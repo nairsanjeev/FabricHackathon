@@ -1,0 +1,201 @@
+patient_id,first_name,last_name,date_of_birth,age,gender,race,zip_code,city,state,insurance_type,primary_care_provider,risk_score
+P0001,Robert,Mitchell,1976-11-03,49,Male,White,11205,Brooklyn,NY,Medicaid,Dr. Patricia Clark,2.19
+P0002,William,Wilson,1971-01-02,55,Male,Black or African American,10452,Bronx,NY,Medicaid,Dr. Patricia Clark,2.3
+P0003,Mary,Carter,1938-06-21,87,Female,Native Hawaiian or Pacific Islander,10029,New York,NY,Medicare,Dr. Robert Singh,1.85
+P0004,Timothy,Miller,1974-03-11,51,Male,Black or African American,10016,New York,NY,Commercial,Dr. Thomas Wright,4.39
+P0005,Elizabeth,Scott,1969-03-05,56,Female,White,07302,Jersey City,NJ,Self-Pay,Dr. Richard Davis,0.78
+P0006,Andrew,Garcia,1936-12-03,89,Male,White,10035,New York,NY,Medicare,Dr. Catherine Lee,1.92
+P0007,Barbara,Hill,1956-09-15,69,Female,Other,10003,New York,NY,Medicare,Dr. William Taylor,3.06
+P0008,Kenneth,Roberts,1962-01-01,64,Male,White,11215,Brooklyn,NY,Medicaid,Dr. William Taylor,4.15
+P0009,Margaret,Adams,1950-02-25,75,Female,White,10451,Bronx,NY,Medicare,Dr. David Kim,2.75
+P0010,Emma,Ramirez,1943-07-21,82,Female,Black or African American,10010,New York,NY,Self-Pay,Dr. David Kim,0.86
+P0011,Joseph,Martinez,1952-02-06,73,Male,White,10035,New York,NY,Medicare,Dr. Steven Park,4.48
+P0012,Brenda,Smith,1963-02-02,62,Female,Asian,07302,Jersey City,NJ,Commercial,Dr. William Taylor,1.86
+P0013,Sharon,Hernandez,1953-09-07,72,Female,Hispanic or Latino,10452,Bronx,NY,Medicaid,Dr. John Williams,3.98
+P0014,Angela,Hill,1989-10-20,36,Female,Hispanic or Latino,10452,Bronx,NY,Self-Pay,Dr. John Williams,2.9
+P0015,Patricia,Davis,1935-08-20,90,Female,American Indian,10010,New York,NY,Medicare,Dr. Richard Davis,0.84
+P0016,Barbara,Carter,1962-11-13,63,Female,White,11201,Brooklyn,NY,Commercial,Dr. Patricia Clark,2.61
+P0017,Margaret,Wright,1953-10-09,72,Female,Black or African American,11205,Brooklyn,NY,Medicare,Dr. Catherine Lee,2.57
+P0018,Donald,Anderson,2007-03-11,18,Male,White,10452,Bronx,NY,Medicaid,Dr. Lisa Chang,3.33
+P0019,Mark,Jones,1936-08-07,89,Male,Asian,10002,New York,NY,Medicare,Dr. William Taylor,1.36
+P0020,Larry,Torres,1952-05-22,73,Male,White,11215,Brooklyn,NY,Medicare,Dr. Maria Rodriguez,2.22
+P0021,Rebecca,Robinson,1949-02-10,76,Female,White,11201,Brooklyn,NY,Self-Pay,Dr. Maria Rodriguez,3.41
+P0022,Donald,Gonzalez,1987-11-01,38,Male,White,10035,New York,NY,Medicaid,Dr. Thomas Wright,4.19
+P0023,Brenda,Miller,2000-01-01,26,Female,White,10002,New York,NY,Self-Pay,Dr. Lisa Chang,2.44
+P0024,Ronald,Brown,1994-06-24,31,Male,White,10016,New York,NY,Self-Pay,Dr. Thomas Wright,3.29
+P0025,Karen,Gonzalez,1979-03-23,46,Female,White,11205,Brooklyn,NY,Commercial,Dr. Ahmed Hassan,2.84
+P0026,Michael,Allen,1992-12-05,33,Male,Black or African American,10453,Bronx,NY,Medicare,Dr. Lisa Chang,4.27
+P0027,Justin,Hill,2006-06-06,19,Male,White,11201,Brooklyn,NY,Commercial,Dr. John Williams,1.54
+P0028,Ashley,Taylor,1969-02-19,56,Female,White,10016,New York,NY,Commercial,Dr. James Wilson,2.98
+P0029,David,Wright,1975-11-08,50,Male,Hispanic or Latino,07302,Jersey City,NJ,Medicaid,Dr. James Wilson,1.98
+P0030,Jeffrey,Wright,1955-02-19,70,Male,White,10452,Bronx,NY,Medicare,Dr. Patricia Clark,3.15
+P0031,Steven,Davis,1938-04-15,87,Male,White,10003,New York,NY,Medicare,Dr. Sandra Lopez,1.87
+P0032,Angela,Young,1965-12-21,60,Female,White,10002,New York,NY,Commercial,Dr. William Taylor,1.83
+P0033,Steven,Hernandez,1956-01-23,69,Male,White,10035,New York,NY,Medicare,Dr. Maria Rodriguez,4.03
+P0034,Jonathan,Williams,1940-04-15,85,Male,White,10003,New York,NY,Medicare,Dr. Michael Patel,4.1
+P0035,Brian,Wilson,1954-11-28,71,Male,Other,10029,New York,NY,Medicaid,Dr. Rachel Green,3.5
+P0036,Christopher,Lopez,1949-10-21,76,Male,Hispanic or Latino,11205,Brooklyn,NY,Commercial,Dr. Rachel Green,3.96
+P0037,Paul,Hernandez,1963-07-06,62,Male,White,11221,Brooklyn,NY,Medicare,Dr. Karen Martinez,3.77
+P0038,Amanda,Martin,1936-09-29,89,Female,White,10010,New York,NY,Medicare,Dr. Robert Singh,1.61
+P0039,Paul,Thompson,1958-02-05,67,Male,White,11221,Brooklyn,NY,Medicare,Dr. Sarah Chen,4.38
+P0040,Justin,Taylor,1998-05-31,27,Male,Black or African American,10029,New York,NY,Commercial,Dr. Ahmed Hassan,4.44
+P0041,Timothy,Torres,1994-01-12,31,Male,Asian,10035,New York,NY,Medicare,Dr. Patricia Clark,4.26
+P0042,George,Ramirez,1997-07-23,28,Male,Asian,10453,Bronx,NY,Medicaid,Dr. Maria Rodriguez,1.7
+P0043,Rebecca,Lee,1975-04-06,50,Female,Asian,10003,New York,NY,Medicaid,Dr. Steven Park,4.11
+P0044,Stephanie,Scott,1945-08-28,80,Female,Black or African American,10010,New York,NY,Medicare,Dr. Richard Davis,1.79
+P0045,Laura,Baker,1972-10-20,53,Female,Asian,11201,Brooklyn,NY,Medicare,Dr. John Williams,2.98
+P0046,Donald,Baker,1967-10-07,58,Male,Other,10003,New York,NY,Medicare,Dr. Lisa Chang,2.95
+P0047,Ryan,Clark,1940-10-15,85,Male,White,11205,Brooklyn,NY,Medicare,Dr. Karen Martinez,1.09
+P0048,Richard,Roberts,1977-01-22,48,Male,White,10452,Bronx,NY,Commercial,Dr. Patricia Clark,3.89
+P0049,Sarah,Robinson,1956-03-20,69,Female,Black or African American,10029,New York,NY,Self-Pay,Dr. Thomas Wright,3.38
+P0050,Brenda,Lewis,1938-05-25,87,Female,Hispanic or Latino,10451,Bronx,NY,Medicare,Dr. Lisa Chang,1.61
+P0051,Ashley,Moore,1968-08-22,57,Female,Hispanic or Latino,10010,New York,NY,Medicaid,Dr. Ahmed Hassan,0.82
+P0052,Mark,Harris,1953-10-02,72,Male,Black or African American,10002,New York,NY,Medicare,Dr. Ahmed Hassan,2.16
+P0053,Edward,Harris,1940-02-01,85,Male,White,10001,New York,NY,Commercial,Dr. Richard Davis,0.52
+P0054,Donna,Carter,1965-06-16,60,Female,Asian,10452,Bronx,NY,Commercial,Dr. Patricia Clark,4.09
+P0055,Sandra,Moore,1979-06-28,46,Female,Asian,10029,New York,NY,Commercial,Dr. Steven Park,3.86
+P0056,Brandon,Wright,2001-03-10,24,Male,Black or African American,10453,Bronx,NY,Commercial,Dr. James Wilson,1.04
+P0057,Nancy,Brown,1974-09-28,51,Female,White,10451,Bronx,NY,Medicaid,Dr. Steven Park,4.3
+P0058,Dorothy,Garcia,1953-04-18,72,Female,White,10001,New York,NY,Self-Pay,Dr. Catherine Lee,0.77
+P0059,Robert,Thomas,1994-02-25,31,Male,Asian,10003,New York,NY,Medicaid,Dr. Karen Martinez,2.76
+P0060,Ryan,Hall,1974-10-21,51,Male,Asian,10453,Bronx,NY,Commercial,Dr. Maria Rodriguez,1.16
+P0061,Susan,Nguyen,2003-03-19,22,Female,White,11201,Brooklyn,NY,Self-Pay,Dr. Steven Park,3.36
+P0062,Justin,Hall,1946-11-30,79,Male,Hispanic or Latino,11205,Brooklyn,NY,Medicaid,Dr. Sandra Lopez,3.68
+P0063,Brian,Wright,1974-12-10,51,Male,Hispanic or Latino,10452,Bronx,NY,Commercial,Dr. Sarah Chen,3.79
+P0064,Jason,White,1951-05-30,74,Male,Asian,11205,Brooklyn,NY,Medicare,Dr. Emily Johnson,4.36
+P0065,Helen,Wright,1957-06-09,68,Female,White,11221,Brooklyn,NY,Medicaid,Dr. William Taylor,1.48
+P0066,Paul,Lewis,1972-03-29,53,Male,White,10453,Bronx,NY,Commercial,Dr. Ahmed Hassan,3.9
+P0067,Gary,Wilson,1975-07-24,50,Male,Black or African American,10016,New York,NY,Self-Pay,Dr. William Taylor,2.57
+P0068,William,Thomas,1957-04-09,68,Male,Black or African American,11215,Brooklyn,NY,Medicare,Dr. Karen Martinez,2.46
+P0069,William,Jackson,1968-09-13,57,Male,Black or African American,10016,New York,NY,Commercial,Dr. Catherine Lee,2.62
+P0070,Brenda,Perez,1972-08-29,53,Female,Asian,10016,New York,NY,Medicaid,Dr. Maria Rodriguez,1.76
+P0071,Matthew,Wilson,1960-03-22,65,Male,Other,11215,Brooklyn,NY,Medicare,Dr. Jennifer Brown,3.83
+P0072,Sandra,White,1994-01-12,31,Female,Other,10452,Bronx,NY,Medicaid,Dr. Michael Patel,2.71
+P0073,Gary,Miller,1940-08-30,85,Male,White,10451,Bronx,NY,Medicare,Dr. Ahmed Hassan,0.71
+P0074,Jessica,Jones,1978-03-24,47,Female,White,11201,Brooklyn,NY,Commercial,Dr. David Kim,2.75
+P0075,Elizabeth,Thomas,1982-06-13,43,Female,White,10453,Bronx,NY,Commercial,Dr. Sandra Lopez,2.59
+P0076,Laura,Martin,1943-08-19,82,Female,Native Hawaiian or Pacific Islander,10453,Bronx,NY,Medicare,Dr. Sandra Lopez,0.9
+P0077,Anthony,Taylor,1962-09-17,63,Male,White,10003,New York,NY,Commercial,Dr. Emily Johnson,2.3
+P0078,Emily,Williams,1968-08-24,57,Female,Asian,11205,Brooklyn,NY,Self-Pay,Dr. James Wilson,4.2
+P0079,Jason,Davis,1954-11-04,71,Male,White,07302,Jersey City,NJ,Medicare,Dr. David Kim,1.16
+P0080,Nicole,Mitchell,1935-08-30,90,Female,Asian,10451,Bronx,NY,Medicare,Dr. Jennifer Brown,4.27
+P0081,Laura,Garcia,1950-06-13,75,Female,White,11205,Brooklyn,NY,Medicare,Dr. William Taylor,1.42
+P0082,Paul,Torres,1995-10-12,30,Male,Hispanic or Latino,10451,Bronx,NY,Commercial,Dr. Thomas Wright,1.23
+P0083,Amy,Garcia,1958-08-01,67,Female,White,10029,New York,NY,Medicare,Dr. Emily Johnson,3.27
+P0084,Stephanie,Carter,1957-12-04,68,Female,Other,10029,New York,NY,Medicare,Dr. Maria Rodriguez,2.12
+P0085,Jonathan,Robinson,1976-04-23,49,Male,Black or African American,10029,New York,NY,Commercial,Dr. Karen Martinez,3.54
+P0086,Paul,Scott,1990-05-31,35,Male,White,07302,Jersey City,NJ,Commercial,Dr. Maria Rodriguez,3.02
+P0087,Christopher,Martin,1956-06-24,69,Male,Black or African American,10002,New York,NY,Medicare,Dr. Maria Rodriguez,0.97
+P0088,Gary,Rivera,1968-08-29,57,Male,White,10035,New York,NY,Commercial,Dr. Karen Martinez,2.71
+P0089,Betty,Hill,1950-11-12,75,Female,White,11221,Brooklyn,NY,Medicare,Dr. Rachel Green,3.65
+P0090,Mary,Jackson,1951-03-26,74,Female,Hispanic or Latino,10453,Bronx,NY,Self-Pay,Dr. Karen Martinez,2.29
+P0091,Amanda,Perez,1956-07-09,69,Female,Other,10451,Bronx,NY,Commercial,Dr. Robert Singh,1.46
+P0092,Sandra,Roberts,1974-05-17,51,Female,White,11205,Brooklyn,NY,Self-Pay,Dr. Steven Park,3.15
+P0093,Gary,Williams,1985-07-26,40,Male,White,11221,Brooklyn,NY,Medicaid,Dr. Thomas Wright,4.14
+P0094,Charles,Clark,1947-12-14,78,Male,White,10451,Bronx,NY,Medicaid,Dr. William Taylor,3.27
+P0095,Kevin,Baker,1943-08-13,82,Male,Hispanic or Latino,11201,Brooklyn,NY,Medicaid,Dr. Karen Martinez,0.64
+P0096,Donald,Green,1960-09-23,65,Male,Asian,11205,Brooklyn,NY,Medicare,Dr. Maria Rodriguez,3.32
+P0097,Jeffrey,Hernandez,1951-01-06,75,Male,White,10001,New York,NY,Medicare,Dr. Michael Patel,2.0
+P0098,Donald,King,1969-10-15,56,Male,Hispanic or Latino,10003,New York,NY,Medicaid,Dr. Sandra Lopez,2.98
+P0099,Gary,Nguyen,1987-02-19,38,Male,Hispanic or Latino,10016,New York,NY,Commercial,Dr. Sarah Chen,2.36
+P0100,Anna,Hernandez,2002-03-13,23,Female,Asian,10016,New York,NY,Commercial,Dr. Rachel Green,2.33
+P0101,Betty,Harris,1948-09-21,77,Female,White,10035,New York,NY,Medicare,Dr. Richard Davis,3.3
+P0102,Ronald,Moore,1997-12-14,28,Male,Hispanic or Latino,07302,Jersey City,NJ,Commercial,Dr. Karen Martinez,4.11
+P0103,Scott,Thompson,1976-03-02,49,Male,Black or African American,10016,New York,NY,Commercial,Dr. David Kim,4.11
+P0104,Joshua,Lewis,2002-11-01,23,Male,Asian,10002,New York,NY,Self-Pay,Dr. Ahmed Hassan,1.2
+P0105,Jonathan,White,1950-09-03,75,Male,Native Hawaiian or Pacific Islander,11221,Brooklyn,NY,Medicare,Dr. Karen Martinez,1.68
+P0106,Jessica,Robinson,1947-09-28,78,Female,Native Hawaiian or Pacific Islander,11221,Brooklyn,NY,Medicare,Dr. Steven Park,3.72
+P0107,Elizabeth,Sanchez,1999-11-06,26,Female,Black or African American,10451,Bronx,NY,Commercial,Dr. William Taylor,3.79
+P0108,Susan,Baker,1979-03-02,46,Female,Hispanic or Latino,07302,Jersey City,NJ,Self-Pay,Dr. Ahmed Hassan,1.39
+P0109,Ryan,Hall,1973-11-16,52,Male,White,10003,New York,NY,Medicare,Dr. Michael Patel,2.47
+P0110,Donald,Wright,1987-07-06,38,Male,Black or African American,11201,Brooklyn,NY,Self-Pay,Dr. Patricia Clark,3.47
+P0111,Edward,Adams,1987-03-02,38,Male,White,10035,New York,NY,Self-Pay,Dr. William Taylor,1.98
+P0112,Laura,Thomas,1948-02-04,77,Female,White,10029,New York,NY,Medicare,Dr. Catherine Lee,1.6
+P0113,Ryan,Garcia,1954-02-26,71,Male,Asian,10453,Bronx,NY,Self-Pay,Dr. Michael Patel,1.47
+P0114,Larry,Wilson,1995-04-01,30,Male,White,10010,New York,NY,Commercial,Dr. Lisa Chang,1.09
+P0115,Paul,Martinez,1941-09-16,84,Male,White,11215,Brooklyn,NY,Medicare,Dr. Sarah Chen,1.93
+P0116,Justin,Lee,2003-12-12,22,Male,White,10003,New York,NY,Commercial,Dr. John Williams,0.75
+P0117,Melissa,Allen,1957-05-06,68,Female,Asian,10010,New York,NY,Commercial,Dr. Michael Patel,4.14
+P0118,Cynthia,Adams,1949-05-20,76,Female,Black or African American,11221,Brooklyn,NY,Medicare,Dr. Maria Rodriguez,4.14
+P0119,William,Lee,1963-11-14,62,Male,Black or African American,10016,New York,NY,Commercial,Dr. Richard Davis,1.8
+P0120,Cynthia,Allen,1963-01-23,62,Female,Asian,10002,New York,NY,Self-Pay,Dr. Patricia Clark,1.36
+P0121,Sandra,Clark,1972-06-24,53,Female,Black or African American,10035,New York,NY,Commercial,Dr. Ahmed Hassan,3.16
+P0122,Karen,Baker,1948-12-05,77,Female,White,11221,Brooklyn,NY,Medicare,Dr. Rachel Green,3.46
+P0123,Stephen,Brown,1956-04-06,69,Male,White,10029,New York,NY,Medicare,Dr. Rachel Green,3.16
+P0124,Linda,Jackson,1959-11-26,66,Female,Asian,10453,Bronx,NY,Medicare,Dr. David Kim,1.4
+P0125,Brian,Scott,1967-08-27,58,Male,Hispanic or Latino,10453,Bronx,NY,Medicaid,Dr. Rachel Green,4.4
+P0126,Scott,Nelson,1946-01-07,80,Male,American Indian,10003,New York,NY,Medicare,Dr. Jennifer Brown,1.9
+P0127,Charles,Torres,1963-11-06,62,Male,White,11205,Brooklyn,NY,Commercial,Dr. Sarah Chen,2.62
+P0128,Rebecca,Robinson,1974-08-08,51,Female,Black or African American,11205,Brooklyn,NY,Medicaid,Dr. Richard Davis,4.03
+P0129,Christopher,Carter,1954-12-09,71,Male,Black or African American,10016,New York,NY,Medicare,Dr. Rachel Green,2.27
+P0130,Margaret,Carter,1959-06-12,66,Female,Black or African American,10002,New York,NY,Medicare,Dr. Richard Davis,3.17
+P0131,Mark,Sanchez,1950-01-17,76,Male,Asian,10010,New York,NY,Medicare,Dr. Robert Singh,3.56
+P0132,Michelle,Davis,1996-06-02,29,Female,Asian,10003,New York,NY,Medicaid,Dr. Patricia Clark,2.5
+P0133,Barbara,Sanchez,1949-06-11,76,Female,Hispanic or Latino,10001,New York,NY,Medicare,Dr. James Wilson,2.8
+P0134,Rebecca,Jackson,1994-07-27,31,Female,Black or African American,10003,New York,NY,Commercial,Dr. Sandra Lopez,3.26
+P0135,Elizabeth,Ramirez,1946-06-12,79,Female,White,10453,Bronx,NY,Medicare,Dr. James Wilson,1.74
+P0136,Sandra,Perez,1963-05-01,62,Female,White,11201,Brooklyn,NY,Medicaid,Dr. John Williams,3.6
+P0137,Karen,Thomas,1990-10-01,35,Female,White,10003,New York,NY,Commercial,Dr. James Wilson,3.59
+P0138,Cynthia,Carter,1955-06-04,70,Female,Black or African American,11201,Brooklyn,NY,Commercial,Dr. Richard Davis,4.45
+P0139,Michelle,Martinez,1972-06-02,53,Female,Black or African American,11201,Brooklyn,NY,Medicaid,Dr. William Taylor,1.91
+P0140,Joshua,Robinson,1964-07-12,61,Male,Black or African American,11221,Brooklyn,NY,Medicaid,Dr. James Wilson,2.53
+P0141,Emma,Scott,1939-01-02,87,Female,Asian,10451,Bronx,NY,Commercial,Dr. Richard Davis,1.79
+P0142,Angela,Martinez,1942-12-01,83,Female,Other,11215,Brooklyn,NY,Commercial,Dr. Ahmed Hassan,0.84
+P0143,John,Thomas,1957-04-25,68,Male,White,10452,Bronx,NY,Medicare,Dr. Catherine Lee,1.63
+P0144,Carol,Baker,1952-03-02,73,Female,White,11201,Brooklyn,NY,Medicare,Dr. Ahmed Hassan,3.21
+P0145,Dorothy,Campbell,1935-03-22,90,Female,Black or African American,11221,Brooklyn,NY,Medicare,Dr. James Wilson,1.07
+P0146,Donna,Adams,1958-11-13,67,Female,White,10453,Bronx,NY,Medicaid,Dr. James Wilson,2.01
+P0147,Sarah,Nelson,1953-02-03,72,Female,Black or African American,07302,Jersey City,NJ,Medicare,Dr. Rachel Green,0.57
+P0148,Nancy,Wilson,1967-05-13,58,Female,White,10010,New York,NY,Medicaid,Dr. David Kim,1.68
+P0149,Nicholas,Roberts,1953-04-25,72,Male,White,10001,New York,NY,Medicare,Dr. Sandra Lopez,2.01
+P0150,Daniel,Hall,1952-10-27,73,Male,White,11205,Brooklyn,NY,Medicare,Dr. Rachel Green,3.38
+P0151,Helen,Jackson,1952-06-04,73,Female,Native Hawaiian or Pacific Islander,10010,New York,NY,Medicare,Dr. Jennifer Brown,3.64
+P0152,George,Baker,1942-05-31,83,Male,Black or African American,11215,Brooklyn,NY,Medicare,Dr. Steven Park,2.17
+P0153,Matthew,Hill,1990-12-15,35,Male,Black or African American,11201,Brooklyn,NY,Commercial,Dr. Catherine Lee,0.91
+P0154,Andrew,Garcia,1960-06-01,65,Male,White,07302,Jersey City,NJ,Medicare,Dr. Rachel Green,4.14
+P0155,Amanda,Johnson,1973-05-02,52,Female,White,10029,New York,NY,Medicaid,Dr. James Wilson,0.61
+P0156,Kevin,Martinez,1990-05-14,35,Male,Black or African American,11205,Brooklyn,NY,Commercial,Dr. Karen Martinez,0.52
+P0157,Robert,Taylor,1977-04-08,48,Male,White,11205,Brooklyn,NY,Commercial,Dr. Rachel Green,1.65
+P0158,Jessica,Brown,1969-03-03,56,Female,Black or African American,10451,Bronx,NY,Medicare,Dr. Karen Martinez,0.57
+P0159,Charles,Jackson,1970-07-19,55,Male,Asian,10010,New York,NY,Commercial,Dr. Emily Johnson,0.84
+P0160,Barbara,King,1952-05-05,73,Female,White,10452,Bronx,NY,Medicare,Dr. Karen Martinez,2.05
+P0161,Dorothy,Mitchell,1995-12-06,30,Female,Asian,10029,New York,NY,Medicaid,Dr. Maria Rodriguez,3.44
+P0162,Sarah,Williams,1974-02-19,51,Female,Other,10003,New York,NY,Commercial,Dr. Thomas Wright,2.41
+P0163,Thomas,Jones,1957-12-31,68,Male,Hispanic or Latino,10016,New York,NY,Medicare,Dr. Robert Singh,1.76
+P0164,Angela,Sanchez,1941-05-25,84,Female,White,10016,New York,NY,Medicare,Dr. Robert Singh,3.95
+P0165,Kevin,Moore,1989-06-01,36,Male,Hispanic or Latino,07302,Jersey City,NJ,Commercial,Dr. Thomas Wright,2.05
+P0166,Gary,Hall,1950-04-30,75,Male,White,10016,New York,NY,Commercial,Dr. Rachel Green,2.91
+P0167,Jonathan,Jackson,1978-07-30,47,Male,Black or African American,11201,Brooklyn,NY,Medicaid,Dr. Thomas Wright,2.2
+P0168,Amanda,Lewis,2002-02-27,23,Female,White,10035,New York,NY,Medicaid,Dr. Michael Patel,3.05
+P0169,Angela,Mitchell,1964-11-04,61,Female,White,11221,Brooklyn,NY,Commercial,Dr. Thomas Wright,0.77
+P0170,Melissa,Harris,1949-03-17,76,Female,White,10003,New York,NY,Medicare,Dr. Catherine Lee,3.55
+P0171,Eric,White,1969-08-26,56,Male,Asian,10010,New York,NY,Self-Pay,Dr. Sarah Chen,2.5
+P0172,Brenda,Davis,1975-01-19,50,Female,White,10451,Bronx,NY,Medicaid,Dr. Sandra Lopez,4.17
+P0173,Betty,Davis,1993-05-23,32,Female,Other,10003,New York,NY,Self-Pay,Dr. Thomas Wright,3.74
+P0174,Amanda,Rivera,1999-08-13,26,Female,Asian,07302,Jersey City,NJ,Medicaid,Dr. Emily Johnson,4.21
+P0175,George,Allen,1976-11-03,49,Male,White,10010,New York,NY,Commercial,Dr. Sarah Chen,2.79
+P0176,Brenda,Rodriguez,1963-12-15,62,Female,Black or African American,10016,New York,NY,Commercial,Dr. Karen Martinez,3.58
+P0177,Thomas,Lee,1957-05-25,68,Male,Hispanic or Latino,11201,Brooklyn,NY,Medicare,Dr. David Kim,3.62
+P0178,Thomas,Ramirez,1951-12-23,74,Male,White,11221,Brooklyn,NY,Medicare,Dr. David Kim,1.15
+P0179,Brian,King,1936-12-14,89,Male,White,10016,New York,NY,Medicare,Dr. Patricia Clark,3.0
+P0180,Nicholas,Adams,1985-10-25,40,Male,White,10003,New York,NY,Commercial,Dr. Sandra Lopez,4.2
+P0181,Robert,Garcia,1997-03-19,28,Male,Black or African American,10016,New York,NY,Commercial,Dr. Richard Davis,3.06
+P0182,Anna,Jackson,1960-05-15,65,Female,White,10010,New York,NY,Commercial,Dr. Steven Park,0.79
+P0183,Christopher,Lewis,1972-10-02,53,Male,Hispanic or Latino,10029,New York,NY,Commercial,Dr. Ahmed Hassan,1.78
+P0184,Stephanie,Rodriguez,1956-04-06,69,Female,White,10002,New York,NY,Medicare,Dr. Thomas Wright,2.3
+P0185,Richard,Brown,1973-03-05,52,Male,Hispanic or Latino,10035,New York,NY,Medicaid,Dr. Emily Johnson,4.24
+P0186,Betty,Carter,1986-05-17,39,Female,White,10451,Bronx,NY,Self-Pay,Dr. Karen Martinez,4.28
+P0187,Ashley,Wilson,1964-12-22,61,Female,White,10016,New York,NY,Commercial,Dr. Karen Martinez,0.53
+P0188,Jason,Rodriguez,1938-07-20,87,Male,Black or African American,11215,Brooklyn,NY,Medicare,Dr. Michael Patel,2.78
+P0189,George,Scott,1973-05-01,52,Male,Hispanic or Latino,10451,Bronx,NY,Commercial,Dr. William Taylor,2.99
+P0190,Thomas,Miller,1967-07-27,58,Male,White,10452,Bronx,NY,Self-Pay,Dr. David Kim,2.54
+P0191,John,Williams,1989-05-13,36,Male,Hispanic or Latino,10452,Bronx,NY,Commercial,Dr. Sandra Lopez,1.06
+P0192,Lisa,Sanchez,1938-08-23,87,Female,Black or African American,10453,Bronx,NY,Medicare,Dr. John Williams,3.33
+P0193,Kathleen,Johnson,1969-11-20,56,Female,Black or African American,10035,New York,NY,Commercial,Dr. Sarah Chen,1.56
+P0194,Michael,Nguyen,1956-03-02,69,Male,White,11205,Brooklyn,NY,Medicare,Dr. Steven Park,3.22
+P0195,Larry,Hall,1994-05-29,31,Male,Asian,10029,New York,NY,Commercial,Dr. Rachel Green,2.14
+P0196,Linda,Rivera,1991-03-29,34,Female,Black or African American,10029,New York,NY,Self-Pay,Dr. Karen Martinez,1.76
+P0197,Ryan,Wright,1974-02-02,51,Male,Black or African American,11215,Brooklyn,NY,Self-Pay,Dr. William Taylor,1.27
+P0198,Paul,Scott,1975-08-20,50,Male,White,11205,Brooklyn,NY,Medicaid,Dr. Karen Martinez,1.9
+P0199,Emily,Davis,1956-07-08,69,Female,Native Hawaiian or Pacific Islander,07302,Jersey City,NJ,Self-Pay,Dr. Catherine Lee,3.72
+P0200,Jennifer,Jackson,1948-07-27,77,Female,Asian,07302,Jersey City,NJ,Medicare,Dr. William Taylor,1.36

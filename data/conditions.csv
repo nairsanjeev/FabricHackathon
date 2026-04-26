@@ -1,0 +1,429 @@
+condition_id,patient_id,encounter_id,condition_code,condition_description,condition_type,date_diagnosed,status
+C00001,P0001,,I10,Essential (primary) hypertension,Chronic,2020-08-11,Active
+C00002,P0002,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2022-04-26,Active
+C00003,P0002,,E78.5,"Hyperlipidemia, unspecified",Chronic,2025-05-29,Active
+C00004,P0003,,I50.9,"Heart failure, unspecified",Chronic,2025-05-28,Active
+C00005,P0003,,I10,Essential (primary) hypertension,Chronic,2020-05-01,Active
+C00006,P0003,,N18.9,"Chronic kidney disease, unspecified",Chronic,2023-03-21,Active
+C00007,P0003,,E66.01,Morbid obesity due to excess calories,Chronic,2025-03-02,Active
+C00008,P0004,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-12-11,Active
+C00009,P0004,,I10,Essential (primary) hypertension,Chronic,2024-09-08,Active
+C00010,P0005,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2023-03-09,Active
+C00011,P0005,,I10,Essential (primary) hypertension,Chronic,2022-07-19,Active
+C00012,P0006,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-08-18,Active
+C00013,P0006,,I10,Essential (primary) hypertension,Chronic,2024-01-11,Active
+C00014,P0006,,E78.5,"Hyperlipidemia, unspecified",Chronic,2024-02-17,Active
+C00015,P0007,,I10,Essential (primary) hypertension,Chronic,2022-03-31,Active
+C00016,P0007,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2021-10-24,Active
+C00017,P0007,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2022-02-24,Active
+C00018,P0008,,E78.5,"Hyperlipidemia, unspecified",Chronic,2023-08-31,Active
+C00019,P0008,,E66.01,Morbid obesity due to excess calories,Chronic,2023-11-06,Active
+C00020,P0009,,I10,Essential (primary) hypertension,Chronic,2020-08-28,Active
+C00021,P0011,,I10,Essential (primary) hypertension,Chronic,2022-01-10,Active
+C00022,P0011,,E78.5,"Hyperlipidemia, unspecified",Chronic,2023-03-01,Active
+C00023,P0011,,N18.9,"Chronic kidney disease, unspecified",Chronic,2024-08-24,Active
+C00024,P0011,,E66.01,Morbid obesity due to excess calories,Chronic,2021-11-02,Active
+C00025,P0012,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2020-09-27,Active
+C00026,P0013,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2022-08-04,Active
+C00027,P0013,,I10,Essential (primary) hypertension,Chronic,2021-06-05,Active
+C00028,P0013,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2021-12-06,Active
+C00029,P0014,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2025-01-05,Active
+C00030,P0014,,I50.9,"Heart failure, unspecified",Chronic,2025-03-27,Active
+C00031,P0014,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-10-04,Active
+C00032,P0015,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-11-15,Active
+C00033,P0015,,I10,Essential (primary) hypertension,Chronic,2025-05-28,Active
+C00034,P0015,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2023-01-05,Active
+C00035,P0016,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2021-04-01,Active
+C00036,P0017,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2021-01-21,Active
+C00037,P0017,,I10,Essential (primary) hypertension,Chronic,2024-07-15,Active
+C00038,P0017,,E66.01,Morbid obesity due to excess calories,Chronic,2023-05-01,Active
+C00039,P0018,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2023-05-09,Active
+C00040,P0018,,E78.5,"Hyperlipidemia, unspecified",Chronic,2022-06-17,Active
+C00041,P0019,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-07-28,Active
+C00042,P0019,,I10,Essential (primary) hypertension,Chronic,2024-05-01,Active
+C00043,P0019,,E66.01,Morbid obesity due to excess calories,Chronic,2021-09-07,Active
+C00044,P0020,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2023-02-14,Active
+C00045,P0021,,I10,Essential (primary) hypertension,Chronic,2022-02-09,Active
+C00046,P0021,,E78.5,"Hyperlipidemia, unspecified",Chronic,2023-01-06,Active
+C00047,P0022,,E78.5,"Hyperlipidemia, unspecified",Chronic,2021-05-12,Active
+C00048,P0023,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2022-02-11,Active
+C00049,P0024,,E78.5,"Hyperlipidemia, unspecified",Chronic,2025-04-03,Active
+C00050,P0025,,I10,Essential (primary) hypertension,Chronic,2021-10-20,Active
+C00051,P0026,,I50.9,"Heart failure, unspecified",Chronic,2024-01-19,Active
+C00052,P0029,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-03-10,Active
+C00053,P0029,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2024-08-02,Active
+C00054,P0030,,I50.9,"Heart failure, unspecified",Chronic,2023-12-19,Active
+C00055,P0030,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2021-03-23,Active
+C00056,P0030,,I10,Essential (primary) hypertension,Chronic,2022-02-03,Active
+C00057,P0030,,E78.5,"Hyperlipidemia, unspecified",Chronic,2023-07-30,Active
+C00058,P0030,,E66.01,Morbid obesity due to excess calories,Chronic,2023-02-03,Active
+C00059,P0031,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-02-04,Active
+C00060,P0031,,E78.5,"Hyperlipidemia, unspecified",Chronic,2024-07-23,Active
+C00061,P0031,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2025-02-23,Active
+C00062,P0031,,E66.01,Morbid obesity due to excess calories,Chronic,2020-10-31,Active
+C00063,P0032,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2023-06-23,Active
+C00064,P0032,,I10,Essential (primary) hypertension,Chronic,2022-03-23,Active
+C00065,P0032,,E78.5,"Hyperlipidemia, unspecified",Chronic,2025-05-18,Active
+C00066,P0033,,E78.5,"Hyperlipidemia, unspecified",Chronic,2022-02-15,Active
+C00067,P0033,,E66.01,Morbid obesity due to excess calories,Chronic,2024-09-27,Active
+C00068,P0034,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-05-25,Active
+C00069,P0035,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2025-03-07,Active
+C00070,P0035,,I50.9,"Heart failure, unspecified",Chronic,2025-03-10,Active
+C00071,P0035,,I10,Essential (primary) hypertension,Chronic,2023-09-09,Active
+C00072,P0035,,E78.5,"Hyperlipidemia, unspecified",Chronic,2025-03-17,Active
+C00073,P0035,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2021-02-28,Active
+C00074,P0036,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-06-06,Active
+C00075,P0036,,I10,Essential (primary) hypertension,Chronic,2024-10-05,Active
+C00076,P0036,,E78.5,"Hyperlipidemia, unspecified",Chronic,2025-01-10,Active
+C00077,P0037,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-03-06,Active
+C00078,P0037,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2022-06-14,Active
+C00079,P0037,,I10,Essential (primary) hypertension,Chronic,2020-06-04,Active
+C00080,P0037,,E78.5,"Hyperlipidemia, unspecified",Chronic,2024-04-23,Active
+C00081,P0038,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2023-02-06,Active
+C00082,P0038,,E78.5,"Hyperlipidemia, unspecified",Chronic,2023-10-24,Active
+C00083,P0038,,E66.01,Morbid obesity due to excess calories,Chronic,2020-05-30,Active
+C00084,P0039,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-11-11,Active
+C00085,P0039,,I10,Essential (primary) hypertension,Chronic,2022-03-08,Active
+C00086,P0039,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-08-06,Active
+C00087,P0039,,N18.9,"Chronic kidney disease, unspecified",Chronic,2025-04-15,Active
+C00088,P0039,,E66.01,Morbid obesity due to excess calories,Chronic,2021-01-18,Active
+C00089,P0040,,I10,Essential (primary) hypertension,Chronic,2020-07-02,Active
+C00090,P0041,,I50.9,"Heart failure, unspecified",Chronic,2025-01-19,Active
+C00091,P0042,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-12-08,Active
+C00092,P0042,,E78.5,"Hyperlipidemia, unspecified",Chronic,2021-05-30,Active
+C00093,P0043,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-01-14,Active
+C00094,P0044,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2021-10-18,Active
+C00095,P0044,,I10,Essential (primary) hypertension,Chronic,2020-12-29,Active
+C00096,P0045,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2022-02-09,Active
+C00097,P0045,,I10,Essential (primary) hypertension,Chronic,2025-03-23,Active
+C00098,P0046,,I10,Essential (primary) hypertension,Chronic,2023-11-19,Active
+C00099,P0046,,E78.5,"Hyperlipidemia, unspecified",Chronic,2024-10-02,Active
+C00100,P0047,,I10,Essential (primary) hypertension,Chronic,2023-05-09,Active
+C00101,P0047,,E78.5,"Hyperlipidemia, unspecified",Chronic,2022-03-31,Active
+C00102,P0047,,E66.01,Morbid obesity due to excess calories,Chronic,2022-01-06,Active
+C00103,P0048,,E78.5,"Hyperlipidemia, unspecified",Chronic,2021-05-23,Active
+C00104,P0048,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2023-08-14,Active
+C00105,P0049,,I10,Essential (primary) hypertension,Chronic,2020-01-22,Active
+C00106,P0049,,E78.5,"Hyperlipidemia, unspecified",Chronic,2021-03-30,Active
+C00107,P0050,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-04-30,Active
+C00108,P0050,,I10,Essential (primary) hypertension,Chronic,2020-02-20,Active
+C00109,P0050,,E78.5,"Hyperlipidemia, unspecified",Chronic,2021-08-28,Active
+C00110,P0050,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2025-04-10,Active
+C00111,P0051,,I10,Essential (primary) hypertension,Chronic,2020-07-18,Active
+C00112,P0051,,E66.01,Morbid obesity due to excess calories,Chronic,2024-10-05,Active
+C00113,P0052,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-08-11,Active
+C00114,P0052,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2024-02-25,Active
+C00115,P0052,,I10,Essential (primary) hypertension,Chronic,2020-12-23,Active
+C00116,P0053,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2023-09-08,Active
+C00117,P0053,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2023-06-11,Active
+C00118,P0053,,E78.5,"Hyperlipidemia, unspecified",Chronic,2022-05-29,Active
+C00119,P0054,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-07-27,Active
+C00120,P0054,,I10,Essential (primary) hypertension,Chronic,2021-02-07,Active
+C00121,P0055,,E66.01,Morbid obesity due to excess calories,Chronic,2020-10-01,Active
+C00122,P0057,,I10,Essential (primary) hypertension,Chronic,2020-12-07,Active
+C00123,P0057,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2022-01-05,Active
+C00124,P0058,,I50.9,"Heart failure, unspecified",Chronic,2022-02-25,Active
+C00125,P0058,,I10,Essential (primary) hypertension,Chronic,2022-10-10,Active
+C00126,P0058,,E78.5,"Hyperlipidemia, unspecified",Chronic,2022-10-04,Active
+C00127,P0058,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2020-03-04,Active
+C00128,P0059,,I50.9,"Heart failure, unspecified",Chronic,2021-04-05,Active
+C00129,P0059,,I10,Essential (primary) hypertension,Chronic,2022-07-25,Active
+C00130,P0061,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2021-06-22,Active
+C00131,P0062,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-10-12,Active
+C00132,P0063,,I50.9,"Heart failure, unspecified",Chronic,2023-12-12,Active
+C00133,P0064,,I50.9,"Heart failure, unspecified",Chronic,2021-07-21,Active
+C00134,P0064,,I10,Essential (primary) hypertension,Chronic,2024-11-08,Active
+C00135,P0064,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-10-26,Active
+C00136,P0065,,I10,Essential (primary) hypertension,Chronic,2023-07-21,Active
+C00137,P0066,,N18.9,"Chronic kidney disease, unspecified",Chronic,2022-07-27,Active
+C00138,P0068,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2023-07-06,Active
+C00139,P0068,,N18.9,"Chronic kidney disease, unspecified",Chronic,2024-10-22,Active
+C00140,P0069,,I10,Essential (primary) hypertension,Chronic,2024-11-25,Active
+C00141,P0070,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2022-03-22,Active
+C00142,P0070,,N18.9,"Chronic kidney disease, unspecified",Chronic,2020-07-13,Active
+C00143,P0070,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2022-09-03,Active
+C00144,P0070,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2023-04-30,Active
+C00145,P0071,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2023-11-25,Active
+C00146,P0071,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2024-10-27,Active
+C00147,P0071,,I10,Essential (primary) hypertension,Chronic,2020-09-27,Active
+C00148,P0071,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2024-07-08,Active
+C00149,P0072,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-05-03,Active
+C00150,P0073,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-03-12,Active
+C00151,P0073,,I50.9,"Heart failure, unspecified",Chronic,2022-04-23,Active
+C00152,P0073,,I10,Essential (primary) hypertension,Chronic,2021-03-20,Active
+C00153,P0073,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-07-24,Active
+C00154,P0073,,N18.9,"Chronic kidney disease, unspecified",Chronic,2020-09-09,Active
+C00155,P0074,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2021-07-21,Active
+C00156,P0074,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2024-09-30,Active
+C00157,P0075,,I10,Essential (primary) hypertension,Chronic,2020-04-21,Active
+C00158,P0076,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-12-25,Active
+C00159,P0076,,E78.5,"Hyperlipidemia, unspecified",Chronic,2024-10-28,Active
+C00160,P0076,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2022-08-22,Active
+C00161,P0077,,I50.9,"Heart failure, unspecified",Chronic,2020-05-18,Active
+C00162,P0077,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2021-03-17,Active
+C00163,P0077,,I10,Essential (primary) hypertension,Chronic,2020-05-03,Active
+C00164,P0078,,I10,Essential (primary) hypertension,Chronic,2020-06-20,Active
+C00165,P0078,,E78.5,"Hyperlipidemia, unspecified",Chronic,2022-11-13,Active
+C00166,P0079,,I10,Essential (primary) hypertension,Chronic,2022-06-14,Active
+C00167,P0079,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2020-06-25,Active
+C00168,P0079,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2023-06-07,Active
+C00169,P0080,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-02-27,Active
+C00170,P0080,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2020-01-26,Active
+C00171,P0080,,N18.9,"Chronic kidney disease, unspecified",Chronic,2025-05-05,Active
+C00172,P0080,,E66.01,Morbid obesity due to excess calories,Chronic,2022-01-31,Active
+C00173,P0081,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-05-18,Active
+C00174,P0081,,I10,Essential (primary) hypertension,Chronic,2025-01-16,Active
+C00175,P0081,,E78.5,"Hyperlipidemia, unspecified",Chronic,2024-07-10,Active
+C00176,P0082,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2024-10-25,Active
+C00177,P0083,,I50.9,"Heart failure, unspecified",Chronic,2024-11-02,Active
+C00178,P0083,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2020-04-04,Active
+C00179,P0083,,I10,Essential (primary) hypertension,Chronic,2022-02-23,Active
+C00180,P0083,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2024-07-02,Active
+C00181,P0084,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-06-08,Active
+C00182,P0084,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2023-10-10,Active
+C00183,P0085,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2022-08-10,Active
+C00184,P0085,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2022-07-24,Active
+C00185,P0085,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2021-02-14,Active
+C00186,P0087,,I50.9,"Heart failure, unspecified",Chronic,2023-01-14,Active
+C00187,P0087,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2023-09-08,Active
+C00188,P0088,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2021-05-02,Active
+C00189,P0088,,E78.5,"Hyperlipidemia, unspecified",Chronic,2021-07-27,Active
+C00190,P0088,,N18.9,"Chronic kidney disease, unspecified",Chronic,2025-03-01,Active
+C00191,P0089,,I10,Essential (primary) hypertension,Chronic,2023-07-29,Active
+C00192,P0089,,N18.9,"Chronic kidney disease, unspecified",Chronic,2023-03-08,Active
+C00193,P0089,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2023-09-18,Active
+C00194,P0090,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-06-28,Active
+C00195,P0090,,I10,Essential (primary) hypertension,Chronic,2022-07-16,Active
+C00196,P0090,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-06-01,Active
+C00197,P0090,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2024-04-26,Active
+C00198,P0090,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2020-12-02,Active
+C00199,P0091,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-09-04,Active
+C00200,P0091,,I10,Essential (primary) hypertension,Chronic,2021-09-23,Active
+C00201,P0091,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2024-07-11,Active
+C00202,P0092,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-09-07,Active
+C00203,P0092,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2021-09-04,Active
+C00204,P0092,,E66.01,Morbid obesity due to excess calories,Chronic,2022-04-08,Active
+C00205,P0093,,I10,Essential (primary) hypertension,Chronic,2020-07-27,Active
+C00206,P0093,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2024-08-27,Active
+C00207,P0094,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2023-11-06,Active
+C00208,P0094,,I10,Essential (primary) hypertension,Chronic,2021-06-14,Active
+C00209,P0094,,N18.9,"Chronic kidney disease, unspecified",Chronic,2020-05-12,Active
+C00210,P0094,,E66.01,Morbid obesity due to excess calories,Chronic,2024-10-01,Active
+C00211,P0095,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2022-08-02,Active
+C00212,P0095,,I10,Essential (primary) hypertension,Chronic,2025-03-07,Active
+C00213,P0095,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2023-10-31,Active
+C00214,P0096,,I10,Essential (primary) hypertension,Chronic,2023-06-11,Active
+C00215,P0096,,E66.01,Morbid obesity due to excess calories,Chronic,2021-07-26,Active
+C00216,P0097,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2022-05-08,Active
+C00217,P0097,,I50.9,"Heart failure, unspecified",Chronic,2024-12-16,Active
+C00218,P0097,,I10,Essential (primary) hypertension,Chronic,2024-06-30,Active
+C00219,P0097,,N18.9,"Chronic kidney disease, unspecified",Chronic,2022-02-22,Active
+C00220,P0098,,I10,Essential (primary) hypertension,Chronic,2021-10-15,Active
+C00221,P0098,,N18.9,"Chronic kidney disease, unspecified",Chronic,2024-07-18,Active
+C00222,P0098,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2022-08-24,Active
+C00223,P0099,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2023-09-07,Active
+C00224,P0099,,I10,Essential (primary) hypertension,Chronic,2022-12-28,Active
+C00225,P0099,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2025-04-25,Active
+C00226,P0100,,I10,Essential (primary) hypertension,Chronic,2023-04-28,Active
+C00227,P0101,,I50.9,"Heart failure, unspecified",Chronic,2025-04-26,Active
+C00228,P0101,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2024-07-17,Active
+C00229,P0101,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2021-04-21,Active
+C00230,P0101,,E66.01,Morbid obesity due to excess calories,Chronic,2022-09-05,Active
+C00231,P0102,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2025-02-22,Active
+C00232,P0103,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-08-15,Active
+C00233,P0103,,E66.01,Morbid obesity due to excess calories,Chronic,2020-11-18,Active
+C00234,P0105,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-12-29,Active
+C00235,P0106,,I50.9,"Heart failure, unspecified",Chronic,2023-05-18,Active
+C00236,P0106,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2022-10-13,Active
+C00237,P0106,,E66.01,Morbid obesity due to excess calories,Chronic,2021-10-16,Active
+C00238,P0107,,E66.01,Morbid obesity due to excess calories,Chronic,2021-06-09,Active
+C00239,P0108,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2022-06-16,Active
+C00240,P0108,,E66.01,Morbid obesity due to excess calories,Chronic,2022-09-08,Active
+C00241,P0109,,I10,Essential (primary) hypertension,Chronic,2022-07-13,Active
+C00242,P0109,,E78.5,"Hyperlipidemia, unspecified",Chronic,2024-09-28,Active
+C00243,P0109,,N18.9,"Chronic kidney disease, unspecified",Chronic,2020-02-11,Active
+C00244,P0109,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2020-12-14,Active
+C00245,P0110,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-06-02,Active
+C00246,P0110,,I10,Essential (primary) hypertension,Chronic,2023-05-01,Active
+C00247,P0111,,I50.9,"Heart failure, unspecified",Chronic,2021-11-09,Active
+C00248,P0111,,I10,Essential (primary) hypertension,Chronic,2023-11-28,Active
+C00249,P0111,,E66.01,Morbid obesity due to excess calories,Chronic,2022-03-15,Active
+C00250,P0112,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2022-01-08,Active
+C00251,P0112,,I10,Essential (primary) hypertension,Chronic,2020-06-28,Active
+C00252,P0112,,E78.5,"Hyperlipidemia, unspecified",Chronic,2023-09-17,Active
+C00253,P0112,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2021-02-27,Active
+C00254,P0113,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-09-24,Active
+C00255,P0113,,I50.9,"Heart failure, unspecified",Chronic,2024-05-26,Active
+C00256,P0113,,I10,Essential (primary) hypertension,Chronic,2023-09-15,Active
+C00257,P0113,,E78.5,"Hyperlipidemia, unspecified",Chronic,2023-08-07,Active
+C00258,P0114,,E78.5,"Hyperlipidemia, unspecified",Chronic,2024-03-20,Active
+C00259,P0115,,I50.9,"Heart failure, unspecified",Chronic,2020-05-04,Active
+C00260,P0115,,E78.5,"Hyperlipidemia, unspecified",Chronic,2023-01-01,Active
+C00261,P0116,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2023-03-15,Active
+C00262,P0117,,I10,Essential (primary) hypertension,Chronic,2022-05-17,Active
+C00263,P0117,,E78.5,"Hyperlipidemia, unspecified",Chronic,2023-10-31,Active
+C00264,P0118,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2022-03-05,Active
+C00265,P0118,,I10,Essential (primary) hypertension,Chronic,2023-02-04,Active
+C00266,P0118,,E78.5,"Hyperlipidemia, unspecified",Chronic,2021-07-19,Active
+C00267,P0118,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2023-12-05,Active
+C00268,P0119,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2023-04-19,Active
+C00269,P0119,,N18.9,"Chronic kidney disease, unspecified",Chronic,2020-08-04,Active
+C00270,P0120,,N18.9,"Chronic kidney disease, unspecified",Chronic,2021-07-18,Active
+C00271,P0121,,I10,Essential (primary) hypertension,Chronic,2022-08-31,Active
+C00272,P0121,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2024-08-01,Active
+C00273,P0122,,I10,Essential (primary) hypertension,Chronic,2021-09-07,Active
+C00274,P0123,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2021-03-08,Active
+C00275,P0123,,I10,Essential (primary) hypertension,Chronic,2022-11-23,Active
+C00276,P0124,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-10-09,Active
+C00277,P0124,,I10,Essential (primary) hypertension,Chronic,2024-11-27,Active
+C00278,P0125,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-08-13,Active
+C00279,P0126,,I10,Essential (primary) hypertension,Chronic,2024-08-28,Active
+C00280,P0127,,I10,Essential (primary) hypertension,Chronic,2022-04-18,Active
+C00281,P0127,,E66.01,Morbid obesity due to excess calories,Chronic,2020-12-20,Active
+C00282,P0128,,I50.9,"Heart failure, unspecified",Chronic,2021-05-31,Active
+C00283,P0129,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2021-09-10,Active
+C00284,P0129,,I10,Essential (primary) hypertension,Chronic,2020-07-28,Active
+C00285,P0129,,E78.5,"Hyperlipidemia, unspecified",Chronic,2023-09-18,Active
+C00286,P0130,,I10,Essential (primary) hypertension,Chronic,2021-10-27,Active
+C00287,P0130,,E66.01,Morbid obesity due to excess calories,Chronic,2024-04-16,Active
+C00288,P0131,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-04-26,Active
+C00289,P0132,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2023-12-21,Active
+C00290,P0133,,I10,Essential (primary) hypertension,Chronic,2023-09-08,Active
+C00291,P0133,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2020-09-19,Active
+C00292,P0135,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2020-04-19,Active
+C00293,P0135,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2024-12-26,Active
+C00294,P0135,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2023-10-26,Active
+C00295,P0136,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-04-20,Active
+C00296,P0136,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2021-02-14,Active
+C00297,P0136,,I10,Essential (primary) hypertension,Chronic,2023-03-12,Active
+C00298,P0136,,E66.01,Morbid obesity due to excess calories,Chronic,2021-11-12,Active
+C00299,P0137,,I10,Essential (primary) hypertension,Chronic,2021-07-14,Active
+C00300,P0138,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2022-06-07,Active
+C00301,P0138,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-03-18,Active
+C00302,P0139,,I50.9,"Heart failure, unspecified",Chronic,2020-01-09,Active
+C00303,P0139,,I10,Essential (primary) hypertension,Chronic,2023-11-21,Active
+C00304,P0139,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2022-10-27,Active
+C00305,P0140,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2021-08-18,Active
+C00306,P0140,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2025-01-20,Active
+C00307,P0140,,E66.01,Morbid obesity due to excess calories,Chronic,2025-01-31,Active
+C00308,P0141,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2024-01-29,Active
+C00309,P0141,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-02-14,Active
+C00310,P0141,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2022-01-20,Active
+C00311,P0142,,I10,Essential (primary) hypertension,Chronic,2020-04-08,Active
+C00312,P0142,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2023-11-13,Active
+C00313,P0142,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2022-06-28,Active
+C00314,P0143,,I50.9,"Heart failure, unspecified",Chronic,2023-11-24,Active
+C00315,P0143,,I10,Essential (primary) hypertension,Chronic,2022-05-11,Active
+C00316,P0143,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2024-08-28,Active
+C00317,P0145,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-11-24,Active
+C00318,P0145,,I50.9,"Heart failure, unspecified",Chronic,2022-10-13,Active
+C00319,P0145,,I10,Essential (primary) hypertension,Chronic,2022-09-11,Active
+C00320,P0145,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-01-06,Active
+C00321,P0145,,N18.9,"Chronic kidney disease, unspecified",Chronic,2020-07-01,Active
+C00322,P0145,,E66.01,Morbid obesity due to excess calories,Chronic,2020-07-03,Active
+C00323,P0146,,I50.9,"Heart failure, unspecified",Chronic,2024-01-21,Active
+C00324,P0146,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2021-06-08,Active
+C00325,P0146,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2024-07-23,Active
+C00326,P0146,,E66.01,Morbid obesity due to excess calories,Chronic,2021-08-18,Active
+C00327,P0147,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2023-10-18,Active
+C00328,P0147,,I10,Essential (primary) hypertension,Chronic,2024-04-01,Active
+C00329,P0147,,N18.9,"Chronic kidney disease, unspecified",Chronic,2020-10-10,Active
+C00330,P0148,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2024-07-27,Active
+C00331,P0148,,I10,Essential (primary) hypertension,Chronic,2020-08-21,Active
+C00332,P0149,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2023-11-26,Active
+C00333,P0149,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2025-02-09,Active
+C00334,P0150,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2022-02-16,Active
+C00335,P0151,,I50.9,"Heart failure, unspecified",Chronic,2023-09-03,Active
+C00336,P0152,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2022-12-07,Active
+C00337,P0152,,I10,Essential (primary) hypertension,Chronic,2024-01-28,Active
+C00338,P0152,,E78.5,"Hyperlipidemia, unspecified",Chronic,2021-12-09,Active
+C00339,P0153,,I50.9,"Heart failure, unspecified",Chronic,2025-03-28,Active
+C00340,P0153,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2022-10-03,Active
+C00341,P0154,,E78.5,"Hyperlipidemia, unspecified",Chronic,2022-06-28,Active
+C00342,P0154,,E66.01,Morbid obesity due to excess calories,Chronic,2022-10-15,Active
+C00343,P0155,,I50.9,"Heart failure, unspecified",Chronic,2022-04-06,Active
+C00344,P0155,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-07-05,Active
+C00345,P0157,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2023-09-11,Active
+C00346,P0157,,I10,Essential (primary) hypertension,Chronic,2021-11-30,Active
+C00347,P0157,,E66.01,Morbid obesity due to excess calories,Chronic,2025-01-10,Active
+C00348,P0158,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-10-14,Active
+C00349,P0158,,I10,Essential (primary) hypertension,Chronic,2021-06-04,Active
+C00350,P0159,,I50.9,"Heart failure, unspecified",Chronic,2022-04-28,Active
+C00351,P0159,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2023-07-20,Active
+C00352,P0159,,E66.01,Morbid obesity due to excess calories,Chronic,2022-10-18,Active
+C00353,P0160,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-02-16,Active
+C00354,P0160,,I50.9,"Heart failure, unspecified",Chronic,2025-03-30,Active
+C00355,P0161,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2023-09-08,Active
+C00356,P0162,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2022-04-25,Active
+C00357,P0163,,I50.9,"Heart failure, unspecified",Chronic,2021-03-05,Active
+C00358,P0163,,I10,Essential (primary) hypertension,Chronic,2021-12-08,Active
+C00359,P0164,,I10,Essential (primary) hypertension,Chronic,2023-04-08,Active
+C00360,P0165,,I10,Essential (primary) hypertension,Chronic,2020-10-24,Active
+C00361,P0165,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-04-25,Active
+C00362,P0166,,E78.5,"Hyperlipidemia, unspecified",Chronic,2024-07-25,Active
+C00363,P0166,,E66.01,Morbid obesity due to excess calories,Chronic,2023-08-18,Active
+C00364,P0168,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2021-05-29,Active
+C00365,P0169,,I10,Essential (primary) hypertension,Chronic,2024-01-24,Active
+C00366,P0169,,E66.01,Morbid obesity due to excess calories,Chronic,2022-11-18,Active
+C00367,P0170,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-03-24,Active
+C00368,P0170,,I10,Essential (primary) hypertension,Chronic,2023-04-11,Active
+C00369,P0170,,N18.9,"Chronic kidney disease, unspecified",Chronic,2022-08-13,Active
+C00370,P0170,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2021-10-22,Active
+C00371,P0171,,I10,Essential (primary) hypertension,Chronic,2024-06-05,Active
+C00372,P0172,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2022-10-31,Active
+C00373,P0172,,I50.9,"Heart failure, unspecified",Chronic,2023-01-17,Active
+C00374,P0172,,I10,Essential (primary) hypertension,Chronic,2021-03-29,Active
+C00375,P0173,,E78.5,"Hyperlipidemia, unspecified",Chronic,2021-12-09,Active
+C00376,P0175,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2025-01-13,Active
+C00377,P0175,,N18.9,"Chronic kidney disease, unspecified",Chronic,2020-07-15,Active
+C00378,P0175,,E66.01,Morbid obesity due to excess calories,Chronic,2020-05-14,Active
+C00379,P0176,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2023-07-13,Active
+C00380,P0176,,I10,Essential (primary) hypertension,Chronic,2020-07-31,Active
+C00381,P0176,,E78.5,"Hyperlipidemia, unspecified",Chronic,2024-08-24,Active
+C00382,P0177,,I50.9,"Heart failure, unspecified",Chronic,2022-07-29,Active
+C00383,P0177,,I10,Essential (primary) hypertension,Chronic,2020-05-30,Active
+C00384,P0177,,E78.5,"Hyperlipidemia, unspecified",Chronic,2024-06-14,Active
+C00385,P0177,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2024-08-09,Active
+C00386,P0178,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2023-10-10,Active
+C00387,P0178,,I10,Essential (primary) hypertension,Chronic,2020-01-13,Active
+C00388,P0178,,E66.01,Morbid obesity due to excess calories,Chronic,2025-03-15,Active
+C00389,P0179,,I50.9,"Heart failure, unspecified",Chronic,2023-11-05,Active
+C00390,P0179,,I10,Essential (primary) hypertension,Chronic,2024-04-16,Active
+C00391,P0179,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2020-11-16,Active
+C00392,P0179,,E66.01,Morbid obesity due to excess calories,Chronic,2022-03-11,Active
+C00393,P0181,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-11-26,Active
+C00394,P0181,,I10,Essential (primary) hypertension,Chronic,2023-05-06,Active
+C00395,P0182,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2025-01-28,Active
+C00396,P0182,,I10,Essential (primary) hypertension,Chronic,2021-03-28,Active
+C00397,P0182,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2023-10-06,Active
+C00398,P0183,,E78.5,"Hyperlipidemia, unspecified",Chronic,2020-05-17,Active
+C00399,P0184,,I10,Essential (primary) hypertension,Chronic,2021-01-31,Active
+C00400,P0184,,E78.5,"Hyperlipidemia, unspecified",Chronic,2022-07-11,Active
+C00401,P0185,,I10,Essential (primary) hypertension,Chronic,2024-05-28,Active
+C00402,P0185,,E78.5,"Hyperlipidemia, unspecified",Chronic,2024-02-24,Active
+C00403,P0186,,E78.5,"Hyperlipidemia, unspecified",Chronic,2023-08-15,Active
+C00404,P0187,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2024-12-20,Active
+C00405,P0188,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2021-06-17,Active
+C00406,P0188,,I10,Essential (primary) hypertension,Chronic,2024-05-06,Active
+C00407,P0188,,E78.5,"Hyperlipidemia, unspecified",Chronic,2022-03-14,Active
+C00408,P0190,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2025-04-26,Active
+C00409,P0190,,I10,Essential (primary) hypertension,Chronic,2024-02-08,Active
+C00410,P0190,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2022-01-26,Active
+C00411,P0191,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2023-08-21,Active
+C00412,P0192,,I10,Essential (primary) hypertension,Chronic,2020-12-22,Active
+C00413,P0192,,E78.5,"Hyperlipidemia, unspecified",Chronic,2022-02-14,Active
+C00414,P0193,,E66.01,Morbid obesity due to excess calories,Chronic,2020-06-06,Active
+C00415,P0194,,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Chronic,2020-11-18,Active
+C00416,P0194,,I10,Essential (primary) hypertension,Chronic,2024-01-09,Active
+C00417,P0194,,I25.10,Atherosclerotic heart disease of native coronary artery,Chronic,2023-10-14,Active
+C00418,P0195,,I10,Essential (primary) hypertension,Chronic,2020-03-29,Active
+C00419,P0195,,E78.5,"Hyperlipidemia, unspecified",Chronic,2023-04-28,Active
+C00420,P0195,,J45.909,"Unspecified asthma, uncomplicated",Chronic,2023-03-18,Active
+C00421,P0197,,I10,Essential (primary) hypertension,Chronic,2022-04-21,Active
+C00422,P0198,,E78.5,"Hyperlipidemia, unspecified",Chronic,2022-02-28,Active
+C00423,P0198,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2022-12-06,Active
+C00424,P0199,,E11.9,Type 2 diabetes mellitus without complications,Chronic,2020-07-16,Active
+C00425,P0199,,I50.9,"Heart failure, unspecified",Chronic,2025-01-20,Active
+C00426,P0199,,I10,Essential (primary) hypertension,Chronic,2024-05-24,Active
+C00427,P0199,,F32.9,"Major depressive disorder, single episode, unspecified",Chronic,2023-09-12,Active
+C00428,P0200,,I10,Essential (primary) hypertension,Chronic,2022-01-28,Active

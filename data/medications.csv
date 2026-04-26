@@ -1,0 +1,641 @@
+medication_id,patient_id,encounter_id,medication_name,medication_class,dosage,frequency,prescriber,start_date,end_date,status
+M00001,P0001,E00001,Losartan 50mg,ARB,50mg,Once daily,Dr. Karen Martinez,2026-02-18,2026-08-10,Discontinued
+M00002,P0001,E00003,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Rachel Green,2024-01-08,2024-10-14,Active
+M00003,P0001,E00004,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Rachel Green,2025-07-02,2025-07-29,Completed
+M00004,P0002,E00013,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Catherine Lee,2025-12-21,2026-07-11,Active
+M00005,P0002,E00011,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. Sarah Chen,2025-09-21,2026-06-12,Active
+M00006,P0002,E00007,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. James Wilson,2025-07-17,2025-07-26,Completed
+M00007,P0003,E00014,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Ahmed Hassan,2025-02-17,2025-09-29,Active
+M00008,P0003,E00017,Losartan 50mg,ARB,50mg,Once daily,Dr. Catherine Lee,2024-03-10,2024-08-25,Completed
+M00009,P0003,E00014,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Ahmed Hassan,2025-02-17,2025-09-22,Discontinued
+M00010,P0004,E00018,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Ahmed Hassan,2024-09-11,2025-02-21,Discontinued
+M00011,P0004,E00020,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. William Taylor,2024-07-13,2025-04-19,Active
+M00012,P0004,E00022,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Richard Davis,2024-02-13,2024-08-24,Discontinued
+M00013,P0004,E00022,Losartan 50mg,ARB,50mg,Once daily,Dr. Richard Davis,2024-02-13,2024-03-25,Active
+M00014,P0005,E00023,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. Emily Johnson,2024-08-15,2024-12-13,Active
+M00015,P0005,E00028,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Patricia Clark,2025-10-07,2026-03-07,Active
+M00016,P0005,E00027,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Sarah Chen,2024-08-29,2024-09-26,Completed
+M00017,P0006,E00031,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. John Williams,2025-10-26,2026-10-11,Completed
+M00018,P0006,E00031,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. John Williams,2025-10-26,2026-01-26,Active
+M00019,P0006,E00029,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Patricia Clark,2024-09-17,2025-01-27,Active
+M00020,P0006,E00029,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Patricia Clark,2024-09-17,2024-09-22,Completed
+M00021,P0007,E00035,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. David Kim,2025-04-06,2025-05-31,Active
+M00022,P0007,E00034,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Thomas Wright,2025-12-28,2026-07-10,Discontinued
+M00023,P0008,E00039,Omeprazole 20mg,PPI,20mg,Once daily,Dr. William Taylor,2024-06-23,2024-07-20,Completed
+M00024,P0009,E00040,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Richard Davis,2025-08-28,2026-02-21,Discontinued
+M00025,P0009,E00042,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Karen Martinez,2024-09-23,2025-06-06,Active
+M00026,P0009,E00042,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Karen Martinez,2024-09-23,2024-10-03,Completed
+M00027,P0009,E00044,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Lisa Chang,2026-01-02,2026-01-25,Completed
+M00028,P0011,E00054,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Catherine Lee,2024-04-03,2024-10-14,Active
+M00029,P0011,E00052,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. William Taylor,2024-02-23,2024-03-08,Completed
+M00030,P0011,E00053,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Catherine Lee,2024-09-05,2024-09-16,Completed
+M00031,P0011,E00049,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Sarah Chen,2024-09-29,2024-10-27,Completed
+M00032,P0011,E00051,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Karen Martinez,2024-11-26,2024-12-21,Completed
+M00033,P0013,E00064,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Lisa Chang,2024-08-09,2024-10-09,Active
+M00034,P0013,E00065,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Richard Davis,2025-07-25,2026-02-16,Active
+M00035,P0013,E00061,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Richard Davis,2024-04-11,2024-06-25,Active
+M00036,P0013,E00058,Losartan 50mg,ARB,50mg,Once daily,Dr. Sandra Lopez,2026-03-05,2026-10-06,Discontinued
+M00037,P0013,E00064,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Lisa Chang,2024-08-09,2024-09-06,Completed
+M00038,P0013,E00060,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Michael Patel,2025-02-23,2025-03-11,Completed
+M00039,P0013,E00062,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Michael Patel,2025-09-12,2025-09-27,Completed
+M00040,P0013,E00058,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Sandra Lopez,2026-03-05,2026-03-17,Completed
+M00041,P0014,E00068,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Thomas Wright,2024-08-07,2025-04-03,Completed
+M00042,P0014,E00075,Furosemide 40mg,Loop Diuretic,40mg,Once daily,Dr. Jennifer Brown,2025-09-08,2026-06-02,Completed
+M00043,P0014,E00071,Carvedilol 12.5mg,Beta Blocker,12.5mg,Twice daily,Dr. Lisa Chang,2024-06-08,2024-09-18,Completed
+M00044,P0014,E00069,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Lisa Chang,2024-02-05,2024-02-14,Completed
+M00045,P0014,E00074,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Maria Rodriguez,2026-01-18,2026-02-04,Completed
+M00046,P0014,E00070,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. David Kim,2026-03-01,2026-03-31,Completed
+M00047,P0015,E00076,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. James Wilson,2025-12-15,2026-04-18,Active
+M00048,P0015,E00079,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Rachel Green,2025-06-20,2026-03-18,Active
+M00049,P0015,E00084,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Sandra Lopez,2024-08-02,2024-08-07,Completed
+M00050,P0015,E00082,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Michael Patel,2024-08-27,2024-09-10,Completed
+M00051,P0015,E00081,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Thomas Wright,2025-11-02,2025-11-22,Completed
+M00052,P0015,E00078,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Robert Singh,2025-12-15,2025-12-25,Completed
+M00053,P0016,E00087,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Steven Park,2025-01-03,2025-03-08,Active
+M00054,P0016,E00086,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. William Taylor,2026-03-19,2027-02-23,Active
+M00055,P0016,E00086,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. William Taylor,2026-03-19,2026-04-08,Completed
+M00056,P0017,E00089,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Jennifer Brown,2025-06-26,2025-08-01,Active
+M00057,P0017,E00092,Losartan 50mg,ARB,50mg,Once daily,Dr. Robert Singh,2024-11-15,2025-10-27,Completed
+M00058,P0017,E00092,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Robert Singh,2024-11-15,2024-11-29,Completed
+M00059,P0017,E00089,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Jennifer Brown,2025-06-26,2025-07-26,Completed
+M00060,P0018,E00093,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Patricia Clark,2026-02-27,2026-04-30,Active
+M00061,P0018,E00095,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. James Wilson,2024-05-14,2024-05-26,Completed
+M00062,P0018,E00094,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. William Taylor,2024-05-29,2024-06-25,Completed
+M00063,P0019,E00100,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Lisa Chang,2025-12-22,2026-06-13,Discontinued
+M00064,P0019,E00097,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Robert Singh,2025-02-22,2025-05-28,Active
+M00065,P0019,E00101,Losartan 50mg,ARB,50mg,Once daily,Dr. Thomas Wright,2026-01-22,2026-06-18,Discontinued
+M00066,P0019,E00101,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Thomas Wright,2026-01-22,2026-02-11,Completed
+M00067,P0020,E00102,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. David Kim,2025-03-08,2025-05-25,Completed
+M00068,P0020,E00976,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Richard Davis,2025-01-30,2025-02-18,Completed
+M00069,P0021,E00107,Amlodipine 5mg,CCB,5mg,Once daily,Dr. William Taylor,2026-01-17,2026-05-25,Active
+M00070,P0021,E00108,Losartan 50mg,ARB,50mg,Once daily,Dr. Lisa Chang,2025-05-25,2025-12-27,Active
+M00071,P0021,E00107,Omeprazole 20mg,PPI,20mg,Once daily,Dr. William Taylor,2026-01-17,2026-02-11,Completed
+M00072,P0021,E00977,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Robert Singh,2026-02-06,2026-03-02,Completed
+M00073,P0023,E00112,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. Catherine Lee,2025-09-17,2026-06-22,Active
+M00074,P0023,E00113,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Patricia Clark,2024-11-26,2025-11-21,Active
+M00075,P0025,E00118,Losartan 50mg,ARB,50mg,Once daily,Dr. Rachel Green,2024-04-30,2024-09-06,Discontinued
+M00076,P0026,E00120,Carvedilol 12.5mg,Beta Blocker,12.5mg,Twice daily,Dr. Ahmed Hassan,2024-12-15,2025-01-19,Active
+M00077,P0026,E00120,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Ahmed Hassan,2024-12-15,2025-04-28,Active
+M00078,P0028,E00126,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Emily Johnson,2024-08-31,2024-09-25,Completed
+M00079,P0030,E00132,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Sarah Chen,2025-06-29,2025-10-12,Completed
+M00080,P0030,E00135,Carvedilol 12.5mg,Beta Blocker,12.5mg,Twice daily,Dr. Jennifer Brown,2025-12-22,2026-08-04,Discontinued
+M00081,P0030,E00136,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. David Kim,2026-02-15,2026-08-24,Active
+M00082,P0030,E00133,Losartan 50mg,ARB,50mg,Once daily,Dr. Lisa Chang,2024-07-30,2025-07-05,Completed
+M00083,P0030,E00134,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Michael Patel,2024-12-12,2025-04-04,Discontinued
+M00084,P0030,E00133,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Lisa Chang,2024-07-30,2024-08-07,Completed
+M00085,P0030,E00134,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Michael Patel,2024-12-12,2025-01-03,Completed
+M00086,P0030,E00132,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Sarah Chen,2025-06-29,2025-07-14,Completed
+M00087,P0030,E00135,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Jennifer Brown,2025-12-22,2026-01-16,Completed
+M00088,P0030,E00136,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. David Kim,2026-02-15,2026-03-04,Completed
+M00089,P0031,E00139,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Maria Rodriguez,2025-04-17,2026-04-11,Active
+M00090,P0031,E00139,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Maria Rodriguez,2025-04-17,2025-04-23,Completed
+M00091,P0032,E00978,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. Ahmed Hassan,2025-08-22,2025-10-23,Active
+M00092,P0032,E00143,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Robert Singh,2024-11-11,2025-09-04,Active
+M00093,P0032,E00145,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Rachel Green,2025-08-14,2025-08-30,Completed
+M00094,P0032,E00978,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Ahmed Hassan,2025-08-22,2025-09-06,Completed
+M00095,P0034,E00152,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Michael Patel,2024-01-08,2024-11-01,Completed
+M00096,P0034,E00979,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Maria Rodriguez,2025-05-13,2025-12-31,Active
+M00097,P0034,E00152,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Michael Patel,2024-01-08,2024-01-19,Completed
+M00098,P0034,E00150,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. David Kim,2024-01-17,2024-02-15,Completed
+M00099,P0034,E00151,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Catherine Lee,2025-04-11,2025-04-17,Completed
+M00100,P0035,E00158,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Sandra Lopez,2026-03-13,2026-08-05,Completed
+M00101,P0035,E00156,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Karen Martinez,2024-12-27,2025-05-25,Active
+M00102,P0035,E00161,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Emily Johnson,2025-05-22,2025-12-03,Completed
+M00103,P0035,E00163,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Jennifer Brown,2026-02-03,2026-02-23,Completed
+M00104,P0035,E00158,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Sandra Lopez,2026-03-13,2026-04-04,Completed
+M00105,P0036,E00171,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. William Taylor,2025-01-26,2025-12-23,Active
+M00106,P0036,E00166,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Emily Johnson,2026-01-21,2026-02-23,Active
+M00107,P0036,E00168,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Maria Rodriguez,2024-04-04,2024-04-25,Completed
+M00108,P0036,E00170,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Emily Johnson,2025-04-09,2025-04-18,Completed
+M00109,P0036,E00169,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Thomas Wright,2025-09-11,2025-09-25,Completed
+M00110,P0037,E00175,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. James Wilson,2026-02-28,2026-06-19,Active
+M00111,P0037,E00176,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. James Wilson,2025-12-06,2026-06-25,Active
+M00112,P0037,E00177,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Emily Johnson,2024-12-14,2025-12-12,Active
+M00113,P0037,E00175,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. James Wilson,2026-02-28,2026-04-13,Completed
+M00114,P0037,E00177,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Emily Johnson,2024-12-14,2025-02-03,Completed
+M00115,P0037,E00177,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Emily Johnson,2024-12-14,2025-04-28,Active
+M00116,P0038,E00179,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. Jennifer Brown,2024-07-16,2025-02-15,Completed
+M00117,P0038,E00180,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Michael Patel,2024-01-17,2025-01-12,Active
+M00118,P0038,E00187,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Richard Davis,2024-06-10,2024-06-21,Completed
+M00119,P0038,E00179,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Jennifer Brown,2024-07-16,2024-07-21,Completed
+M00120,P0038,E00184,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Steven Park,2025-09-01,2025-09-16,Completed
+M00121,P0038,E00181,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Lisa Chang,2025-10-31,2025-11-28,Completed
+M00122,P0038,E00186,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Maria Rodriguez,2026-02-14,2026-03-10,Completed
+M00123,P0039,E00192,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Michael Patel,2026-03-26,2027-02-06,Discontinued
+M00124,P0039,E00189,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. James Wilson,2024-02-08,2025-01-18,Active
+M00125,P0039,E00189,Amlodipine 5mg,CCB,5mg,Once daily,Dr. James Wilson,2024-02-08,2024-03-24,Discontinued
+M00126,P0039,E00192,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Michael Patel,2026-03-26,2026-04-08,Completed
+M00127,P0040,E00194,Losartan 50mg,ARB,50mg,Once daily,Dr. Thomas Wright,2025-05-11,2025-12-22,Discontinued
+M00128,P0040,E00193,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Patricia Clark,2024-09-14,2024-09-25,Completed
+M00129,P0041,E00200,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Rachel Green,2025-05-15,2025-07-22,Active
+M00130,P0041,E00198,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Emily Johnson,2024-02-02,2024-02-16,Completed
+M00131,P0042,E00202,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Karen Martinez,2026-01-21,2026-05-03,Active
+M00132,P0042,E00201,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Rachel Green,2025-08-16,2025-08-24,Completed
+M00133,P0043,E00203,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Robert Singh,2024-03-26,2024-05-02,Active
+M00134,P0043,E00204,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Sarah Chen,2025-10-25,2025-11-13,Completed
+M00135,P0044,E00206,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. James Wilson,2026-02-09,2026-12-24,Completed
+M00136,P0044,E00207,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Thomas Wright,2024-02-26,2024-06-13,Active
+M00137,P0044,E00206,Losartan 50mg,ARB,50mg,Once daily,Dr. James Wilson,2026-02-09,2026-09-20,Active
+M00138,P0044,E00207,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Thomas Wright,2024-02-26,2024-03-16,Completed
+M00139,P0044,E00208,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Ahmed Hassan,2024-06-28,2024-07-21,Completed
+M00140,P0045,E00217,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Emily Johnson,2025-05-10,2025-09-20,Active
+M00141,P0045,E00212,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Emily Johnson,2024-03-08,2024-08-24,Active
+M00142,P0045,E00217,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Emily Johnson,2025-05-10,2025-06-09,Active
+M00143,P0045,E00217,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Emily Johnson,2025-05-10,2025-06-09,Completed
+M00144,P0045,E00218,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Richard Davis,2025-07-02,2025-07-16,Completed
+M00145,P0046,E00219,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Patricia Clark,2025-07-29,2026-04-26,Discontinued
+M00146,P0046,E00220,Losartan 50mg,ARB,50mg,Once daily,Dr. David Kim,2025-02-18,2025-09-27,Active
+M00147,P0047,E00227,Losartan 50mg,ARB,50mg,Once daily,Dr. Sandra Lopez,2025-03-01,2025-10-25,Active
+M00148,P0047,E00227,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Sandra Lopez,2025-03-01,2025-03-20,Completed
+M00149,P0048,E00229,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Patricia Clark,2025-04-18,2025-05-14,Completed
+M00150,P0049,E00237,Losartan 50mg,ARB,50mg,Once daily,Dr. Ahmed Hassan,2024-07-06,2025-06-09,Active
+M00151,P0049,E00236,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. James Wilson,2024-12-30,2025-07-18,Active
+M00152,P0049,E00239,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Patricia Clark,2025-05-11,2025-06-06,Completed
+M00153,P0049,E00238,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. David Kim,2025-12-02,2025-12-17,Completed
+M00154,P0050,E00244,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Maria Rodriguez,2024-09-16,2025-08-05,Active
+M00155,P0050,E00243,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. John Williams,2026-02-14,2026-04-26,Completed
+M00156,P0051,E00246,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Richard Davis,2024-06-13,2025-05-03,Active
+M00157,P0051,E00246,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Richard Davis,2024-06-13,2024-07-09,Completed
+M00158,P0052,E00259,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Karen Martinez,2025-11-07,2026-02-04,Active
+M00159,P0052,E00257,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Karen Martinez,2025-05-24,2025-10-13,Discontinued
+M00160,P0052,E00255,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Catherine Lee,2025-03-10,2025-11-03,Active
+M00161,P0052,E00259,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Karen Martinez,2025-11-07,2026-02-24,Active
+M00162,P0053,E00263,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Richard Davis,2024-06-09,2024-08-14,Active
+M00163,P0053,E00268,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Karen Martinez,2025-01-21,2025-06-07,Discontinued
+M00164,P0053,E00265,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Rachel Green,2026-01-29,2026-02-03,Completed
+M00165,P0054,E00980,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Steven Park,2025-09-04,2025-11-09,Active
+M00166,P0054,E00271,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Maria Rodriguez,2025-10-01,2026-06-19,Active
+M00167,P0054,E00272,Losartan 50mg,ARB,50mg,Once daily,Dr. Jennifer Brown,2025-08-03,2026-07-04,Active
+M00168,P0054,E00271,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Maria Rodriguez,2025-10-01,2026-05-17,Active
+M00169,P0054,E00272,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Jennifer Brown,2025-08-03,2025-08-27,Completed
+M00170,P0054,E00980,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Steven Park,2025-09-04,2025-09-29,Completed
+M00171,P0057,E00279,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Karen Martinez,2024-01-30,2024-03-16,Completed
+M00172,P0057,E00278,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Michael Patel,2024-01-29,2024-02-11,Completed
+M00173,P0058,E00285,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Lisa Chang,2025-09-12,2026-08-08,Discontinued
+M00174,P0058,E00282,Carvedilol 12.5mg,Beta Blocker,12.5mg,Twice daily,Dr. Rachel Green,2024-11-16,2025-08-24,Active
+M00175,P0058,E00283,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Ahmed Hassan,2024-08-07,2025-05-07,Active
+M00176,P0058,E00281,Losartan 50mg,ARB,50mg,Once daily,Dr. Lisa Chang,2025-05-27,2025-08-12,Active
+M00177,P0058,E00283,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Ahmed Hassan,2024-08-07,2024-08-26,Completed
+M00178,P0059,E00286,Furosemide 40mg,Loop Diuretic,40mg,Once daily,Dr. Thomas Wright,2025-12-18,2026-09-14,Active
+M00179,P0059,E00287,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Lisa Chang,2025-02-06,2025-08-13,Discontinued
+M00180,P0059,E00288,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Michael Patel,2024-06-13,2024-07-18,Active
+M00181,P0059,E00286,Losartan 50mg,ARB,50mg,Once daily,Dr. Thomas Wright,2025-12-18,2026-01-31,Discontinued
+M00182,P0059,E00291,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Emily Johnson,2025-03-30,2025-04-09,Completed
+M00183,P0059,E00289,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Emily Johnson,2026-03-09,2026-03-26,Completed
+M00184,P0061,E00295,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Maria Rodriguez,2025-02-14,2025-05-15,Discontinued
+M00185,P0061,E00294,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. William Taylor,2024-01-24,2024-02-07,Completed
+M00186,P0062,E00301,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Sandra Lopez,2024-04-07,2024-04-22,Completed
+M00187,P0062,E00304,Omeprazole 20mg,PPI,20mg,Once daily,Dr. William Taylor,2025-12-28,2026-01-04,Completed
+M00188,P0063,E00308,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Maria Rodriguez,2025-04-13,2025-09-17,Active
+M00189,P0063,E00307,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Thomas Wright,2024-09-23,2024-10-22,Completed
+M00190,P0063,E00309,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Richard Davis,2024-10-17,2024-10-27,Completed
+M00191,P0064,E00313,Furosemide 40mg,Loop Diuretic,40mg,Once daily,Dr. Jennifer Brown,2026-01-21,2026-06-17,Completed
+M00192,P0064,E00311,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Karen Martinez,2024-04-18,2024-07-28,Active
+M00193,P0065,E00321,Losartan 50mg,ARB,50mg,Once daily,Dr. Maria Rodriguez,2025-08-05,2026-03-10,Completed
+M00194,P0065,E00319,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Thomas Wright,2025-04-19,2025-05-16,Completed
+M00195,P0065,E00321,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Maria Rodriguez,2025-08-05,2025-08-13,Completed
+M00196,P0066,E00322,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Rachel Green,2024-03-24,2024-04-06,Completed
+M00197,P0066,E00324,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Sarah Chen,2025-09-10,2025-09-17,Completed
+M00198,P0066,E00323,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Emily Johnson,2026-01-11,2026-02-06,Completed
+M00199,P0067,E00326,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Sarah Chen,2024-05-18,2024-06-08,Completed
+M00200,P0068,E00334,Albuterol Inhaler 90mcg,SABA,90mcg,As needed,Dr. Thomas Wright,2024-12-18,2025-04-09,Active
+M00201,P0068,E00334,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Thomas Wright,2024-12-18,2025-01-06,Completed
+M00202,P0069,E00337,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. John Williams,2025-07-24,2025-09-26,Active
+M00203,P0069,E00336,Losartan 50mg,ARB,50mg,Once daily,Dr. Rachel Green,2026-02-06,2026-10-05,Active
+M00204,P0069,E00338,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Catherine Lee,2025-03-16,2025-03-27,Completed
+M00205,P0069,E00337,Omeprazole 20mg,PPI,20mg,Once daily,Dr. John Williams,2025-07-24,2025-08-21,Completed
+M00206,P0070,E00340,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Maria Rodriguez,2024-04-14,2025-01-30,Active
+M00207,P0071,E00341,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. David Kim,2026-02-19,2026-12-17,Active
+M00208,P0071,E00343,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. Catherine Lee,2024-03-28,2024-12-28,Active
+M00209,P0071,E00343,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Catherine Lee,2024-03-28,2024-12-26,Completed
+M00210,P0071,E00343,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Catherine Lee,2024-03-28,2024-11-11,Discontinued
+M00211,P0071,E00341,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. David Kim,2026-02-19,2027-02-05,Discontinued
+M00212,P0072,E00345,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. Sarah Chen,2025-06-12,2026-03-30,Active
+M00213,P0073,E00347,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Patricia Clark,2025-06-16,2026-05-01,Active
+M00214,P0073,E00346,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Michael Patel,2026-03-01,2026-07-24,Active
+M00215,P0073,E00347,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Patricia Clark,2025-06-16,2025-12-27,Completed
+M00216,P0073,E00347,Losartan 50mg,ARB,50mg,Once daily,Dr. Patricia Clark,2025-06-16,2025-10-22,Active
+M00217,P0073,E00346,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Michael Patel,2026-03-01,2026-03-13,Completed
+M00218,P0074,E00352,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. John Williams,2026-03-03,2026-12-18,Completed
+M00219,P0074,E00352,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. John Williams,2026-03-03,2026-03-24,Completed
+M00220,P0075,E00355,Losartan 50mg,ARB,50mg,Once daily,Dr. Richard Davis,2025-06-16,2026-05-19,Active
+M00221,P0075,E00355,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Richard Davis,2025-06-16,2025-08-18,Discontinued
+M00222,P0076,E00357,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. Thomas Wright,2025-11-24,2026-11-17,Active
+M00223,P0076,E00362,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Sandra Lopez,2024-02-15,2024-02-28,Completed
+M00224,P0076,E00360,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Jennifer Brown,2025-01-13,2025-01-27,Completed
+M00225,P0077,E00364,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Sarah Chen,2024-08-26,2025-05-23,Active
+M00226,P0077,E00370,Carvedilol 12.5mg,Beta Blocker,12.5mg,Twice daily,Dr. Sandra Lopez,2024-06-06,2025-03-13,Active
+M00227,P0077,E00368,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Sarah Chen,2025-09-13,2026-02-28,Active
+M00228,P0077,E00367,Losartan 50mg,ARB,50mg,Once daily,Dr. Richard Davis,2025-11-05,2026-04-06,Discontinued
+M00229,P0077,E00369,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. David Kim,2024-01-25,2024-02-05,Completed
+M00230,P0077,E00367,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Richard Davis,2025-11-05,2025-11-18,Completed
+M00231,P0078,E00374,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Thomas Wright,2024-09-09,2025-08-18,Active
+M00232,P0078,E00371,Losartan 50mg,ARB,50mg,Once daily,Dr. Michael Patel,2025-02-03,2025-06-10,Active
+M00233,P0078,E00373,Omeprazole 20mg,PPI,20mg,Once daily,Dr. William Taylor,2025-04-20,2025-05-20,Completed
+M00234,P0079,E00378,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Robert Singh,2024-11-03,2025-05-01,Active
+M00235,P0079,E00380,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Sarah Chen,2025-09-05,2026-08-07,Active
+M00236,P0079,E00378,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Robert Singh,2024-11-03,2024-11-19,Completed
+M00237,P0079,E00380,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Sarah Chen,2025-09-05,2025-10-02,Completed
+M00238,P0079,E00376,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Sandra Lopez,2025-09-27,2025-10-16,Completed
+M00239,P0079,E00379,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Ahmed Hassan,2025-11-29,2025-12-12,Completed
+M00240,P0080,E00393,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Ahmed Hassan,2024-03-05,2024-10-13,Discontinued
+M00241,P0080,E00392,Albuterol Inhaler 90mcg,SABA,90mcg,As needed,Dr. Lisa Chang,2024-07-18,2024-12-25,Completed
+M00242,P0080,E00388,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Patricia Clark,2025-08-06,2026-06-13,Discontinued
+M00243,P0080,E00387,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. David Kim,2024-07-17,2024-07-28,Completed
+M00244,P0080,E00392,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Lisa Chang,2024-07-18,2024-08-12,Completed
+M00245,P0080,E00383,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Lisa Chang,2026-02-25,2026-03-15,Completed
+M00246,P0081,E00394,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Maria Rodriguez,2024-02-25,2024-06-26,Active
+M00247,P0081,E00395,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. David Kim,2024-03-28,2024-05-24,Active
+M00248,P0081,E00398,Losartan 50mg,ARB,50mg,Once daily,Dr. Maria Rodriguez,2024-01-27,2024-12-02,Discontinued
+M00249,P0081,E00394,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Maria Rodriguez,2024-02-25,2024-03-24,Completed
+M00250,P0081,E00397,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Sandra Lopez,2025-09-05,2025-09-11,Completed
+M00251,P0081,E00396,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Maria Rodriguez,2025-09-17,2025-10-11,Completed
+M00252,P0082,E00399,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Catherine Lee,2024-07-17,2024-12-12,Active
+M00253,P0082,E00401,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. Patricia Clark,2025-06-09,2026-05-14,Discontinued
+M00254,P0083,E00407,Furosemide 40mg,Loop Diuretic,40mg,Once daily,Dr. Michael Patel,2024-01-31,2024-03-12,Discontinued
+M00255,P0083,E00405,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Lisa Chang,2025-10-16,2026-04-26,Active
+M00256,P0083,E00409,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Maria Rodriguez,2024-04-13,2025-02-14,Discontinued
+M00257,P0083,E00982,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Robert Singh,2024-01-15,2024-12-02,Discontinued
+M00258,P0083,E00982,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Robert Singh,2024-01-15,2024-01-23,Completed
+M00259,P0083,E00407,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Michael Patel,2024-01-31,2024-02-12,Completed
+M00260,P0083,E00408,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Robert Singh,2024-06-27,2024-07-07,Completed
+M00261,P0083,E00404,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Michael Patel,2025-08-15,2025-08-27,Completed
+M00262,P0085,E00414,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Emily Johnson,2025-10-22,2026-03-19,Active
+M00263,P0085,E00414,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. Emily Johnson,2025-10-22,2026-06-18,Completed
+M00264,P0086,E00417,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Catherine Lee,2024-08-11,2024-09-04,Completed
+M00265,P0087,E00418,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Thomas Wright,2024-10-29,2025-03-13,Completed
+M00266,P0087,E00418,Furosemide 40mg,Loop Diuretic,40mg,Once daily,Dr. Thomas Wright,2024-10-29,2025-08-23,Active
+M00267,P0088,E00424,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Robert Singh,2026-02-18,2027-01-29,Completed
+M00268,P0088,E00420,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. Lisa Chang,2025-06-09,2026-05-15,Active
+M00269,P0088,E00421,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. William Taylor,2024-02-09,2024-03-04,Completed
+M00270,P0089,E00433,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Sandra Lopez,2024-11-13,2025-04-03,Active
+M00271,P0089,E00429,Losartan 50mg,ARB,50mg,Once daily,Dr. Jennifer Brown,2025-02-04,2025-09-29,Active
+M00272,P0089,E00425,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Catherine Lee,2024-03-28,2024-04-09,Completed
+M00273,P0089,E00429,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Jennifer Brown,2025-02-04,2025-02-09,Completed
+M00274,P0089,E00430,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Steven Park,2025-07-20,2025-08-08,Completed
+M00275,P0089,E00427,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Michael Patel,2025-12-03,2025-12-19,Completed
+M00276,P0089,E00984,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. John Williams,2025-12-26,2026-01-15,Completed
+M00277,P0090,E00441,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. David Kim,2024-07-18,2025-03-28,Active
+M00278,P0090,E00438,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. James Wilson,2024-10-07,2025-03-03,Active
+M00279,P0090,E00439,Losartan 50mg,ARB,50mg,Once daily,Dr. Catherine Lee,2024-08-10,2024-12-04,Active
+M00280,P0090,E00440,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Thomas Wright,2026-02-23,2027-01-18,Discontinued
+M00281,P0090,E00437,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Michael Patel,2025-09-24,2025-09-30,Completed
+M00282,P0091,E00447,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Emily Johnson,2024-01-15,2024-05-05,Active
+M00283,P0091,E00445,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Maria Rodriguez,2025-12-14,2026-10-23,Active
+M00284,P0091,E00443,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Maria Rodriguez,2024-06-23,2024-10-07,Active
+M00285,P0091,E00446,Losartan 50mg,ARB,50mg,Once daily,Dr. James Wilson,2024-02-23,2024-11-02,Active
+M00286,P0091,E00446,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. James Wilson,2024-02-23,2024-03-08,Completed
+M00287,P0091,E00444,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Michael Patel,2024-03-20,2024-04-01,Completed
+M00288,P0092,E00448,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. Patricia Clark,2024-11-26,2025-10-02,Completed
+M00289,P0093,E00454,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Michael Patel,2024-09-06,2025-01-14,Discontinued
+M00290,P0093,E00453,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Jennifer Brown,2025-08-22,2025-09-04,Completed
+M00291,P0094,E00459,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Lisa Chang,2025-07-16,2026-05-25,Active
+M00292,P0094,E00460,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Catherine Lee,2025-08-13,2025-12-16,Active
+M00293,P0094,E00462,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Jennifer Brown,2024-03-26,2024-04-24,Completed
+M00294,P0094,E00467,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Thomas Wright,2025-01-05,2025-01-26,Completed
+M00295,P0094,E00464,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Richard Davis,2025-02-18,2025-03-07,Completed
+M00296,P0094,E00461,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Karen Martinez,2025-03-27,2025-04-16,Completed
+M00297,P0094,E00466,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Lisa Chang,2025-05-15,2025-05-27,Completed
+M00298,P0094,E00463,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. John Williams,2025-09-12,2025-10-01,Completed
+M00299,P0095,E00468,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Steven Park,2024-06-14,2024-09-08,Active
+M00300,P0095,E00469,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Rachel Green,2024-03-23,2024-05-26,Completed
+M00301,P0095,E00470,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. James Wilson,2025-06-29,2025-07-18,Completed
+M00302,P0096,E00472,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Rachel Green,2024-01-02,2024-10-26,Completed
+M00303,P0096,E00472,Losartan 50mg,ARB,50mg,Once daily,Dr. Rachel Green,2024-01-02,2024-12-07,Discontinued
+M00304,P0097,E00477,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Steven Park,2025-03-15,2025-07-08,Discontinued
+M00305,P0097,E00477,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Steven Park,2025-03-15,2025-06-17,Active
+M00306,P0097,E00474,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Jennifer Brown,2025-03-27,2025-10-31,Active
+M00307,P0097,E00477,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Steven Park,2025-03-15,2025-10-26,Completed
+M00308,P0097,E00476,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Karen Martinez,2024-02-12,2024-02-27,Completed
+M00309,P0097,E00475,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. William Taylor,2024-03-06,2024-03-17,Completed
+M00310,P0097,E00473,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Emily Johnson,2024-05-17,2024-06-05,Completed
+M00311,P0098,E00479,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Karen Martinez,2024-09-11,2025-05-01,Active
+M00312,P0098,E00478,Omeprazole 20mg,PPI,20mg,Once daily,Dr. John Williams,2025-12-16,2026-01-04,Completed
+M00313,P0099,E00487,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Steven Park,2025-09-07,2026-06-02,Active
+M00314,P0099,E00484,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. Emily Johnson,2025-05-08,2026-01-30,Active
+M00315,P0099,E00484,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Emily Johnson,2025-05-08,2026-04-30,Active
+M00316,P0099,E00486,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Ahmed Hassan,2025-07-01,2026-02-07,Active
+M00317,P0099,E00485,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Karen Martinez,2025-03-21,2025-04-15,Completed
+M00318,P0100,E00491,Amlodipine 5mg,CCB,5mg,Once daily,Dr. David Kim,2025-07-05,2026-04-23,Discontinued
+M00319,P0100,E00985,Losartan 50mg,ARB,50mg,Once daily,Dr. Jennifer Brown,2025-07-21,2025-09-09,Completed
+M00320,P0100,E00488,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Maria Rodriguez,2024-04-28,2024-05-09,Completed
+M00321,P0100,E00489,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Steven Park,2024-11-16,2024-11-26,Completed
+M00322,P0100,E00491,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. David Kim,2025-07-05,2025-07-14,Completed
+M00323,P0101,E00492,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Robert Singh,2025-12-06,2026-04-26,Discontinued
+M00324,P0101,E00498,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Sarah Chen,2025-05-09,2025-06-20,Completed
+M00325,P0101,E00501,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Lisa Chang,2025-10-04,2026-04-29,Discontinued
+M00326,P0101,E00498,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Sarah Chen,2025-05-09,2025-10-31,Active
+M00327,P0101,E00500,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Ahmed Hassan,2024-02-27,2024-03-21,Completed
+M00328,P0101,E00496,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Steven Park,2024-03-14,2024-04-12,Completed
+M00329,P0101,E00498,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Sarah Chen,2025-05-09,2025-05-15,Completed
+M00330,P0101,E00497,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Emily Johnson,2026-03-21,2026-04-11,Completed
+M00331,P0102,E00503,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. Maria Rodriguez,2025-01-26,2025-08-13,Completed
+M00332,P0103,E00508,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. David Kim,2024-07-03,2024-09-18,Discontinued
+M00333,P0103,E00987,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. John Williams,2025-07-17,2026-01-04,Completed
+M00334,P0103,E00510,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Jennifer Brown,2025-07-11,2025-07-25,Completed
+M00335,P0103,E00987,Omeprazole 20mg,PPI,20mg,Once daily,Dr. John Williams,2025-07-17,2025-07-28,Completed
+M00336,P0104,E00513,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Sandra Lopez,2024-08-08,2024-08-26,Completed
+M00337,P0105,E00520,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Steven Park,2025-08-08,2025-08-21,Completed
+M00338,P0105,E00515,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Robert Singh,2025-12-12,2025-12-22,Completed
+M00339,P0106,E00527,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Robert Singh,2025-06-29,2026-03-25,Active
+M00340,P0106,E00523,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Rachel Green,2026-03-28,2026-06-24,Active
+M00341,P0107,E00529,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. David Kim,2024-06-21,2024-07-11,Completed
+M00342,P0108,E00533,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Sarah Chen,2025-04-16,2026-02-09,Active
+M00343,P0108,E00533,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Sarah Chen,2025-04-16,2026-03-16,Active
+M00344,P0108,E00533,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Sarah Chen,2025-04-16,2025-05-04,Completed
+M00345,P0109,E00542,Losartan 50mg,ARB,50mg,Once daily,Dr. Robert Singh,2025-06-07,2025-12-07,Completed
+M00346,P0109,E00536,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Robert Singh,2025-03-25,2025-05-20,Discontinued
+M00347,P0109,E00544,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. James Wilson,2024-05-03,2024-05-11,Completed
+M00348,P0109,E00545,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Rachel Green,2024-11-09,2024-11-21,Completed
+M00349,P0109,E00536,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Robert Singh,2025-03-25,2025-04-02,Completed
+M00350,P0110,E00547,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Jennifer Brown,2024-10-19,2025-06-20,Discontinued
+M00351,P0110,E00547,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Jennifer Brown,2024-10-19,2025-04-20,Active
+M00352,P0110,E00548,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Catherine Lee,2025-11-30,2026-09-02,Active
+M00353,P0111,E00551,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Patricia Clark,2024-05-10,2025-01-16,Active
+M00354,P0111,E00551,Losartan 50mg,ARB,50mg,Once daily,Dr. Patricia Clark,2024-05-10,2024-12-15,Active
+M00355,P0111,E00551,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Patricia Clark,2024-05-10,2024-10-07,Completed
+M00356,P0111,E00551,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Patricia Clark,2024-05-10,2024-06-02,Completed
+M00357,P0111,E00549,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Robert Singh,2025-01-28,2025-02-09,Completed
+M00358,P0112,E00552,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. Michael Patel,2025-03-22,2025-10-10,Active
+M00359,P0112,E00558,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. William Taylor,2025-10-26,2026-09-24,Completed
+M00360,P0112,E00556,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Lisa Chang,2024-10-30,2025-01-10,Active
+M00361,P0112,E00557,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Lisa Chang,2024-02-10,2024-03-01,Completed
+M00362,P0113,E00566,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Sandra Lopez,2024-02-14,2024-11-11,Active
+M00363,P0113,E00569,Carvedilol 12.5mg,Beta Blocker,12.5mg,Twice daily,Dr. Maria Rodriguez,2025-10-04,2026-05-09,Active
+M00364,P0113,E00562,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Emily Johnson,2024-04-05,2024-10-10,Active
+M00365,P0113,E00560,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Ahmed Hassan,2025-10-31,2025-11-07,Completed
+M00366,P0115,E00573,Carvedilol 12.5mg,Beta Blocker,12.5mg,Twice daily,Dr. Rachel Green,2024-07-01,2025-02-16,Completed
+M00367,P0116,E00575,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. David Kim,2025-12-29,2026-12-09,Discontinued
+M00368,P0116,E00577,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Ahmed Hassan,2025-01-29,2025-02-12,Completed
+M00369,P0116,E00576,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. James Wilson,2026-01-08,2026-02-01,Completed
+M00370,P0117,E00579,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Lisa Chang,2026-01-02,2026-12-08,Active
+M00371,P0117,E00581,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. David Kim,2025-07-18,2025-09-02,Completed
+M00372,P0118,E00990,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Emily Johnson,2025-11-13,2026-07-06,Completed
+M00373,P0118,E00583,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. Jennifer Brown,2025-03-02,2025-09-06,Active
+M00374,P0118,E00584,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Emily Johnson,2025-10-22,2026-02-05,Active
+M00375,P0118,E00583,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Jennifer Brown,2025-03-02,2025-03-25,Completed
+M00376,P0118,E00990,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Emily Johnson,2025-11-13,2025-11-22,Completed
+M00377,P0119,E00585,Albuterol Inhaler 90mcg,SABA,90mcg,As needed,Dr. Lisa Chang,2025-11-27,2026-06-15,Active
+M00378,P0119,E00586,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Patricia Clark,2024-04-04,2024-04-22,Completed
+M00379,P0119,E00587,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Robert Singh,2025-12-10,2026-01-07,Completed
+M00380,P0120,E00588,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Jennifer Brown,2026-03-08,2026-03-28,Completed
+M00381,P0121,E00592,Losartan 50mg,ARB,50mg,Once daily,Dr. Michael Patel,2024-06-02,2025-01-18,Active
+M00382,P0121,E00590,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Steven Park,2024-04-05,2024-04-11,Completed
+M00383,P0122,E00595,Losartan 50mg,ARB,50mg,Once daily,Dr. Sandra Lopez,2026-03-03,2026-11-25,Completed
+M00384,P0122,E00598,Amlodipine 5mg,CCB,5mg,Once daily,Dr. William Taylor,2025-08-13,2026-04-30,Active
+M00385,P0123,E00601,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Jennifer Brown,2024-09-07,2024-10-10,Active
+M00386,P0123,E00603,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Steven Park,2025-04-21,2025-12-19,Active
+M00387,P0123,E00602,Losartan 50mg,ARB,50mg,Once daily,Dr. Catherine Lee,2024-03-15,2024-06-24,Active
+M00388,P0123,E00991,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Patricia Clark,2025-10-18,2026-09-22,Completed
+M00389,P0124,E00606,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Jennifer Brown,2024-01-24,2024-02-27,Active
+M00390,P0124,E00608,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Karen Martinez,2024-10-31,2024-12-01,Active
+M00391,P0124,E00604,Losartan 50mg,ARB,50mg,Once daily,Dr. Karen Martinez,2024-12-16,2025-09-28,Active
+M00392,P0124,E00606,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Jennifer Brown,2024-01-24,2024-02-19,Completed
+M00393,P0125,E00611,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Thomas Wright,2026-01-21,2026-12-30,Discontinued
+M00394,P0125,E00612,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Sarah Chen,2024-04-26,2025-01-03,Active
+M00395,P0126,E00614,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Sarah Chen,2025-11-26,2026-08-16,Active
+M00396,P0126,E00613,Losartan 50mg,ARB,50mg,Once daily,Dr. Robert Singh,2025-08-15,2026-03-03,Active
+M00397,P0126,E00615,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. John Williams,2024-05-07,2024-05-27,Completed
+M00398,P0126,E00617,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Maria Rodriguez,2025-11-06,2025-11-30,Completed
+M00399,P0127,E00618,Losartan 50mg,ARB,50mg,Once daily,Dr. Sandra Lopez,2025-09-23,2026-06-10,Active
+M00400,P0128,E00621,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Rachel Green,2025-06-03,2026-04-25,Active
+M00401,P0128,E00623,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Steven Park,2025-03-16,2025-08-28,Active
+M00402,P0128,E00622,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Ahmed Hassan,2025-02-28,2025-03-12,Completed
+M00403,P0129,E00626,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. James Wilson,2024-04-05,2024-12-11,Active
+M00404,P0129,E00626,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. James Wilson,2024-04-05,2024-09-22,Discontinued
+M00405,P0129,E00627,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Lisa Chang,2026-01-21,2026-03-18,Completed
+M00406,P0129,E00627,Losartan 50mg,ARB,50mg,Once daily,Dr. Lisa Chang,2026-01-21,2026-06-09,Discontinued
+M00407,P0129,E00628,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. James Wilson,2024-09-08,2024-09-20,Completed
+M00408,P0129,E00627,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Lisa Chang,2026-01-21,2026-01-31,Completed
+M00409,P0130,E00630,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Thomas Wright,2025-05-17,2026-01-21,Active
+M00410,P0130,E00631,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Catherine Lee,2024-07-01,2024-07-21,Completed
+M00411,P0130,E00630,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Thomas Wright,2025-05-17,2025-06-14,Completed
+M00412,P0131,E00634,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. Catherine Lee,2024-10-01,2025-03-11,Completed
+M00413,P0131,E00633,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. James Wilson,2024-04-27,2024-12-31,Active
+M00414,P0132,E00636,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Richard Davis,2026-01-04,2026-06-30,Active
+M00415,P0133,E00638,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Richard Davis,2024-07-23,2024-10-23,Active
+M00416,P0133,E00638,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Richard Davis,2024-07-23,2024-08-02,Completed
+M00417,P0133,E00642,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. James Wilson,2025-09-08,2025-09-23,Completed
+M00418,P0134,E00644,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Sarah Chen,2024-05-07,2024-05-26,Completed
+M00419,P0135,E00648,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. William Taylor,2026-01-11,2026-12-21,Active
+M00420,P0135,E00649,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Thomas Wright,2024-11-07,2024-11-23,Completed
+M00421,P0135,E00645,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Jennifer Brown,2025-06-30,2025-07-22,Completed
+M00422,P0136,E00652,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. James Wilson,2024-03-25,2024-07-07,Active
+M00423,P0136,E00650,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. John Williams,2025-02-27,2026-02-15,Active
+M00424,P0136,E00650,Losartan 50mg,ARB,50mg,Once daily,Dr. John Williams,2025-02-27,2025-11-05,Active
+M00425,P0137,E00653,Amlodipine 5mg,CCB,5mg,Once daily,Dr. John Williams,2024-08-09,2025-07-22,Completed
+M00426,P0137,E00653,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. John Williams,2024-08-09,2025-01-02,Completed
+M00427,P0137,E00653,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. John Williams,2024-08-09,2024-08-26,Completed
+M00428,P0138,E00658,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Michael Patel,2024-06-03,2024-07-21,Completed
+M00429,P0138,E00655,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Rachel Green,2025-06-09,2025-07-10,Discontinued
+M00430,P0138,E00658,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Michael Patel,2024-06-03,2024-06-28,Completed
+M00431,P0138,E00656,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Emily Johnson,2025-08-14,2025-08-29,Completed
+M00432,P0139,E00660,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Steven Park,2024-02-06,2025-01-05,Discontinued
+M00433,P0139,E00660,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Steven Park,2024-02-06,2025-01-04,Active
+M00434,P0139,E00660,Losartan 50mg,ARB,50mg,Once daily,Dr. Steven Park,2024-02-06,2025-01-20,Active
+M00435,P0139,E00659,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Lisa Chang,2025-08-31,2026-02-02,Active
+M00436,P0139,E00660,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Steven Park,2024-02-06,2024-02-20,Completed
+M00437,P0139,E00662,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Lisa Chang,2024-07-08,2024-07-14,Completed
+M00438,P0140,E00663,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Sarah Chen,2024-01-14,2024-05-01,Active
+M00439,P0140,E00663,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Sarah Chen,2024-01-14,2024-01-21,Completed
+M00440,P0141,E00670,Albuterol Inhaler 90mcg,SABA,90mcg,As needed,Dr. Richard Davis,2024-10-09,2025-04-10,Completed
+M00441,P0141,E00671,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. Sandra Lopez,2024-01-09,2024-02-21,Active
+M00442,P0141,E00671,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Sandra Lopez,2024-01-09,2024-01-18,Completed
+M00443,P0141,E00673,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. John Williams,2025-03-16,2025-03-29,Completed
+M00444,P0141,E00672,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Maria Rodriguez,2025-05-13,2025-05-23,Completed
+M00445,P0141,E00667,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. David Kim,2025-06-15,2025-07-15,Completed
+M00446,P0141,E00668,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Steven Park,2025-08-14,2025-08-27,Completed
+M00447,P0142,E00676,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Robert Singh,2025-11-26,2026-10-04,Active
+M00448,P0142,E00677,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Rachel Green,2024-07-23,2025-03-16,Active
+M00449,P0142,E00677,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Rachel Green,2024-07-23,2024-07-30,Completed
+M00450,P0143,E00684,Furosemide 40mg,Loop Diuretic,40mg,Once daily,Dr. Maria Rodriguez,2024-01-07,2024-04-16,Active
+M00451,P0143,E00684,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Maria Rodriguez,2024-01-07,2024-12-03,Active
+M00452,P0143,E00684,Losartan 50mg,ARB,50mg,Once daily,Dr. Maria Rodriguez,2024-01-07,2024-10-03,Active
+M00453,P0143,E00684,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Maria Rodriguez,2024-01-07,2024-01-20,Completed
+M00454,P0143,E00685,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Karen Martinez,2024-04-16,2024-05-16,Completed
+M00455,P0143,E00682,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Michael Patel,2024-10-24,2024-11-03,Completed
+M00456,P0143,E00680,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Sarah Chen,2025-06-08,2025-07-05,Completed
+M00457,P0145,E00691,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Steven Park,2024-06-11,2024-09-13,Active
+M00458,P0145,E00693,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Sandra Lopez,2024-03-10,2025-01-01,Active
+M00459,P0145,E00695,Losartan 50mg,ARB,50mg,Once daily,Dr. Karen Martinez,2025-09-24,2026-02-22,Active
+M00460,P0145,E00692,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. William Taylor,2024-06-04,2024-06-30,Completed
+M00461,P0145,E00691,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Steven Park,2024-06-11,2024-06-25,Completed
+M00462,P0145,E00690,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Thomas Wright,2025-08-17,2025-09-09,Completed
+M00463,P0145,E00695,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Karen Martinez,2025-09-24,2025-10-08,Completed
+M00464,P0145,E00696,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Rachel Green,2026-03-01,2026-03-09,Completed
+M00465,P0146,E00699,Furosemide 40mg,Loop Diuretic,40mg,Once daily,Dr. Richard Davis,2024-10-19,2024-11-18,Active
+M00466,P0146,E00699,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Richard Davis,2024-10-19,2025-09-16,Active
+M00467,P0146,E00700,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. Ahmed Hassan,2024-02-04,2025-01-27,Discontinued
+M00468,P0146,E00700,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Ahmed Hassan,2024-02-04,2024-07-10,Active
+M00469,P0146,E00699,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Richard Davis,2024-10-19,2024-11-16,Completed
+M00470,P0147,E00702,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Karen Martinez,2025-03-13,2025-06-19,Active
+M00471,P0147,E00704,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Steven Park,2024-06-10,2024-09-04,Active
+M00472,P0147,E00702,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Karen Martinez,2025-03-13,2025-06-05,Active
+M00473,P0147,E00704,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Steven Park,2024-06-10,2024-06-19,Completed
+M00474,P0148,E00708,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. John Williams,2024-05-12,2025-01-07,Completed
+M00475,P0148,E00706,Losartan 50mg,ARB,50mg,Once daily,Dr. Sandra Lopez,2026-02-22,2026-06-06,Active
+M00476,P0148,E00708,Amlodipine 5mg,CCB,5mg,Once daily,Dr. John Williams,2024-05-12,2024-12-08,Active
+M00477,P0149,E00710,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Steven Park,2025-11-29,2026-05-18,Completed
+M00478,P0149,E00712,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Patricia Clark,2024-02-29,2024-03-18,Completed
+M00479,P0149,E00714,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Karen Martinez,2024-11-17,2024-12-17,Completed
+M00480,P0150,E00715,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Patricia Clark,2025-07-10,2025-11-21,Completed
+M00481,P0150,E00715,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Patricia Clark,2025-07-10,2025-07-19,Completed
+M00482,P0151,E00721,Furosemide 40mg,Loop Diuretic,40mg,Once daily,Dr. Emily Johnson,2025-01-28,2025-03-06,Completed
+M00483,P0151,E00722,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Sarah Chen,2025-11-07,2026-09-04,Active
+M00484,P0152,E00726,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Richard Davis,2026-03-29,2026-08-20,Completed
+M00485,P0152,E00731,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. Michael Patel,2024-08-20,2025-02-07,Completed
+M00486,P0152,E00728,Losartan 50mg,ARB,50mg,Once daily,Dr. Thomas Wright,2025-11-07,2026-03-29,Completed
+M00487,P0152,E00732,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Michael Patel,2024-07-07,2024-08-14,Active
+M00488,P0152,E00728,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Thomas Wright,2025-11-07,2025-11-28,Completed
+M00489,P0152,E00725,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Lisa Chang,2026-01-06,2026-02-03,Completed
+M00490,P0152,E00726,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Richard Davis,2026-03-29,2026-04-25,Completed
+M00491,P0153,E00739,Furosemide 40mg,Loop Diuretic,40mg,Once daily,Dr. John Williams,2025-10-07,2026-07-28,Active
+M00492,P0153,E00735,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Jennifer Brown,2024-11-30,2024-12-08,Completed
+M00493,P0154,E00742,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Lisa Chang,2025-06-01,2025-06-14,Completed
+M00494,P0155,E00750,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. John Williams,2024-01-08,2024-04-23,Active
+M00495,P0155,E00750,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. John Williams,2024-01-08,2024-01-26,Completed
+M00496,P0155,E00747,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Steven Park,2024-03-15,2024-04-04,Completed
+M00497,P0155,E00748,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Catherine Lee,2024-10-27,2024-11-24,Completed
+M00498,P0155,E00752,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Robert Singh,2024-11-22,2024-12-05,Completed
+M00499,P0155,E00751,Omeprazole 20mg,PPI,20mg,Once daily,Dr. John Williams,2026-03-02,2026-03-27,Completed
+M00500,P0156,E00755,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Emily Johnson,2024-08-25,2024-09-17,Completed
+M00501,P0157,E00758,Albuterol Inhaler 90mcg,SABA,90mcg,As needed,Dr. Ahmed Hassan,2024-12-28,2025-12-12,Active
+M00502,P0157,E00757,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. David Kim,2024-05-02,2024-11-14,Active
+M00503,P0157,E00760,Losartan 50mg,ARB,50mg,Once daily,Dr. Michael Patel,2026-03-24,2026-08-24,Discontinued
+M00504,P0157,E00761,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Karen Martinez,2024-05-20,2025-02-26,Active
+M00505,P0157,E00762,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Sandra Lopez,2024-03-31,2024-04-05,Completed
+M00506,P0157,E00759,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Michael Patel,2025-04-09,2025-04-21,Completed
+M00507,P0157,E00756,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Jennifer Brown,2025-05-15,2025-05-26,Completed
+M00508,P0158,E00764,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Jennifer Brown,2025-05-11,2025-07-17,Active
+M00509,P0158,E00764,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Jennifer Brown,2025-05-11,2026-03-17,Completed
+M00510,P0158,E00764,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Jennifer Brown,2025-05-11,2025-09-27,Active
+M00511,P0158,E00763,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Jennifer Brown,2024-09-26,2024-10-09,Completed
+M00512,P0158,E00993,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Richard Davis,2024-10-06,2024-10-24,Completed
+M00513,P0158,E00764,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Jennifer Brown,2025-05-11,2025-06-05,Completed
+M00514,P0159,E00767,Carvedilol 12.5mg,Beta Blocker,12.5mg,Twice daily,Dr. Michael Patel,2025-02-04,2025-07-05,Discontinued
+M00515,P0159,E00766,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Ahmed Hassan,2024-08-28,2024-11-13,Active
+M00516,P0159,E00767,Albuterol Inhaler 90mcg,SABA,90mcg,As needed,Dr. Michael Patel,2025-02-04,2025-07-25,Discontinued
+M00517,P0159,E00766,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Ahmed Hassan,2024-08-28,2024-09-17,Completed
+M00518,P0159,E00765,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Karen Martinez,2025-04-20,2025-05-05,Completed
+M00519,P0160,E00769,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Catherine Lee,2025-07-06,2026-05-30,Active
+M00520,P0160,E00771,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Robert Singh,2024-08-22,2025-03-22,Completed
+M00521,P0160,E00769,Carvedilol 12.5mg,Beta Blocker,12.5mg,Twice daily,Dr. Catherine Lee,2025-07-06,2025-10-28,Active
+M00522,P0161,E00775,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Sarah Chen,2025-02-04,2025-06-02,Active
+M00523,P0161,E00773,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. William Taylor,2025-10-08,2025-11-05,Completed
+M00524,P0161,E00774,Omeprazole 20mg,PPI,20mg,Once daily,Dr. David Kim,2026-01-09,2026-01-20,Completed
+M00525,P0162,E00777,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Maria Rodriguez,2025-12-20,2026-02-19,Completed
+M00526,P0162,E00779,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Richard Davis,2024-05-27,2024-06-02,Completed
+M00527,P0162,E00780,Omeprazole 20mg,PPI,20mg,Once daily,Dr. William Taylor,2025-09-23,2025-10-09,Completed
+M00528,P0163,E00781,Spironolactone 25mg,Aldosterone Antagonist,25mg,Once daily,Dr. Karen Martinez,2025-12-06,2026-02-06,Active
+M00529,P0163,E00782,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. David Kim,2025-10-29,2026-06-09,Active
+M00530,P0163,E00783,Losartan 50mg,ARB,50mg,Once daily,Dr. Maria Rodriguez,2024-05-04,2025-03-02,Active
+M00531,P0164,E00785,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Robert Singh,2025-01-15,2025-06-02,Active
+M00532,P0164,E00788,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Sandra Lopez,2024-07-11,2024-07-29,Completed
+M00533,P0164,E00784,Omeprazole 20mg,PPI,20mg,Once daily,Dr. William Taylor,2025-06-21,2025-07-04,Completed
+M00534,P0165,E00795,Losartan 50mg,ARB,50mg,Once daily,Dr. Emily Johnson,2024-11-20,2025-10-20,Discontinued
+M00535,P0165,E00791,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Sandra Lopez,2024-09-26,2025-08-12,Active
+M00536,P0165,E00796,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Rachel Green,2024-05-26,2024-06-25,Completed
+M00537,P0165,E00791,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Sandra Lopez,2024-09-26,2024-10-09,Completed
+M00538,P0168,E00801,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. Patricia Clark,2025-09-14,2026-03-14,Completed
+M00539,P0168,E00802,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Thomas Wright,2025-09-19,2025-10-12,Completed
+M00540,P0169,E00810,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Catherine Lee,2024-09-27,2024-11-23,Active
+M00541,P0169,E00809,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Emily Johnson,2024-10-20,2024-11-11,Completed
+M00542,P0169,E00807,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Catherine Lee,2024-11-21,2024-12-18,Completed
+M00543,P0169,E00804,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. William Taylor,2025-11-11,2025-11-21,Completed
+M00544,P0170,E00821,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. Maria Rodriguez,2024-09-07,2024-11-01,Discontinued
+M00545,P0170,E00812,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Robert Singh,2025-07-18,2026-05-26,Active
+M00546,P0170,E00821,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Maria Rodriguez,2024-09-07,2024-09-14,Completed
+M00547,P0170,E00815,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Patricia Clark,2024-12-08,2024-12-30,Completed
+M00548,P0170,E00820,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Lisa Chang,2025-02-09,2025-02-15,Completed
+M00549,P0170,E00995,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Richard Davis,2025-03-11,2025-03-20,Completed
+M00550,P0170,E00816,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. William Taylor,2025-09-23,2025-10-14,Completed
+M00551,P0170,E00818,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. John Williams,2026-03-03,2026-03-10,Completed
+M00552,P0171,E00827,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Rachel Green,2025-10-31,2026-07-23,Active
+M00553,P0171,E00827,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Rachel Green,2025-10-31,2026-05-21,Active
+M00554,P0171,E00826,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Jennifer Brown,2025-09-05,2025-10-04,Completed
+M00555,P0171,E00827,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Rachel Green,2025-10-31,2025-11-30,Completed
+M00556,P0172,E00830,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Catherine Lee,2025-03-11,2025-07-03,Discontinued
+M00557,P0172,E00836,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Thomas Wright,2024-04-06,2025-01-07,Active
+M00558,P0172,E00835,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Steven Park,2024-01-18,2025-01-04,Discontinued
+M00559,P0172,E00835,Losartan 50mg,ARB,50mg,Once daily,Dr. Steven Park,2024-01-18,2024-05-03,Active
+M00560,P0172,E00835,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Steven Park,2024-01-18,2024-02-17,Completed
+M00561,P0172,E00831,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. David Kim,2025-07-01,2025-07-23,Completed
+M00562,P0175,E00842,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Ahmed Hassan,2024-07-31,2024-11-15,Active
+M00563,P0175,E00844,Tiotropium 18mcg,LAMA,18mcg,Once daily,Dr. David Kim,2025-02-02,2025-11-15,Discontinued
+M00564,P0175,E00846,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Thomas Wright,2024-12-19,2024-12-25,Completed
+M00565,P0175,E00847,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Patricia Clark,2024-12-26,2024-12-31,Completed
+M00566,P0175,E00844,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. David Kim,2025-02-02,2025-02-07,Completed
+M00567,P0176,E00852,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Rachel Green,2024-12-08,2025-02-21,Active
+M00568,P0176,E00850,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Patricia Clark,2025-11-11,2026-09-01,Active
+M00569,P0176,E00851,Losartan 50mg,ARB,50mg,Once daily,Dr. Emily Johnson,2025-02-17,2026-01-01,Active
+M00570,P0176,E00852,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Rachel Green,2024-12-08,2025-01-07,Completed
+M00571,P0176,E00851,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Emily Johnson,2025-02-17,2025-03-04,Completed
+M00572,P0177,E00859,Lisinopril 10mg,ACE Inhibitor,10mg,Once daily,Dr. Rachel Green,2025-02-20,2025-06-17,Discontinued
+M00573,P0177,E00857,Carvedilol 12.5mg,Beta Blocker,12.5mg,Twice daily,Dr. Thomas Wright,2025-04-15,2025-06-05,Discontinued
+M00574,P0177,E00857,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Thomas Wright,2025-04-15,2025-06-11,Completed
+M00575,P0177,E00858,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Sarah Chen,2025-09-10,2025-10-04,Completed
+M00576,P0178,E00864,Fluticasone/Salmeterol 250/50mcg,ICS/LABA,250/50mcg,Twice daily,Dr. Karen Martinez,2025-01-14,2026-01-04,Discontinued
+M00577,P0178,E00865,Albuterol Inhaler 90mcg,SABA,90mcg,As needed,Dr. Jennifer Brown,2024-06-07,2024-09-09,Active
+M00578,P0178,E00866,Losartan 50mg,ARB,50mg,Once daily,Dr. Sarah Chen,2024-01-29,2024-04-30,Completed
+M00579,P0178,E00862,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Karen Martinez,2024-09-05,2024-09-13,Completed
+M00580,P0179,E00873,Furosemide 40mg,Loop Diuretic,40mg,Once daily,Dr. Sandra Lopez,2026-03-27,2026-09-05,Active
+M00581,P0179,E00875,Losartan 50mg,ARB,50mg,Once daily,Dr. Maria Rodriguez,2026-02-18,2026-06-27,Completed
+M00582,P0179,E00868,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Karen Martinez,2025-01-18,2025-11-14,Active
+M00583,P0179,E00877,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Thomas Wright,2024-04-24,2024-05-03,Completed
+M00584,P0179,E00872,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Richard Davis,2025-07-20,2025-08-13,Completed
+M00585,P0179,E00875,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Maria Rodriguez,2026-02-18,2026-03-08,Completed
+M00586,P0179,E00873,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Sandra Lopez,2026-03-27,2026-04-08,Completed
+M00587,P0181,E00882,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. David Kim,2025-05-28,2025-10-14,Active
+M00588,P0181,E00882,Losartan 50mg,ARB,50mg,Once daily,Dr. David Kim,2025-05-28,2025-07-17,Completed
+M00589,P0181,E00882,Amlodipine 5mg,CCB,5mg,Once daily,Dr. David Kim,2025-05-28,2026-05-16,Completed
+M00590,P0181,E00882,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. David Kim,2025-05-28,2025-06-26,Completed
+M00591,P0182,E00883,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Karen Martinez,2025-09-16,2026-02-10,Active
+M00592,P0182,E00885,Empagliflozin 10mg,SGLT2 Inhibitor,10mg,Once daily,Dr. Rachel Green,2024-12-07,2025-10-11,Active
+M00593,P0182,E00886,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Thomas Wright,2024-02-26,2024-11-22,Completed
+M00594,P0182,E00885,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Rachel Green,2024-12-07,2025-08-04,Active
+M00595,P0183,E00891,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. David Kim,2024-10-18,2024-11-08,Completed
+M00596,P0184,E00898,Amlodipine 5mg,CCB,5mg,Once daily,Dr. David Kim,2026-02-08,2026-05-04,Active
+M00597,P0184,E00897,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Thomas Wright,2024-03-18,2024-04-08,Completed
+M00598,P0184,E00895,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. John Williams,2024-05-02,2024-05-17,Completed
+M00599,P0184,E00899,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Steven Park,2025-10-25,2025-11-21,Completed
+M00600,P0184,E00893,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Thomas Wright,2026-03-01,2026-03-07,Completed
+M00601,P0185,E00903,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. David Kim,2024-11-06,2025-04-07,Active
+M00602,P0185,E00900,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Richard Davis,2024-09-22,2025-02-05,Active
+M00603,P0185,E00900,Ondansetron 4mg,Antiemetic,4mg,Every 8 hours as needed,Dr. Richard Davis,2024-09-22,2024-10-05,Completed
+M00604,P0185,E00903,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. David Kim,2024-11-06,2024-11-23,Completed
+M00605,P0187,E00909,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Lisa Chang,2024-10-08,2024-12-25,Discontinued
+M00606,P0187,E00908,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Steven Park,2024-11-13,2024-12-11,Completed
+M00607,P0188,E00911,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Maria Rodriguez,2024-06-04,2024-11-04,Discontinued
+M00608,P0188,E00911,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Maria Rodriguez,2024-06-04,2025-03-13,Active
+M00609,P0188,E00910,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Emily Johnson,2025-04-26,2025-05-08,Completed
+M00610,P0189,E00915,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Patricia Clark,2025-03-05,2025-03-11,Completed
+M00611,P0190,E00918,Glipizide 5mg,Sulfonylurea,5mg,Once daily,Dr. Jennifer Brown,2024-04-07,2024-12-29,Discontinued
+M00612,P0190,E00919,Insulin Glargine 100 units/mL,Insulin,As directed,Once daily,Dr. William Taylor,2025-11-15,2026-09-23,Discontinued
+M00613,P0190,E00916,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Sandra Lopez,2024-09-20,2025-02-03,Active
+M00614,P0190,E00917,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. David Kim,2025-05-19,2025-06-03,Completed
+M00615,P0192,E00928,Hydrochlorothiazide 25mg,Thiazide Diuretic,25mg,Once daily,Dr. Emily Johnson,2025-06-27,2026-05-28,Discontinued
+M00616,P0192,E00928,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Emily Johnson,2025-06-27,2025-07-12,Completed
+M00617,P0192,E00931,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Emily Johnson,2025-07-23,2025-08-05,Completed
+M00618,P0193,E00935,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Ahmed Hassan,2024-05-07,2024-05-12,Completed
+M00619,P0194,E00937,Prednisone 20mg,Corticosteroid,20mg,Once daily,Dr. Rachel Green,2025-09-05,2026-08-13,Active
+M00620,P0194,E00939,Amlodipine 5mg,CCB,5mg,Once daily,Dr. William Taylor,2024-12-31,2025-07-08,Discontinued
+M00621,P0194,E00939,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. William Taylor,2024-12-31,2025-01-21,Completed
+M00622,P0194,E00997,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Richard Davis,2025-02-27,2025-03-21,Completed
+M00623,P0194,E00936,Omeprazole 20mg,PPI,20mg,Once daily,Dr. John Williams,2025-08-22,2025-09-08,Completed
+M00624,P0194,E00941,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Richard Davis,2026-03-23,2026-03-28,Completed
+M00625,P0195,E00949,Losartan 50mg,ARB,50mg,Once daily,Dr. Patricia Clark,2024-06-21,2024-10-16,Active
+M00626,P0195,E00949,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Patricia Clark,2024-06-21,2024-07-03,Completed
+M00627,P0195,E00943,Ceftriaxone 1g IV,Antibiotic,As directed,Once daily,Dr. Thomas Wright,2024-07-04,2024-07-19,Completed
+M00628,P0195,E00948,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Thomas Wright,2025-05-24,2025-06-06,Completed
+M00629,P0197,E00957,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Catherine Lee,2026-03-14,2026-05-04,Active
+M00630,P0197,E00957,Losartan 50mg,ARB,50mg,Once daily,Dr. Catherine Lee,2026-03-14,2026-04-23,Active
+M00631,P0197,E00956,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Lisa Chang,2024-08-28,2024-09-15,Completed
+M00632,P0197,E00959,Acetaminophen 500mg,Analgesic,500mg,Every 6 hours as needed,Dr. Catherine Lee,2025-08-28,2025-09-18,Completed
+M00633,P0198,E00964,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Sandra Lopez,2024-05-02,2024-05-20,Completed
+M00634,P0199,E00966,Metformin 500mg,Biguanide,500mg,Twice daily,Dr. Lisa Chang,2024-11-14,2025-01-11,Discontinued
+M00635,P0199,E00968,Furosemide 40mg,Loop Diuretic,40mg,Once daily,Dr. Richard Davis,2025-01-17,2025-09-07,Discontinued
+M00636,P0199,E00968,Amlodipine 5mg,CCB,5mg,Once daily,Dr. Richard Davis,2025-01-17,2025-05-05,Completed
+M00637,P0199,E00966,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Lisa Chang,2024-11-14,2024-11-22,Completed
+M00638,P0200,E00972,Losartan 50mg,ARB,50mg,Once daily,Dr. Thomas Wright,2025-05-24,2025-12-22,Active
+M00639,P0200,E00974,Omeprazole 20mg,PPI,20mg,Once daily,Dr. Richard Davis,2025-05-17,2025-06-04,Completed
+M00640,P0200,E00971,Enoxaparin 40mg,Anticoagulant,40mg,Once daily,Dr. Richard Davis,2025-07-04,2025-07-29,Completed

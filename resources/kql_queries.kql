@@ -1,0 +1,110 @@
+// =============================================================
+// KQL Queries for Real-Time Patient Vitals Monitoring
+// 
+// Use these queries in your Eventhouse KQL database or
+// Real-Time Dashboard tiles after running the vitals simulator
+// =============================================================
+
+
+// --- 1. Latest Vitals for All Patients ---
+// Shows the most recent reading for every patient
+PatientVitals
+| summarize arg_max(timestamp, *) by patient_id
+| project timestamp, patient_id, facility_name, department, 
+    heart_rate, systolic_bp, diastolic_bp, temperature_f, 
+    respiratory_rate, spo2_percent, sirs_alert
+| order by sirs_alert desc, patient_id asc
+
+
+// --- 2. Active SIRS/Sepsis Alerts (Last 5 Minutes) ---
+// Shows patients currently meeting SIRS criteria
+PatientVitals
+| where timestamp > ago(5m)
+| where sirs_alert == true
+| summarize 
+    latest_reading = max(timestamp),
+    avg_hr = round(avg(heart_rate), 0),
+    avg_temp = round(avg(temperature_f), 1),
+    avg_rr = round(avg(respiratory_rate), 0),
+    avg_spo2 = round(avg(spo2_percent), 0),
+    alert_count = count()
+    by patient_id, facility_name, department
+| order by alert_count desc
+
+
+// --- 3. Vital Sign Trends for a Specific Patient ---
+// Change patient_id to track any patient
+PatientVitals
+| where patient_id == "RT-P001"
+| order by timestamp asc
+| project timestamp, heart_rate, temperature_f, respiratory_rate, spo2_percent, sirs_alert
+
+
+// --- 4. Department Census & Alert Summary ---
+// Overview of each department's current status
+PatientVitals
+| where timestamp > ago(5m)
+| summarize 
+    patient_count = dcount(patient_id),
+    sirs_alerts = dcountif(patient_id, sirs_alert == true),
+    avg_hr = round(avg(heart_rate), 0),
+    avg_spo2 = round(avg(spo2_percent), 0),
+    critical_spo2 = dcountif(patient_id, spo2_percent < 90)
+    by facility_name, department
+| order by sirs_alerts desc
+
+
+// --- 5. Vital Sign Distribution by Facility ---
+// Percentile analysis for anomaly detection
+PatientVitals
+| where timestamp > ago(10m)
+| summarize 
+    hr_p50 = percentile(heart_rate, 50),
+    hr_p95 = percentile(heart_rate, 95),
+    temp_p50 = percentile(temperature_f, 50),
+    temp_p95 = percentile(temperature_f, 95),
+    spo2_p5 = percentile(spo2_percent, 5),
+    spo2_p50 = percentile(spo2_percent, 50)
+    by facility_name
+
+
+// --- 6. Alert Timeline (Time Chart) ---
+// Visualize alert frequency over time
+PatientVitals
+| where timestamp > ago(30m)
+| where sirs_alert == true
+| summarize alert_count = count() by bin(timestamp, 1m), facility_name
+| order by timestamp asc
+| render timechart
+
+
+// --- 7. SIRS Alert Count (for Dashboard Big Number) ---
+PatientVitals
+| where timestamp > ago(5m)
+| where sirs_alert == true
+| summarize alert_patients = dcount(patient_id)
+
+
+// --- 8. Heart Rate Trend - High Risk Patients (Time Chart) ---
+PatientVitals
+| where patient_id in ("RT-P001", "RT-P002", "RT-P003")
+| where timestamp > ago(10m)
+| project timestamp, patient_id, heart_rate
+| render timechart
+
+
+// --- 9. Average SpO2 by Facility (Time Chart) ---
+PatientVitals
+| where timestamp > ago(10m)
+| summarize avg_spo2 = round(avg(spo2_percent), 1) by bin(timestamp, 30s), facility_name
+| render timechart
+
+
+// --- 10. Department Alert Heat Map Data ---
+PatientVitals
+| where timestamp > ago(5m)
+| summarize 
+    total_patients = dcount(patient_id),
+    sirs_alerts = dcountif(patient_id, sirs_alert == true)
+    by facility_name, department
+| extend alert_pct = round(todouble(sirs_alerts) / todouble(total_patients) * 100, 1)
