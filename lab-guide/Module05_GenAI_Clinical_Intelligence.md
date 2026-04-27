@@ -94,6 +94,11 @@ Paste in Cell 2:
 %pip install openai -q
 ```
 
+> **Expected warnings — safe to ignore:**
+> - `ERROR: pip's dependency resolver...` — This is a pre-installed Fabric package (`nni`) with a stale dependency constraint. It does **not** affect the `openai` package or this lab.
+> - `A new release of pip is available` — Informational only.
+> - `PySpark kernel has been restarted` — Expected. Fabric restarts the kernel after `%pip install` so the new package is available. **Wait for the restart to complete, then continue with the next cell.**
+
 ### Step 4: Initialize the Client
 
 Paste in Cell 3:

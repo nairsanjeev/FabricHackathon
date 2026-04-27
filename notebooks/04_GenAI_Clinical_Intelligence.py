@@ -101,6 +101,12 @@ print(f"   Deployment: {AZURE_OPENAI_DEPLOYMENT}")
 # ╚════════════════════════════════════════════════════════════════╝
 
 %pip install openai -q
+# ⚠️ EXPECTED WARNINGS (safe to ignore):
+#   - "ERROR: pip's dependency resolver..." — a pre-installed Fabric package (nni)
+#     has a stale constraint. It does NOT affect the openai package or this lab.
+#   - "A new release of pip is available" — informational only.
+#   - "PySpark kernel has been restarted" — expected. Wait for the restart, then
+#     continue with the next cell.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
