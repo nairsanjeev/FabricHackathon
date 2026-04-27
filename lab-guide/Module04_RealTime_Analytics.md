@@ -27,9 +27,10 @@ In this module, we'll monitor for **temperature + heart rate + respiratory rate*
 
 1. Create an **Eventhouse** with a KQL database
 2. Create an **Eventstream** to receive vitals data
-3. Run a **simulator notebook** that pushes vitals data to the Eventstream
-4. Write **KQL queries** for real-time clinical analysis
-5. Create a **Real-Time Dashboard** for the ICU/ED command center
+3. Build a **Real-Time Dashboard** with auto-refresh (before any data flows — so you can watch it come alive)
+4. Run a **simulator notebook** that pushes vitals data to the Eventstream
+5. **Watch the dashboard update in real time** as the simulator runs
+6. Write **KQL queries** for deeper clinical analysis
 
 ---
 
@@ -71,14 +72,6 @@ The Eventstream needs a source that your simulator notebook can send data to. We
 2. From the dropdown, select **Custom endpoint**
 3. Name: `VitalsSimulator`
 4. Click **Add**
-5. After the source is created, click on the **VitalsSimulator** node in the canvas
-6. In the detail pane that appears on the right, look for the **Keys** tab
-7. Copy the **Connection string–primary key** — you'll need this for the simulator notebook
-
-> **Important:** The connection string looks like:
-> `Endpoint=sb://....servicebus.windows.net/;SharedAccessKeyName=...;SharedAccessKey=...;EntityPath=...`
->
-> You can also find the **Event hub name** separately — both values are available under the Keys tab.
 
 ### Step 5: Add the Eventhouse as a Destination
 
@@ -95,25 +88,145 @@ Now we need to route the incoming data to our Eventhouse for storage and KQL que
    - **Input data format**: Select **JSON**
 4. Click **Save**
 5. On the canvas, you should now see the flow: **VitalsSimulator** → **PatientVitalsDB**
-6. Click **Publish** in the toolbar to activate the Eventstream
 
-> **Note:** After publishing, wait ~30 seconds for the connection to become active. The nodes should show a green status indicator when ready.
+### Step 6: Publish the Eventstream and Get the Connection String
+
+You **must publish the Eventstream before the connection string becomes available**.
+
+1. Click **Publish** in the toolbar to activate the Eventstream
+2. Wait for the publish to complete — the nodes should show a green status indicator
+3. After publishing, click on the **VitalsSimulator** source node in the canvas
+4. In the detail pane that opens at the bottom, click the **Details** link (or look for the information panel)
+5. You will see connection options — select **Event Hub** with **SAS key authentication**
+6. You should now see:
+   - **Event Hub name** — e.g., `es_xxxxxxxx`
+   - **Connection string–primary key** — starts with `Endpoint=sb://...`
+7. Click the **copy** icon next to the **Connection string–primary key** to copy it
+8. **Save this connection string** — you'll paste it into the simulator notebook later
+
+> **The connection string looks like:**
+> `Endpoint=sb://....servicebus.windows.net/;SharedAccessKeyName=...;SharedAccessKey=...;EntityPath=...`
+>
+> **⚠️ If you don't see the connection string:** Make sure you have **published** the Eventstream first (Step 6.1). The connection string is only available after publishing.
 
 > **Troubleshooting:** If you don't see the **Add destination** button in the toolbar, try clicking on an empty area of the canvas first, or look for a **"+"** icon on the right edge of the source node that lets you connect directly to a new destination.
 
 ---
 
-## Part C: Simulate Real-Time Vitals Data
+## Part C: Build the Real-Time Dashboard (Before Simulation)
 
-### Step 6: Create the Simulator Notebook
+We build the dashboard **first** so you can watch it come alive the moment the simulator starts sending data.
+
+> **Note:** The dashboard tiles will show "No data" or empty visuals initially — that's expected. They will populate as soon as the simulator starts.
+
+### Step 7: Create a Real-Time Dashboard
+
+1. Go to your workspace
+2. Click **+ New item** → **Real-Time Dashboard**
+3. Name: `ICU Command Center Dashboard`
+4. Click **Create**
+
+### Step 8: Add Dashboard Tiles
+
+#### Tile 1: SIRS Alert Count (Big Number)
+1. Click **+ Add tile**
+2. Select your KQL database as the data source
+3. Enter this query:
+```kql
+PatientVitals
+| where todatetime(timestamp) > ago(5m)
+| where sirs_alert == true
+| summarize alert_patients = dcount(patient_id)
+```
+4. Visual type: **Stat** (big number)
+5. Title: `Active SIRS Alerts`
+6. Add conditional formatting: Red if > 0
+
+#### Tile 2: Patient Vitals Grid
+1. Add a new tile with this query:
+```kql
+PatientVitals
+| summarize arg_max(timestamp, *) by patient_id
+| project patient_id, department, facility_name,
+    heart_rate, temperature_f, respiratory_rate, spo2_percent, sirs_alert
+| order by sirs_alert desc, patient_id
+```
+2. Visual type: **Table**
+3. Title: `Current Patient Vitals`
+4. Add conditional formatting on `sirs_alert` column (highlight TRUE in red)
+
+#### Tile 3: Heart Rate Trend
+1. Add a tile:
+```kql
+PatientVitals
+| where patient_id in ("RT-P001", "RT-P002", "RT-P003")
+| where todatetime(timestamp) > ago(10m)
+| project timestamp, patient_id, heart_rate
+| render timechart
+```
+2. Visual type: **Time chart**
+3. Title: `Heart Rate — High-Risk Patients`
+
+#### Tile 4: SpO2 Monitor
+1. Add a tile:
+```kql
+PatientVitals
+| where todatetime(timestamp) > ago(10m)
+| summarize avg_spo2 = round(avg(spo2_percent), 1) by bin(timestamp, 30s), facility_name
+| render timechart
+```
+2. Visual type: **Time chart**
+3. Title: `Average SpO2 by Facility`
+
+#### Tile 5: Department Alert Heat Map
+1. Add a tile:
+```kql
+PatientVitals
+| where todatetime(timestamp) > ago(5m)
+| summarize 
+    total_patients = dcount(patient_id),
+    sirs_alerts = dcountif(patient_id, sirs_alert == true)
+    by facility_name, department
+| extend alert_pct = round(todouble(sirs_alerts) / todouble(total_patients) * 100, 1)
+```
+2. Visual type: **Table** or **Heatmap**
+3. Title: `Department Alert Summary`
+
+### Step 9: Set Continuous Auto-Refresh
+
+This is the key step that makes the dashboard update automatically as data flows in.
+
+1. At the top of the dashboard, click the **Manage** tab in the ribbon
+2. Look for the **Auto refresh** button and click it (or find it under the dashboard toolbar area)
+3. Toggle **Auto refresh** to **On**
+4. Set the **Minimum time interval** to **30 seconds**
+5. Click **Apply**
+6. You should now see a small refresh indicator at the top of the dashboard showing the countdown to the next refresh
+
+> **Alternative method:** If you don't see the Auto refresh button in the Manage tab:
+> 1. Click the **pencil/Edit** icon at the top-right of the dashboard
+> 2. In editing mode, click the **⚙️ gear icon** (Settings) at the top
+> 3. Look for **Auto refresh** in the settings panel
+> 4. Toggle it **On** and set the interval to **30 seconds**
+> 5. Click **Apply** and then **Save** the dashboard
+
+> **Note:** The dashboard will now automatically re-run all tile queries every 30 seconds. When you start the simulator in the next step, you'll see values appear and update without manually refreshing.
+
+**Leave this dashboard tab open** — you'll come back to it after starting the simulator.
+
+---
+
+## Part D: Simulate Real-Time Vitals Data
+
+### Step 10: Create the Simulator Notebook
 
 We'll create a notebook that simulates real-time patient vitals streaming into the Eventstream.
 
-1. Go to your workspace
+1. Go to your workspace (**open this in a new browser tab** — keep the dashboard tab open)
 2. Click **+ New item** → **Notebook**
 3. Rename to: `05 - RealTime Vitals Simulator`
 
-### Step 7: Configure the Simulator
+### Step 11: Configure the Simulator
 
 Paste the following code in Cell 1:
 
@@ -124,7 +237,12 @@ Paste the following code in Cell 1:
 # =============================================================
 
 # ⚠️ IMPORTANT: Replace with YOUR Eventstream connection string
-# Find this by clicking your Custom endpoint source node → Keys tab
+# To find it:
+#   1. Go to your PatientVitalsStream Eventstream (must be published)
+#   2. Click the VitalsSimulator source node
+#   3. Click "Details" in the lower pane
+#   4. Select Event Hub → SAS key authentication
+#   5. Copy the "Connection string–primary key"
 CONNECTION_STR = "<PASTE_YOUR_EVENTSTREAM_CONNECTION_STRING_HERE>"
 
 # Simulation parameters
@@ -276,9 +394,9 @@ finally:
 print(f"\n✅ Simulation complete! Sent {NUM_BATCHES * NUM_PATIENTS} total readings.")
 ```
 
-### Step 8: Run the Simulator
+### Step 12: Run the Simulator
 
-1. First, replace the `CONNECTION_STR` value in Cell 1 with the connection string from your Custom endpoint source (found under the **Keys** tab)
+1. First, replace the `CONNECTION_STR` value in Cell 1 with the connection string you copied from the Eventstream (see Step 6)
 2. Run Cell 1 to set the configuration
 3. Run Cell 2 to start the simulation
 
@@ -297,20 +415,38 @@ Starting vitals simulation...
 ...
 ```
 
-> **Tip:** Let the simulator run for a few minutes while you set up the KQL queries and dashboard in the next steps. You can open new browser tabs for the following steps.
+### Step 13: Watch the Real-Time Dashboard Update
+
+Now that the simulator is sending data, switch to the dashboard tab and watch it come alive:
+
+1. **Switch to the browser tab** with your `ICU Command Center Dashboard`
+2. Wait up to 30 seconds for the next auto-refresh cycle (or click the **Refresh** button manually)
+3. You should see:
+   - **SIRS Alert Count** tile showing 2–3 active alerts
+   - **Patient Vitals Grid** populating with 20 patients, SIRS alert patients in red at the top
+   - **Heart Rate Trend** chart drawing a live line as new data arrives for RT-P001, RT-P002, RT-P003
+   - **SpO2 Monitor** showing oxygen saturation trends by facility
+   - **Department Alert Summary** showing which departments have the most alerts
+4. **Keep watching** — every 30 seconds the dashboard will refresh and you'll see the charts extend with new data points
+5. Notice how the **sepsis-risk patients** (RT-P001, RT-P002, RT-P003) consistently show elevated vitals, while stable patients remain in normal ranges
+
+> **This is the power of real-time analytics:** In a real clinical setting, a nurse or charge nurse would have this dashboard on a monitor at the nursing station, instantly seeing which patients are deteriorating without waiting for a batch report.
+
+> **Tip:** Let the simulator run for at least 3-5 minutes while you explore the dashboard, then continue with the KQL queries in the next section (in another tab).
 
 ---
 
-## Part D: KQL Queries for Clinical Analysis
+## Part E: KQL Queries for Clinical Analysis
 
-### Step 9: Open the KQL Database
+### Step 14: Open the KQL Database
 
-1. Go to your workspace
-2. Click on `PatientVitalsEventhouse`
-3. Click on the KQL database
-4. Click **Explore data** or open a new KQL queryset
+1. Open a **new browser tab** (keep the simulator running and the dashboard open)
+2. Go to your workspace
+3. Click on `PatientVitalsEventhouse`
+4. Click on the KQL database
+5. Click **Explore data** or open a new KQL queryset
 
-### Step 10: Write Clinical KQL Queries
+### Step 15: Write Clinical KQL Queries
 
 Paste and run each of the following queries:
 
@@ -388,90 +524,7 @@ PatientVitals
 
 ---
 
-## Part E: Build the Real-Time Dashboard
-
-### Step 11: Create a Real-Time Dashboard
-
-1. Go to your workspace
-2. Click **+ New item** → **Real-Time Dashboard**
-3. Name: `ICU Command Center Dashboard`
-4. Click **Create**
-
-### Step 12: Add Dashboard Tiles
-
-#### Tile 1: SIRS Alert Count (Big Number)
-1. Click **+ Add tile**
-2. Select your KQL database as the data source
-3. Enter this query:
-```kql
-PatientVitals
-| where todatetime(timestamp) > ago(5m)
-| where sirs_alert == true
-| summarize alert_patients = dcount(patient_id)
-```
-4. Visual type: **Stat** (big number)
-5. Title: `Active SIRS Alerts`
-6. Add conditional formatting: Red if > 0
-
-#### Tile 2: Patient Vitals Grid
-1. Add a new tile with this query:
-```kql
-PatientVitals
-| summarize arg_max(timestamp, *) by patient_id
-| project patient_id, department, facility_name,
-    heart_rate, temperature_f, respiratory_rate, spo2_percent, sirs_alert
-| order by sirs_alert desc, patient_id
-```
-2. Visual type: **Table**
-3. Title: `Current Patient Vitals`
-4. Add conditional formatting on `sirs_alert` column (highlight TRUE in red)
-
-#### Tile 3: Heart Rate Trend
-1. Add a tile:
-```kql
-PatientVitals
-| where patient_id in ("RT-P001", "RT-P002", "RT-P003")
-| where todatetime(timestamp) > ago(10m)
-| project timestamp, patient_id, heart_rate
-| render timechart
-```
-2. Visual type: **Time chart**
-3. Title: `Heart Rate — High-Risk Patients`
-
-#### Tile 4: SpO2 Monitor
-1. Add a tile:
-```kql
-PatientVitals
-| where todatetime(timestamp) > ago(10m)
-| summarize avg_spo2 = round(avg(spo2_percent), 1) by bin(timestamp, 30s), facility_name
-| render timechart
-```
-2. Visual type: **Time chart**
-3. Title: `Average SpO2 by Facility`
-
-#### Tile 5: Department Alert Heat Map
-1. Add a tile:
-```kql
-PatientVitals
-| where todatetime(timestamp) > ago(5m)
-| summarize 
-    total_patients = dcount(patient_id),
-    sirs_alerts = dcountif(patient_id, sirs_alert == true)
-    by facility_name, department
-| extend alert_pct = round(todouble(sirs_alerts) / todouble(total_patients) * 100, 1)
-```
-2. Visual type: **Table** or **Heatmap**
-3. Title: `Department Alert Summary`
-
-### Step 13: Set Auto-Refresh
-
-1. In the dashboard settings (gear icon), find the **Auto-refresh** option
-2. Set the refresh interval to **30 seconds**
-3. This will keep the dashboard updating in real-time as the simulator sends data
-
----
-
-## Step 14: Stop the Simulator
+## Step 16: Stop the Simulator
 
 Once you've explored the dashboard, go back to your simulator notebook and stop the cell execution (click the stop button ■ next to the running cell).
 
