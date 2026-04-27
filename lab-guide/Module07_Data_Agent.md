@@ -317,6 +317,63 @@ Fill in the comparison table based on your experience. Discuss with your table g
 2. Which tool would a CFO prefer? A quality nurse?
 3. Could you chain them? (e.g., ask Data Agent for data, then Copilot for visualization)
 
+### Step 12: Test the Fabric Copilot (Standalone Experience)
+
+In addition to the in-report Copilot, Fabric provides a **standalone Copilot** that works across your entire workspace — not just the report you have open.
+
+1. In the Fabric portal, click the **Copilot** icon in the left navigation bar (the sparkle icon)
+2. The standalone Copilot opens with an "Ask a question about your data" prompt
+
+> **Note:** The standalone Fabric Copilot can find reports, prep summaries, and answer questions across all items in your workspace — not just the report you're currently viewing.
+
+Try the following scenarios:
+
+#### Scenario 1: Find Reports by Topic
+```
+Find reports about patient readmissions
+```
+**What to observe:** Copilot searches across all reports in your workspace and returns relevant matches — useful when a workspace has dozens of reports.
+
+#### Scenario 2: Prep a Summary for a Meeting
+```
+Prep a summary for a meeting about HealthFirst Medical Center performance
+```
+**What to observe:** Copilot pulls data from your semantic model and generates a narrative summary covering key metrics for the specified facility. This is ideal for managers preparing for a meeting in 5 minutes.
+
+#### Scenario 3: Cross-Report Insights
+```
+What are the key quality metrics across our healthcare data?
+```
+**What to observe:** Copilot identifies readmission rates, length of stay, and other quality measures from your semantic model without you needing to navigate to a specific report page.
+
+#### Scenario 4: Drill into a Department
+```
+Show me emergency department utilization trends and average wait times
+```
+**What to observe:** Copilot generates insights about ED volume patterns. Compare the depth of response to what the in-report Copilot provides for the same question.
+
+#### Scenario 5: Financial Question from the CFO's Perspective
+```
+Summarize our revenue cycle performance including claim denial rates 
+and average days to payment by payer
+```
+**What to observe:** Copilot generates a financial summary pulling from claims data. This demonstrates how a CFO could get answers without opening a specific report.
+
+#### Scenario 6: Population Health Overview
+```
+Which chronic conditions are most prevalent in our patient population 
+and how do they correlate with readmission rates?
+```
+**What to observe:** Copilot connects population health data with quality outcomes. Notice whether it cites specific numbers or gives directional insights.
+
+#### Scenario 7: Natural Language to Action
+```
+Create a visual showing the top 5 diagnoses by total charges
+```
+**What to observe:** Copilot can generate visuals directly from the standalone experience. Compare the quality to what the in-report Copilot produces.
+
+> **💡 Key Takeaway:** The standalone Fabric Copilot is best for **discovery** ("what reports do we have?"), **meeting prep** ("summarize our quality metrics"), and **cross-report questions** that don't require navigating to a specific page. The in-report Copilot is better for **context-aware** analysis on a specific dashboard page.
+
 ---
 
 ## 💡 Discussion: AI-Powered Analytics in Healthcare
@@ -351,6 +408,7 @@ Confirm you have completed:
 - [ ] Successfully tested at least 4 natural language queries with the Data Agent
 - [ ] The agent returns accurate, well-formatted responses
 - [ ] Power BI Copilot tested with at least 3 prompts
+- [ ] Tested standalone Fabric Copilot with at least 3 scenarios (report discovery, meeting prep, cross-report questions)
 - [ ] Compared Data Agent vs. Copilot for the same question
 - [ ] You understand when to use each AI tool
 
