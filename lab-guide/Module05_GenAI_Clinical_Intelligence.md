@@ -503,4 +503,4 @@ Before moving to Module 6, confirm:
 
 ---
 
-**[← Module 4: Real-Time Analytics](Module04_RealTime_Analytics.md)** | **[Module 6: Data Agent →](Module06_Data_Agent.md)**
+**[← Module 4: Real-Time Analytics](Module04_RealTime_Analytics.md)** | **[Module 6: Prep Data for AI →](Module06_Prep_Data_for_AI.md)**

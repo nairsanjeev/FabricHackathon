@@ -339,6 +339,94 @@ Add four cards:
 
 ---
 
+## Alternate Path: Create the Report Using Power BI Copilot
+
+Instead of manually building each visual, you can use **Power BI Copilot** to generate report pages using natural language prompts. This is faster and demonstrates the AI-assisted analytics experience.
+
+### Prerequisites
+- Power BI Copilot must be enabled in your Fabric tenant (your admin may need to enable this in the Admin Portal → Tenant settings → Copilot)
+- Your semantic model must have tables and measures already created (complete Part A first)
+
+### Copilot Step 1: Open Copilot in the Report Editor
+
+1. Create a new report from your semantic model (same as Step 5 above)
+2. In the report editor, look for the **Copilot** icon in the toolbar (it looks like a sparkle ✨)
+3. Click it to open the Copilot pane on the right side
+
+> **Note:** If you don't see the Copilot icon, Copilot may not be enabled for your tenant. Continue with the manual approach above.
+
+### Copilot Step 2: Generate Page 1 — Patient Volume & Flow
+
+In the Copilot chat pane, type the following prompt:
+
+```
+Create a dashboard page showing patient volume and flow for our hospital system. Include:
+- KPI cards for Total Encounters, ED Visits, Inpatient Admissions, and Average Length of Stay
+- A line chart showing monthly encounter volume trends by encounter type 
+- A bar chart showing encounters by facility name
+- Slicers for facility name, encounter year, and insurance type
+Use the gold_encounter_summary table and related measures.
+```
+
+Review what Copilot generates. You can refine by asking:
+
+```
+Make the KPI cards larger and add conditional formatting. 
+Change the line chart to show the last 12 months only.
+```
+
+### Copilot Step 3: Generate Page 2 — Quality & Readmissions
+
+Add a new page, then prompt Copilot:
+
+```
+Create a quality metrics page focused on 30-day hospital readmissions. Include:
+- KPI cards for Readmission Rate (as percentage), Total Readmissions, and Total Index Admissions
+- A bar chart showing readmission rate by diagnosis (index_diagnosis)
+- A column chart comparing readmission rates across facilities (index_facility)
+- A detail table with index diagnosis, total admissions, readmissions, and readmission rate
+- Slicers for index_facility and encounter_year
+Use the gold_readmissions table and readmission measures.
+```
+
+### Copilot Step 4: Generate Page 3 — Financials & Population Health
+
+Add a new page, then prompt Copilot:
+
+```
+Create a financial and population health dashboard page. Include:
+- KPI cards for Total Charges, Total Collections, Collection Rate, and Revenue Lost to Denials
+- A bar chart of denial rate by payer from gold_financial table 
+- A pie chart showing multimorbidity distribution (None, Moderate, High) from gold_population_health
+- A matrix showing collection rate by facility and payer type
+- Slicers for age group, insurance type, and gender
+```
+
+### Copilot Step 5: Refine and Polish
+
+Use follow-up prompts to refine:
+
+```
+Add a title text box at the top of each page with "HealthFirst Medical Group" branding.
+Change the color theme to use blues and greens (healthcare colors).
+Format all currency values with dollar signs and no decimals.
+Format all percentage KPIs to show 1 decimal place.
+```
+
+### Copilot Tips
+
+| Do | Don't |
+|----|-------|
+| Reference specific table and column names | Use vague terms like "the data" |
+| Ask for one page at a time | Try to generate the entire report in one prompt |
+| Specify chart types explicitly | Let Copilot guess which visual to use |
+| Refine iteratively with follow-up prompts | Start over if the first result isn't perfect |
+| Mention your measures by name | Expect Copilot to know your custom DAX measures |
+
+> **Key Takeaway:** Copilot is excellent for rapid prototyping and getting 80% of the way there. You'll typically still need to fine-tune layouts, conditional formatting, and interactions manually.
+
+---
+
 ## ✅ Module 3 Checklist
 
 Before moving to Module 4, confirm:

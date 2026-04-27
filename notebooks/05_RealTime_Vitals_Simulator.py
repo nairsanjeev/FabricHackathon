@@ -1,34 +1,151 @@
-# =============================================================
-# Notebook 05: Real-Time Vitals Simulator
+# ================================================================
+# NOTEBOOK 05: REAL-TIME VITALS SIMULATOR
+# ================================================================
 # 
-# Purpose: Simulate real-time patient vital signs streaming
-#          to a Fabric Eventstream via Event Hub protocol
+# ┌─────────────────────────────────────────────────────────────┐
+# │  MODULE 4 — REAL-TIME ANALYTICS (Simulator Component)       │
+# │  Fabric Capability: Eventstream Custom Endpoint, Event Hubs │
+# └─────────────────────────────────────────────────────────────┘
 #
-# Prerequisites:
-#   - Eventstream created with a Custom App source
-#   - Connection string from the Custom App source
-#
-# Instructions:
+# ── INSTRUCTIONS ──────────────────────────────────────────────
 #   1. Create a notebook in Fabric named "05 - RealTime Vitals Simulator"
-#   2. Replace CONNECTION_STR with your Eventstream connection string
-#   3. Run Cell 1 (config), then Cell 2 (simulator)
-# =============================================================
+#   2. Attach your HealthcareLakehouse
+#   3. Create one cell per section below (each "CELL" block)
+#   4. Run cells sequentially
+#
+# ⚠️ PREREQUISITES:
+#   - Eventstream created with a Custom endpoint source
+#   - Connection string copied from Keys tab of the Custom endpoint
+#   - Eventhouse created as a destination in the Eventstream
+#
+# ================================================================
 
-# --- Cell 1: Configuration ---
-# Replace with YOUR Eventstream Custom App connection string
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 1 — MARKDOWN                                            ║
+# ╚════════════════════════════════════════════════════════════════╝
+#
+# # 📡 Real-Time Vitals Simulator
+#
+# ## What This Notebook Does
+#
+# This notebook simulates a **real-time patient monitoring system** 
+# — the kind found in ICUs, EDs, and telemetry floors. It generates 
+# synthetic vital sign readings and streams them to your Fabric 
+# Eventstream via the Event Hub protocol.
+#
+# ## Real-World Context
+#
+# In a hospital, bedside monitors (Philips, GE, Medtronic) 
+# continuously capture:
+# - Heart rate (ECG-derived)
+# - Blood pressure (arterial line or cuff)
+# - Temperature (oral, rectal, or axillary)
+# - Respiratory rate (impedance or capnography)
+# - SpO2 (pulse oximetry)
+#
+# These readings stream to a central monitoring system at 
+# intervals of 1-5 minutes. **Early Warning Scores** calculated 
+# from these vitals can predict clinical deterioration 6-12 hours 
+# before it becomes obvious to clinicians.
+#
+# ## Patient Archetypes
+#
+# We simulate 3 types of patients:
+#
+# | Archetype | Count | Vital Pattern | Clinical Significance |
+# |-----------|-------|---------------|----------------------|
+# | Sepsis Risk | 3 | High temp (>101.5°F), high HR (>100), high RR (>22), low SpO2 | SIRS criteria → sepsis screening |
+# | Heart Failure | 3 | Elevated HR (90-115), normal temp, low SpO2 (90-95) | Fluid overload monitoring |
+# | Stable | 14 | Normal ranges | Baseline comparison group |
+#
+# ## SIRS Criteria (Systemic Inflammatory Response Syndrome)
+#
+# SIRS is a clinical screening tool for sepsis. Meeting ≥2 
+# of these 4 criteria triggers a sepsis alert:
+#
+# 1. **Temperature** > 100.4°F (38°C) or < 96.8°F (36°C)
+# 2. **Heart rate** > 90 bpm
+# 3. **Respiratory rate** > 20 breaths/min
+# 4. **WBC** > 12,000 or < 4,000 (not available in vitals)
+#
+# Since we only have vitals (not WBC), we check the first 3.
+# Meeting ≥2 means SIRS_ALERT = TRUE.
+#
+# **Why SIRS matters:** Sepsis kills ~270,000 Americans annually. 
+# Every hour of delayed treatment increases mortality by 7.6%.
+# Real-time SIRS monitoring enables "Code Sepsis" activation 
+# within minutes of clinical deterioration.
+
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 2 — CODE: Configuration                                  ║
+# ╚════════════════════════════════════════════════════════════════╝
+
+# ⚠️ IMPORTANT: Replace with YOUR Eventstream connection string
+# Find this by clicking your Custom endpoint source node → Keys tab
 CONNECTION_STR = "<PASTE_YOUR_EVENTSTREAM_CONNECTION_STRING_HERE>"
 
 # Simulation parameters
 NUM_PATIENTS = 20    # Number of patients to simulate
 INTERVAL_SEC = 2     # Seconds between each batch of readings
-NUM_BATCHES = 100    # Total number of batches to send
+NUM_BATCHES = 100    # Total number of batches to send (set high for demo)
 
-# --- Cell 2: Simulator ---
+print(f"📡 Simulator configured:")
+print(f"   Patients: {NUM_PATIENTS}")
+print(f"   Interval: {INTERVAL_SEC}s between batches")
+print(f"   Total batches: {NUM_BATCHES}")
+print(f"   Total readings: {NUM_PATIENTS * NUM_BATCHES}")
+print(f"   Estimated run time: {NUM_BATCHES * INTERVAL_SEC / 60:.1f} minutes")
+
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 3 — MARKDOWN                                            ║
+# ╚════════════════════════════════════════════════════════════════╝
+#
+# ## The Event Hub Protocol
+#
+# Fabric Eventstream's Custom endpoint source exposes an 
+# **Event Hub-compatible endpoint**. This is the same protocol 
+# used by:
+# - Azure IoT Hub (medical devices)
+# - Azure Event Hubs (application telemetry)
+# - Kafka (via the Kafka protocol surface)
+#
+# The `azure-eventhub` Python SDK sends events as:
+# 1. Create a **producer client** from the connection string
+# 2. Create an **event batch** (groups events for efficient transport)
+# 3. Add **EventData** objects (JSON-serialized readings)
+# 4. **Send the batch** — delivery is guaranteed (at-least-once)
+#
+# Each batch contains one reading per patient (20 events). 
+# Events are automatically routed through the Eventstream 
+# to the Eventhouse destination.
+#
+# ## How the Simulator Generates Realistic Variation
+#
+# Each patient has a **base profile** (e.g., base HR = 110 for 
+# sepsis-risk patients). Each reading adds random variation:
+# - Heart rate: ±8 bpm
+# - Temperature: ±0.5°F
+# - Blood pressure: ±10/8 mmHg
+# - Respiratory rate: ±2 breaths/min
+# - SpO2: ±2%
+#
+# This creates realistic physiologic variation while maintaining 
+# the clinical pattern (sepsis patients stay abnormal, stable 
+# patients stay normal).
+
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 4 — CODE: Vitals Simulator                               ║
+# ╚════════════════════════════════════════════════════════════════╝
 import json
 import random
 import time
 from datetime import datetime
 
+# Install the Event Hubs SDK if not available
 try:
     from azure.eventhub import EventHubProducerClient, EventData
 except ImportError:
@@ -36,26 +153,32 @@ except ImportError:
     subprocess.check_call(["pip", "install", "azure-eventhub", "-q"])
     from azure.eventhub import EventHubProducerClient, EventData
 
-# Define simulated patients with different clinical profiles
+# ── Build Patient Profiles ─────────────────────────────────
+# 3 clinical archetypes with different vital sign baselines
+
 patient_profiles = []
 facilities = ["Metro General Hospital", "Community Medical Center", "Riverside Health Center"]
 departments = ["ICU", "Emergency", "Internal Medicine", "Cardiology", "Pulmonology"]
 
 for i in range(NUM_PATIENTS):
-    if i < 3:  # Sepsis-risk patients
+    if i < 3:
+        # SEPSIS RISK: High temp, high HR, high RR, low SpO2
+        # These patients should trigger SIRS alerts (≥2 criteria met)
         profile = {
             "patient_id": f"RT-P{i+1:03d}",
             "facility": random.choice(facilities),
             "department": random.choice(["ICU", "Emergency"]),
             "condition": "Sepsis Risk",
-            "base_hr": random.randint(100, 130),
-            "base_temp": round(random.uniform(101.5, 104.0), 1),
-            "base_rr": random.randint(22, 32),
-            "base_spo2": random.randint(88, 94),
-            "base_systolic": random.randint(75, 95),
+            "base_hr": random.randint(100, 130),      # Tachycardic
+            "base_temp": round(random.uniform(101.5, 104.0), 1),  # Febrile
+            "base_rr": random.randint(22, 32),         # Tachypneic
+            "base_spo2": random.randint(88, 94),       # Hypoxic
+            "base_systolic": random.randint(75, 95),   # Hypotensive
             "base_diastolic": random.randint(45, 60)
         }
-    elif i < 6:  # Heart failure patients
+    elif i < 6:
+        # HEART FAILURE: Elevated HR, normal temp, low SpO2
+        # Represents fluid-overloaded patients with compensatory tachycardia
         profile = {
             "patient_id": f"RT-P{i+1:03d}",
             "facility": random.choice(facilities),
@@ -68,7 +191,8 @@ for i in range(NUM_PATIENTS):
             "base_systolic": random.randint(100, 130),
             "base_diastolic": random.randint(60, 80)
         }
-    else:  # Normal/stable patients
+    else:
+        # STABLE: Normal vital signs — baseline comparison group
         profile = {
             "patient_id": f"RT-P{i+1:03d}",
             "facility": random.choice(facilities),
@@ -83,8 +207,14 @@ for i in range(NUM_PATIENTS):
         }
     patient_profiles.append(profile)
 
+
 def generate_vital_reading(profile):
-    """Generate a single vital sign reading with realistic variation."""
+    """Generate a single vital sign reading with realistic physiologic variation.
+    
+    Each reading adds random variation around the patient's baseline.
+    Values are clamped to physiologically possible ranges to avoid
+    nonsensical data (e.g., HR of -5 or SpO2 of 110%).
+    """
     reading = {
         "patient_id": profile["patient_id"],
         "facility_name": profile["facility"],
@@ -100,25 +230,29 @@ def generate_vital_reading(profile):
         "pain_level": random.randint(0, 8)
     }
     
-    # Calculate SIRS criteria
+    # ── SIRS Scoring ────────────────────────────────────────
+    # Check 3 of 4 SIRS criteria (WBC not available from vitals)
     sirs_count = 0
     if reading["temperature_f"] > 100.4 or reading["temperature_f"] < 96.8:
-        sirs_count += 1
+        sirs_count += 1  # Criterion 1: Abnormal temperature
     if reading["heart_rate"] > 90:
-        sirs_count += 1
+        sirs_count += 1  # Criterion 2: Tachycardia
     if reading["respiratory_rate"] > 20:
-        sirs_count += 1
+        sirs_count += 1  # Criterion 3: Tachypnea
     
     reading["sirs_criteria_met"] = sirs_count
-    reading["sirs_alert"] = sirs_count >= 2
+    reading["sirs_alert"] = sirs_count >= 2  # ≥2 = potential sepsis
     
     return reading
 
-# Send data to Eventstream
-print("Starting vitals simulation...")
-print(f"  Patients: {NUM_PATIENTS}")
-print(f"  Interval: {INTERVAL_SEC}s between batches")
-print(f"  Batches: {NUM_BATCHES}")
+
+# ── Send Data to Eventstream ───────────────────────────────
+print("🚀 Starting vitals simulation...")
+print(f"   Patients: {NUM_PATIENTS} ({sum(1 for p in patient_profiles if p['condition']=='Sepsis Risk')} sepsis risk, "
+      f"{sum(1 for p in patient_profiles if p['condition']=='Heart Failure')} heart failure, "
+      f"{sum(1 for p in patient_profiles if p['condition']=='Stable')} stable)")
+print(f"   Interval: {INTERVAL_SEC}s between batches")
+print(f"   Batches: {NUM_BATCHES}")
 print()
 
 producer = EventHubProducerClient.from_connection_string(CONNECTION_STR)
@@ -132,6 +266,7 @@ try:
             reading = generate_vital_reading(profile)
             event_batch.add(EventData(json.dumps(reading)))
             
+            # Collect SIRS alerts for console output
             if reading["sirs_alert"]:
                 alerts.append(f"⚠️  {reading['patient_id']} ({reading['department']}): "
                             f"Temp={reading['temperature_f']}°F, HR={reading['heart_rate']}, "
@@ -139,6 +274,7 @@ try:
         
         producer.send_batch(event_batch)
         
+        # Print status with alert details
         timestamp = datetime.utcnow().strftime("%H:%M:%S")
         print(f"[{timestamp}] Batch {batch_num}/{NUM_BATCHES}: Sent {NUM_PATIENTS} readings", end="")
         if alerts:
@@ -150,8 +286,9 @@ try:
         
         if batch_num < NUM_BATCHES:
             time.sleep(INTERVAL_SEC)
-            
+
 finally:
     producer.close()
 
 print(f"\n✅ Simulation complete! Sent {NUM_BATCHES * NUM_PATIENTS} total readings.")
+print("   Switch to Eventhouse to run KQL queries on the streaming data.")

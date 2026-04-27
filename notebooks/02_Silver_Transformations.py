@@ -1,20 +1,96 @@
-# =============================================================
-# Notebook 02: Silver Transformations
+# ================================================================
+# NOTEBOOK 02: SILVER TRANSFORMATIONS
+# ================================================================
 # 
-# Purpose: Cleanse Bronze data and create Silver layer tables
-#          with proper types, computed columns, and standardization
+# ┌─────────────────────────────────────────────────────────────┐
+# │  MODULE 2 — DATA ENGINEERING (Part A: Silver Layer)          │
+# │  Fabric Capability: Spark Notebooks, Delta Lake              │
+# └─────────────────────────────────────────────────────────────┘
 #
-# Instructions:
+# ── INSTRUCTIONS ──────────────────────────────────────────────
 #   1. Create a notebook in Fabric named "02 - Silver Transformations"
 #   2. Attach your HealthcareLakehouse
-#   3. Paste each section into a separate cell (or all in one cell)
-# =============================================================
+#   3. Create one cell per section below (each "CELL" block)
+#   4. Run cells sequentially
+#
+# ================================================================
+
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 1 — MARKDOWN                                            ║
+# ╚════════════════════════════════════════════════════════════════╝
+#
+# # 🔄 Silver Layer — Cleansed & Standardized Healthcare Data
+#
+# ## What is the Silver Layer?
+#
+# The Silver layer takes raw Bronze data and applies:
+# - **Type casting** — Dates become proper dates, numbers become 
+#   proper numbers (Bronze data from CSVs often has everything as 
+#   strings)
+# - **Computed columns** — Derived fields like age groups, risk 
+#   categories, and clinical flags that don't exist in the source
+# - **Standardization** — Consistent naming, categorization, and 
+#   null handling
+#
+# ## Why is this important in healthcare?
+#
+# Healthcare data is notoriously messy. EHR systems export dates in 
+# different formats, numeric fields arrive as strings, and critical 
+# clinical categories (like "is this patient high-risk?") must be 
+# computed from raw data. The Silver layer creates a **single source 
+# of truth** that all downstream analytics can rely on.
+#
+# ## What we'll create
+#
+# | Silver Table | Key Transformations |
+# |---|---|
+# | silver_patients | Age groups (18-29, 30-44, ..., 75+), risk categories (Low/Medium/High) |
+# | silver_encounters | Date parsing, LOS categories, month/quarter extraction, weekend flag |
+# | silver_conditions | ICD-10 code → clinical category mapping (Diabetes, CHF, COPD, etc.) |
+# | silver_claims | Payment ratio calculation, denial flag |
+# | silver_medications | Date parsing for start/end dates |
+# | silver_vitals | SIRS criteria flag for sepsis early detection |
+# | silver_clinical_notes | Date parsing for note dates |
+
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 2 — CODE: Setup & Imports                                ║
+# ╚════════════════════════════════════════════════════════════════╝
+
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 
-# =============================================================
-# Silver Patients
-# =============================================================
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 3 — MARKDOWN                                            ║
+# ╚════════════════════════════════════════════════════════════════╝
+#
+# ## Silver Patients
+#
+# ### Business context
+# Patient demographics drive everything in healthcare analytics:
+# - **Age groups** are used for population health segmentation, 
+#   staffing models, and CMS quality reporting brackets
+# - **Risk categories** (derived from risk scores assigned by the 
+#   primary care provider) determine care management outreach 
+#   priorities — high-risk patients cost 5-10x more than low-risk
+# - **Insurance type** determines reimbursement rates and reporting 
+#   obligations
+#
+# ### Technical approach
+# - Cast `age` and `risk_score` to proper numeric types
+# - Compute `age_group` buckets aligned with CMS reporting brackets
+# - Compute `risk_category` using clinical risk score thresholds:
+#   - Low: < 1.5 (healthy, minimal chronic disease)
+#   - Medium: 1.5–3.0 (some chronic conditions, manageable)
+#   - High: ≥ 3.0 (multiple comorbidities, frequent utilization)
+
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 4 — CODE: Silver Patients                                ║
+# ╚════════════════════════════════════════════════════════════════╝
+
 patients = spark.table("bronze_patients")
 
 silver_patients = patients \
@@ -39,10 +115,39 @@ silver_patients = patients \
 
 silver_patients.write.mode("overwrite").format("delta").saveAsTable("silver_patients")
 print(f"✓ silver_patients: {silver_patients.count()} rows")
+silver_patients.groupBy("age_group", "risk_category").count().orderBy("age_group").show()
 
-# =============================================================
-# Silver Encounters
-# =============================================================
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 5 — MARKDOWN                                            ║
+# ╚════════════════════════════════════════════════════════════════╝
+#
+# ## Silver Encounters
+#
+# ### Business context
+# Encounters are the **transaction records** of healthcare — every 
+# time a patient interacts with the health system, an encounter is 
+# created. Key enrichments:
+#
+# - **encounter_month / quarter** — Enables time-series trending for 
+#   volume forecasting, seasonal pattern analysis (flu season, etc.)
+# - **day_of_week / is_weekend** — Weekend admissions often have 
+#   worse outcomes due to reduced staffing ("weekend effect")
+# - **los_category** — Length of stay buckets help identify outliers. 
+#   A "Same Day" inpatient encounter is suspicious (possible coding 
+#   error), while "Extended (>10 days)" cases need care management 
+#   review
+#
+# ### Technical approach
+# - Parse date strings into proper Date types for date arithmetic
+# - Extract temporal dimensions (month, year, quarter, day of week)
+# - Categorize length of stay into clinically meaningful buckets
+
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 6 — CODE: Silver Encounters                              ║
+# ╚════════════════════════════════════════════════════════════════╝
+
 encounters = spark.table("bronze_encounters")
 
 silver_encounters = encounters \
@@ -65,10 +170,42 @@ silver_encounters = encounters \
 
 silver_encounters.write.mode("overwrite").format("delta").saveAsTable("silver_encounters")
 print(f"✓ silver_encounters: {silver_encounters.count()} rows")
+silver_encounters.groupBy("encounter_type").count().orderBy("count", ascending=False).show()
 
-# =============================================================
-# Silver Conditions
-# =============================================================
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 7 — MARKDOWN                                            ║
+# ╚════════════════════════════════════════════════════════════════╝
+#
+# ## Silver Conditions
+#
+# ### Business context
+# Diagnoses are coded using **ICD-10-CM** (International Classification 
+# of Diseases, 10th Revision, Clinical Modification). These codes are:
+# - Required for claims submission and reimbursement
+# - Used by CMS for risk adjustment (Medicare Advantage payments)
+# - The basis for quality measure reporting (e.g., diabetes care, 
+#   heart failure management)
+#
+# We map ICD-10 codes to **clinical categories** because:
+# - Raw codes like "E11.9" are meaningless to business users
+# - Categories enable population health segmentation 
+# - They align with disease management program definitions
+#
+# ### Code-to-category mapping
+# | ICD-10 Prefix | Category | Why it matters |
+# |---|---|---|
+# | E11 | Diabetes | Affects 37.3M Americans; drives complications |
+# | I50 | Heart Failure | #1 cause of readmissions (CMS penalty) |
+# | J44 | COPD | 3rd leading cause of death in US |
+# | I10 | Hypertension | Affects nearly half of US adults |
+# | N18 | Chronic Kidney Disease | Often comorbid with diabetes/HTN |
+
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 8 — CODE: Silver Conditions                              ║
+# ╚════════════════════════════════════════════════════════════════╝
+
 conditions = spark.table("bronze_conditions")
 
 silver_conditions = conditions \
@@ -88,10 +225,38 @@ silver_conditions = conditions \
 
 silver_conditions.write.mode("overwrite").format("delta").saveAsTable("silver_conditions")
 print(f"✓ silver_conditions: {silver_conditions.count()} rows")
+silver_conditions.groupBy("condition_category").count().orderBy("count", ascending=False).show()
 
-# =============================================================
-# Silver Claims
-# =============================================================
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 9 — MARKDOWN                                            ║
+# ╚════════════════════════════════════════════════════════════════╝
+#
+# ## Silver Claims
+#
+# ### Business context
+# Claims data is the **financial backbone** of healthcare analytics.
+# Each claim represents a bill submitted to an insurance payer.
+#
+# Key computed fields:
+# - **payment_ratio** = paid_amount / claim_amount — Measures how 
+#   many cents on the dollar you actually collect. Below 0.80 is 
+#   concerning. Medicare typically pays 0.83 on average.
+# - **is_denied** flag — Denied claims generate zero revenue but 
+#   still cost $25-50 each in admin re-work. The national average 
+#   denial rate is ~12%, but Medicare Advantage plans can be 17%+.
+#
+# ### Why this matters financially
+# A 200-bed hospital with an average denial rate of 15% and $200M 
+# in annual charges loses ~$30M to denials. Even a 2% reduction in 
+# denial rate can recover $4M+ in revenue.
+
+
+# ╔════════════════════════════════════════════════════════════════╗
+# ║  CELL 10 — CODE: Silver Claims, Medications, Vitals, Notes     ║
+# ╚════════════════════════════════════════════════════════════════╝
+
+# --- Silver Claims ---
 claims = spark.table("bronze_claims")
 
 silver_claims = claims \
@@ -109,11 +274,10 @@ silver_claims = claims \
 silver_claims.write.mode("overwrite").format("delta").saveAsTable("silver_claims")
 print(f"✓ silver_claims: {silver_claims.count()} rows")
 
-# =============================================================
-# Silver Medications
-# =============================================================
+# --- Silver Medications ---
+# Simple date parsing. In production, you'd also normalize drug names 
+# to RxNorm codes and check for drug-drug interactions.
 medications = spark.table("bronze_medications")
-
 silver_medications = medications \
     .withColumn("start_date", to_date(col("start_date"))) \
     .withColumn("end_date", to_date(col("end_date")))
@@ -121,9 +285,17 @@ silver_medications = medications \
 silver_medications.write.mode("overwrite").format("delta").saveAsTable("silver_medications")
 print(f"✓ silver_medications: {silver_medications.count()} rows")
 
-# =============================================================
-# Silver Vitals
-# =============================================================
+# --- Silver Vitals ---
+# CRITICAL: We add a SIRS (Systemic Inflammatory Response Syndrome) 
+# flag. SIRS is an early indicator of sepsis — a life-threatening 
+# condition where the body's response to infection damages its own 
+# organs. Sepsis kills 270,000 Americans/year.
+#
+# SIRS criteria (need ≥2 of 3 in our simplified model):
+#   1. Temperature > 100.4°F (38°C) or < 96.8°F (36°C)
+#   2. Heart rate > 90 bpm
+#   3. Respiratory rate > 20 breaths/min
+# (The 4th real criterion — WBC count — is a lab value we don't have)
 vitals = spark.table("bronze_vitals")
 
 silver_vitals = vitals \
@@ -144,9 +316,7 @@ silver_vitals = vitals \
 silver_vitals.write.mode("overwrite").format("delta").saveAsTable("silver_vitals")
 print(f"✓ silver_vitals: {silver_vitals.count()} rows")
 
-# =============================================================
-# Silver Clinical Notes
-# =============================================================
+# --- Silver Clinical Notes ---
 clinical_notes = spark.table("bronze_clinical_notes")
 silver_clinical_notes = clinical_notes \
     .withColumn("note_date", to_date(col("note_date")))

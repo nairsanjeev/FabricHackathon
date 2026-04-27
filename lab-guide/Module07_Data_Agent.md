@@ -1,9 +1,9 @@
-# Module 6: Data Agent — Natural Language Analytics
+# Module 7: Data Agent & Power BI Copilot
 
-| Duration | 30 minutes |
+| Duration | 45 minutes |
 |----------|------------|
-| Objective | Create a Fabric Data Agent that allows clinical and administrative staff to query healthcare data using plain English — no SQL, no KQL, no coding required |
-| Fabric Features | Data Agent (AI Skill), Lakehouse integration |
+| Objective | Create a Fabric Data Agent that allows clinical and administrative staff to query healthcare data using plain English, then test Power BI Copilot to compare AI-assisted analytics approaches |
+| Fabric Features | Data Agent (AI Skill), Lakehouse integration, Power BI Copilot |
 
 ---
 
@@ -33,6 +33,7 @@ The Data Agent translates natural language into queries, runs them, and returns 
 3. Add **instructions** so it understands healthcare context
 4. Test with clinical and operational questions
 5. Share with your team
+6. Test **Power BI Copilot** and compare approaches
 
 ---
 
@@ -59,9 +60,11 @@ After the Data Agent is created:
 - `gold_readmissions`
 - `gold_ed_utilization`
 - `gold_encounter_summary`
-- `gold_alos_by_diagnosis`
-- `gold_financial_analysis`
+- `gold_alos`
+- `gold_financial`
 - `gold_population_health`
+- `gold_patient_360` *(created in Module 6)*
+- `gold_facility_summary` *(created in Module 6)*
 
 **Silver layer tables (supplemental):**
 - `silver_patients`
@@ -72,6 +75,9 @@ After the Data Agent is created:
 
 **AI-enriched table (if created in Module 5):**
 - `gold_clinical_ai_insights`
+
+**Metadata table (from Module 6):**
+- `data_dictionary`
 
 5. Click **Confirm** to add all selected tables
 
@@ -103,22 +109,27 @@ Key domain knowledge:
 - Insurance types include Medicare, Medicaid, Commercial, and Self-Pay.
 
 Important tables:
+- gold_patient_360: Comprehensive patient view with demographics, encounters, 
+  conditions, and financial data all in one table. Use this for patient-level questions.
+- gold_facility_summary: Pre-computed facility metrics. Use this for facility 
+  comparisons instead of aggregating raw tables.
 - gold_readmissions: Contains index admission and readmission details with 
   30-day readmission flags
 - gold_encounter_summary: One row per encounter with patient demographics, 
   facility, department, length of stay, and outcome details
 - gold_ed_utilization: ED encounters with frequent flyer flags
-- gold_financial_analysis: Claims with payment ratios and denial information
+- gold_financial: Claims with payment ratios and denial information
 - gold_population_health: Patient-level chronic condition counts and risk info
-- gold_alos_by_diagnosis: Average length of stay broken down by diagnosis
-- silver_patients: Patient demographics (age, gender, insurance, zip code)
-- silver_conditions: Patient diagnoses with ICD-10 codes
+- gold_alos: Average length of stay broken down by diagnosis
+- data_dictionary: Describes all columns in all tables — query this first if 
+  you're unsure what a column means
 
 When answering:
 - Always specify which facility or facilities the data covers
 - Include relevant counts (N=) alongside percentages
 - Flag any quality concerns (e.g., readmission rate above 15%)
 - If comparing facilities, present results in a table format
+- For patient-level queries, use gold_patient_360 first
 ```
 
 ### Step 4: Provide Example Questions (Optional)
@@ -128,10 +139,11 @@ If the agent configuration supports example questions/prompts, add these:
 | Example Question | Expected Behavior |
 |---|---|
 | What is our readmission rate? | Query gold_readmissions, calculate % |
-| Which facility has the highest ALOS? | Query gold_encounter_summary, group by facility |
+| Which facility has the highest ALOS? | Query gold_facility_summary |
 | How many ED frequent flyers do we have? | Query gold_ed_utilization, filter is_frequent_flyer |
-| What is our claims denial rate by payer? | Query gold_financial_analysis, group by payer |
-| Show me patients with diabetes and CHF | Query silver_conditions, filter by condition codes |
+| What is our claims denial rate by payer? | Query gold_financial, group by payer |
+| Show me patients with diabetes and CHF | Query gold_population_health, filter flags |
+| Compare all three facilities | Query gold_facility_summary |
 
 ---
 
@@ -154,7 +166,7 @@ What is the average length of stay for inpatient encounters?
 Which diagnoses have the longest stays?
 ```
 
-**Expected:** The agent uses `gold_encounter_summary` or `gold_alos_by_diagnosis` to show ALOS with a breakdown by diagnosis.
+**Expected:** The agent uses `gold_encounter_summary` or `gold_alos` to show ALOS with a breakdown by diagnosis.
 
 #### Question 3: ED Utilization
 ```
@@ -170,7 +182,7 @@ What is our claims denial rate? Which payer has the highest denial rate,
 and how much revenue have we lost to denials?
 ```
 
-**Expected:** The agent queries `gold_financial_analysis` to show denial rates and financial impact by payer.
+**Expected:** The agent queries `gold_financial` to show denial rates and financial impact by payer.
 
 #### Question 5: Population Health
 ```
@@ -180,13 +192,13 @@ What percentage are on Medicare?
 
 **Expected:** The agent queries `gold_population_health` and `silver_patients` for multimorbidity analysis.
 
-#### Question 6: Cross-Domain Analysis
+#### Question 6: Cross-Domain Analysis (Using Patient 360)
 ```
 Compare Metro General Hospital and Community Medical Center across:
 readmission rate, average length of stay, and ED volume
 ```
 
-**Expected:** The agent queries multiple Gold tables and presents a comparative table.
+**Expected:** The agent queries `gold_facility_summary` and presents a comparative table.
 
 ### Step 6: Try Your Own Questions
 
@@ -196,7 +208,8 @@ Think about what a hospital administrator or quality officer would want to know,
 - "What percentage of our patients are uninsured?"
 - "Are there any diagnoses where our ALOS is significantly above average?"
 - "Show me the trend of encounters by month"
-- "Which medications are most commonly prescribed to diabetic patients?"
+- "Which high-risk patients have diabetes AND heart failure?"
+- "Tell me everything about patient P-XXX" (uses gold_patient_360)
 
 ---
 
@@ -226,37 +239,120 @@ When asked about "readmission rate," always return a percentage:
 
 ---
 
-## 💡 Discussion: Data Agents in Healthcare
+## Part E: Power BI Copilot — AI-Assisted Visual Analytics
+
+Now that you've tested the Data Agent (text-based Q&A), let's test **Power BI Copilot** — which provides AI-assisted *visual* analytics.
+
+### Data Agent vs. Power BI Copilot
+
+| Capability | Data Agent | Power BI Copilot |
+|---|---|---|
+| **Output format** | Text answers + tables | Visual charts + narratives |
+| **Data source** | Lakehouse tables directly | Semantic model (DAX measures) |
+| **Best for** | Ad-hoc data questions | Visual exploration & presentations |
+| **User persona** | Analysts, data-savvy managers | Executives, board presentations |
+| **Underlying tech** | SQL generation over Lakehouse | DAX generation over semantic model |
+
+### Step 9: Open Your Power BI Report
+
+1. Open the Power BI report you created in Module 3
+2. Click the **Copilot** button in the top ribbon (if available)
+3. The Copilot pane opens on the right side
+
+> **Note:** Power BI Copilot requires Fabric capacity (F64 or higher) and must be enabled by your admin. If you don't see the Copilot button, check with your instructor.
+
+### Step 10: Test Copilot with Healthcare Questions
+
+Try these prompts in the Copilot pane:
+
+#### Prompt 1: Summary of Current Page
+```
+Summarize the key insights from this report page
+```
+**What to observe:** Copilot reads the visuals on the current page and generates a narrative summary. Compare this to the Data Agent — Copilot understands the *visual context*.
+
+#### Prompt 2: Create a New Visual
+```
+Create a bar chart showing readmission rate by facility
+```
+**What to observe:** Copilot generates a visual using DAX queries against your semantic model.
+
+#### Prompt 3: Suggest Insights
+```
+What are the most important trends in patient volume over time?
+```
+**What to observe:** Copilot identifies patterns and trends from the data, similar to a junior analyst.
+
+#### Prompt 4: Ask a Complex Question
+```
+Which facility has the best financial performance based on 
+collection rates and lowest denial rates?
+```
+**What to observe:** Copilot may create a comparison visual or provide a narrative answer.
+
+#### Prompt 5: Request a Narrative
+```
+Write a summary for the hospital board about our quality metrics, 
+including readmission rates and length of stay trends
+```
+**What to observe:** Copilot generates executive-level narrative text suitable for board presentations.
+
+### Step 11: Compare Data Agent vs. Copilot
+
+Ask the **same question** to both tools and compare:
+
+**Question:** *"What is our 30-day readmission rate by facility?"*
+
+| Aspect | Data Agent Answer | Power BI Copilot Answer |
+|---|---|---|
+| **Format** | | |
+| **Detail level** | | |
+| **Accuracy** | | |
+| **Usefulness** | | |
+| **Speed** | | |
+
+Fill in the comparison table based on your experience. Discuss with your table group:
+
+1. When would you use the Data Agent vs. Copilot?
+2. Which tool would a CFO prefer? A quality nurse?
+3. Could you chain them? (e.g., ask Data Agent for data, then Copilot for visualization)
+
+---
+
+## 💡 Discussion: AI-Powered Analytics in Healthcare
 
 **Impact Scenarios:**
 - **Quality Director:** "Show me readmission rates for CHF patients by facility" → Instant insight instead of waiting for IT to run a report
-- **CFO:** "How much revenue did we lose to claim denials last quarter?" → Real-time financial visibility
-- **Care Manager:** "Which patients with diabetes haven't had an encounter in 6 months?" → Proactive outreach
+- **CFO:** "How much revenue did we lose to claim denials last quarter?" → Real-time financial visibility via Data Agent text answer OR Copilot visual dashboard
+- **Board Presentation:** Use Copilot to generate executive narratives and visuals directly from the data
 
 **Governance Considerations:**
 - Data Agents respect Fabric workspace permissions (row-level security, table access)
 - All queries are logged and auditable
 - PHI (Protected Health Information) stays within the Fabric environment
 - HIPAA compliance is maintained through Azure's compliance certifications
+- Power BI Copilot uses the semantic model's security policies
 
 **Discussion Questions:**
-1. Who in a hospital would benefit most from a Data Agent?
+1. Who in a hospital would benefit most from each tool?
 2. What safeguards should exist when non-technical users query patient data?
 3. How does this approach compare to traditional BI report distribution?
-4. What happens if the agent generates an incorrect response — what guardrails are needed?
+4. What happens if the AI generates an incorrect response — what guardrails are needed?
 
 ---
 
-## ✅ Module 6 Checklist
+## ✅ Module 7 Checklist
 
 Confirm you have completed:
 
 - [ ] Data Agent `HealthFirst Clinical Analyst` is created
-- [ ] Lakehouse tables are connected as data sources
+- [ ] Lakehouse tables are connected as data sources (including gold_patient_360 and data_dictionary)
 - [ ] Custom instructions added with healthcare domain context
-- [ ] Successfully tested at least 4 natural language queries
+- [ ] Successfully tested at least 4 natural language queries with the Data Agent
 - [ ] The agent returns accurate, well-formatted responses
-- [ ] You understand how to refine instructions based on query results
+- [ ] Power BI Copilot tested with at least 3 prompts
+- [ ] Compared Data Agent vs. Copilot for the same question
+- [ ] You understand when to use each AI tool
 
 ---
 
@@ -271,10 +367,11 @@ Congratulations! You have built an end-to-end healthcare analytics platform on M
 | **Module 3** | Semantic model with 12 DAX measures and a 3-page Power BI dashboard |
 | **Module 4** | Real-time patient vitals monitoring with sepsis SIRS detection |
 | **Module 5** | AI-powered clinical note summarization, entity extraction, and ICD-10 coding |
-| **Module 6** | Natural language Data Agent for self-service clinical analytics |
+| **Module 6** | Data quality validation and AI-ready data preparation |
+| **Module 7** | Natural language Data Agent + Power BI Copilot for self-service analytics |
 
 This represents the full spectrum of what Microsoft Fabric enables for healthcare — from raw data landing to AI-powered insights, all in a unified, governed platform.
 
 ---
 
-**[← Module 5: Gen AI — Clinical Intelligence](Module05_GenAI_Clinical_Intelligence.md)** | **[Back to Overview](../README.md)**
+**[← Module 6: Prep Data for AI](Module06_Prep_Data_for_AI.md)** | **[Back to Overview](../README.md)**

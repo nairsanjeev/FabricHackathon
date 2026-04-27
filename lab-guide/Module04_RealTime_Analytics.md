@@ -63,28 +63,43 @@ This will automatically create a KQL database inside the Eventhouse.
 4. Name: `PatientVitalsStream`
 5. Click **Create**
 
-### Step 4: Add a Custom App Source
+### Step 4: Add a Custom Endpoint Source
 
-1. In the Eventstream editor, click **New source** → **Custom App**
-2. Name: `VitalsSimulator`
-3. Click **Add**
-4. After the source is created, click on it and note the **connection string** — you'll need this for the simulator notebook
+The Eventstream needs a source that your simulator notebook can send data to. We'll use a **Custom endpoint**, which provides an Event Hub-compatible connection string.
 
-> **Important:** Copy the **Event Hub-compatible connection string** that appears. It will look something like:
+1. In the Eventstream editor, click **Add source** (in the toolbar)
+2. From the dropdown, select **Custom endpoint**
+3. Name: `VitalsSimulator`
+4. Click **Add**
+5. After the source is created, click on the **VitalsSimulator** node in the canvas
+6. In the detail pane that appears on the right, look for the **Keys** tab
+7. Copy the **Connection string–primary key** — you'll need this for the simulator notebook
+
+> **Important:** The connection string looks like:
 > `Endpoint=sb://....servicebus.windows.net/;SharedAccessKeyName=...;SharedAccessKey=...;EntityPath=...`
+>
+> You can also find the **Event hub name** separately — both values are available under the Keys tab.
 
 ### Step 5: Add the Eventhouse as a Destination
 
-1. In the Eventstream editor, click **New destination** → **Eventhouse**
-2. Select your workspace
-3. Select `PatientVitalsEventhouse` and the KQL database
-4. For **Destination table**, select **Create new** and name it: `PatientVitals`
-5. Under **Input data format**, select **JSON**
-6. Click **Add**
+Now we need to route the incoming data to our Eventhouse for storage and KQL querying.
 
-The Eventstream will now route data from the Custom App source to your Eventhouse table.
+1. In the Eventstream canvas, click **Add destination** (in the toolbar)
+2. Select **Eventhouse** from the list
+3. Configure the destination:
+   - **Destination name**: `PatientVitalsDB`
+   - **Workspace**: Select your workspace
+   - **Eventhouse**: Select `PatientVitalsEventhouse`
+   - **KQL Database**: Select the database (same name as the Eventhouse)
+   - **Destination table**: Click **Create new** and name it: `PatientVitals`
+   - **Input data format**: Select **JSON**
+4. Click **Save**
+5. On the canvas, you should now see the flow: **VitalsSimulator** → **PatientVitalsDB**
+6. Click **Publish** in the toolbar to activate the Eventstream
 
-> **Note:** After adding the destination, the system may need a minute to provision the connection. Wait until you see a green checkmark on the destination.
+> **Note:** After publishing, wait ~30 seconds for the connection to become active. The nodes should show a green status indicator when ready.
+
+> **Troubleshooting:** If you don't see the **Add destination** button in the toolbar, try clicking on an empty area of the canvas first, or look for a **"+"** icon on the right edge of the source node that lets you connect directly to a new destination.
 
 ---
 
@@ -109,7 +124,7 @@ Paste the following code in Cell 1:
 # =============================================================
 
 # ⚠️ IMPORTANT: Replace with YOUR Eventstream connection string
-# You can find this by clicking on your Custom App source in the Eventstream
+# Find this by clicking your Custom endpoint source node → Keys tab
 CONNECTION_STR = "<PASTE_YOUR_EVENTSTREAM_CONNECTION_STRING_HERE>"
 
 # Simulation parameters
@@ -263,7 +278,7 @@ print(f"\n✅ Simulation complete! Sent {NUM_BATCHES * NUM_PATIENTS} total readi
 
 ### Step 8: Run the Simulator
 
-1. First, replace the `CONNECTION_STR` value in Cell 1 with your actual Eventstream connection string
+1. First, replace the `CONNECTION_STR` value in Cell 1 with the connection string from your Custom endpoint source (found under the **Keys** tab)
 2. Run Cell 1 to set the configuration
 3. Run Cell 2 to start the simulation
 
