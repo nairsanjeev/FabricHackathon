@@ -83,14 +83,31 @@ csv_files = [
 ]
 
 # Lakehouse path where we uploaded the raw CSVs
+# In Fabric, each Lakehouse has a "Files" area (for unstructured/raw files)
+# and a "Tables" area (for Delta tables). We read from Files and write to Tables.
 raw_path = "Files/raw"
 
-# Ingest each CSV → Delta table
-# We use inferSchema=true for Bronze (accept whatever types Spark detects).
-# Proper type casting happens in the Silver layer.
+# ── Bronze Ingestion Pattern ──────────────────────────────────
+# For each CSV, we:
+#   1. Read it with Spark (distributed CSV parsing across the cluster)
+#   2. Write it as a Delta table (adds ACID transactions, schema, time travel)
+#
+# WHY DELTA instead of keeping CSVs?
+#   - CSVs have no schema enforcement (a string "abc" can appear in an age column)
+#   - CSVs don't support UPDATE/DELETE (needed for GDPR patient data removal)
+#   - Delta tables support time travel: spark.table("bronze_patients").version(3)
+#   - Delta tables are 3-10x faster to query than CSV (columnar Parquet format)
+
 for file_name in csv_files:
     print(f"Ingesting {file_name}...")
     
+    # spark.read.format("csv") — Spark's built-in CSV reader
+    # Options explained:
+    #   header=true    → First row contains column names, not data
+    #   inferSchema    → Spark samples the data to guess types (int, string, double)
+    #                    This is fine for Bronze; Silver will cast to exact types
+    #   multiLine=true → Some clinical notes contain newlines within a single field
+    #   escape='"'     → Handle quoted fields that contain commas (common in notes)
     df = spark.read.format("csv") \
         .option("header", "true") \
         .option("inferSchema", "true") \
@@ -98,7 +115,13 @@ for file_name in csv_files:
         .option("escape", '"') \
         .load(f"{raw_path}/{file_name}.csv")
     
+    # Naming convention: bronze_ prefix clearly marks these as raw, unprocessed
+    # This prevents confusion when analysts see both bronze_patients and silver_patients
     table_name = f"bronze_{file_name}"
+    
+    # mode("overwrite") — Replace the table if it already exists
+    # This makes the notebook idempotent (safe to re-run without duplicating data)
+    # format("delta") — Write as Delta Lake table (Parquet + transaction log)
     df.write.mode("overwrite").format("delta").saveAsTable(table_name)
     
     count = df.count()
@@ -129,12 +152,26 @@ print("\n✅ Bronze layer ingestion complete!")
 # ║  CELL 4 — CODE: Data Exploration                               ║
 # ╚════════════════════════════════════════════════════════════════╝
 
+# ── Exploration Strategy ─────────────────────────────────────
+# Before transforming data, always explore it first to understand:
+#   1. Data distribution — Is the sample realistic?
+#   2. Cardinality — How many unique values per category?
+#   3. Potential issues — Nulls, unexpected values, skewed data?
+#
+# In healthcare, specific distributions tell us if data is realistic:
+#   - Insurance: Medicare ~40%, Commercial ~30%, Medicaid ~20%, Self-Pay ~10%
+#   - Gender: Roughly 50/50 with slight female majority
+#   - Encounter types: Outpatient should be highest volume
+
 # --- Patient Demographics ---
 # Why this matters: Insurance type drives reimbursement rates, 
 # denial patterns, and regulatory requirements. Medicare patients
 # trigger CMS quality reporting obligations.
 print("=== Patient Demographics ===")
 patients_df = spark.table("bronze_patients")
+
+# groupBy().count() — Spark's equivalent of SQL: SELECT insurance_type, COUNT(*) GROUP BY
+# This runs distributed across the Spark cluster (fast even on millions of rows)
 patients_df.groupBy("insurance_type").count().orderBy("count", ascending=False).show()
 patients_df.groupBy("gender").count().show()
 
@@ -149,6 +186,8 @@ encounters_df.groupBy("encounter_type").count().orderBy("count", ascending=False
 # --- Top Diagnoses ---
 # Why this matters: Top diagnoses drive resource allocation, 
 # staffing models, and quality improvement priorities.
+# We expect chronic conditions (hypertension, diabetes) to dominate,
+# matching national prevalence data.
 print("\n=== Top 10 Diagnoses ===")
 encounters_df.groupBy("primary_diagnosis_description") \
     .count() \
@@ -158,10 +197,13 @@ encounters_df.groupBy("primary_diagnosis_description") \
 # --- Facility Distribution ---
 # Why this matters: Volume distribution affects capacity planning, 
 # nurse-to-patient ratios, and capital investment decisions.
+# We want roughly even distribution across our 3 hospitals.
 print("\n=== Facilities ===")
 encounters_df.groupBy("facility_name").count().orderBy("count", ascending=False).show()
 
 # --- Record Counts Summary ---
+# Quick validation: do all tables have data? Any empty tables 
+# would indicate a file upload or ingestion problem.
 print("\n=== Bronze Table Summary ===")
 for table in csv_files:
     count = spark.table(f"bronze_{table}").count()

@@ -83,7 +83,18 @@
 # ╚════════════════════════════════════════════════════════════════╝
 
 # ⚠️ IMPORTANT: Replace with YOUR Eventstream connection string
-# Find this by clicking your Custom endpoint source node → Keys tab
+#
+# HOW TO GET THIS VALUE:
+#   1. First, make sure you've PUBLISHED the Eventstream
+#   2. Click your Custom endpoint source node (e.g., "VitalsSimulator")
+#   3. Click "Details" (bottom/right pane) → look for "Event Hub" section
+#   4. Under "SAS key authentication", copy the full Connection string
+#
+# The connection string looks like:
+#   Endpoint=sb://xxx.servicebus.windows.net/;SharedAccessKeyName=...;SharedAccessKey=...;EntityPath=...
+#
+# ⚠️ If you DON'T see the Event Hub section, the Eventstream may not be published yet.
+#    Click "Publish" in the Eventstream toolbar first.
 CONNECTION_STR = "<PASTE_YOUR_EVENTSTREAM_CONNECTION_STRING_HERE>"
 
 # Simulation parameters
@@ -154,7 +165,16 @@ except ImportError:
     from azure.eventhub import EventHubProducerClient, EventData
 
 # ── Build Patient Profiles ─────────────────────────────────
-# 3 clinical archetypes with different vital sign baselines
+# We define 3 clinical archetypes with distinct vital sign baselines.
+# Each archetype represents a typical patient scenario that generates
+# different alert patterns in the real-time dashboard:
+#
+#   Sepsis Risk (3 patients): Will trigger SIRS alerts continuously
+#     → This tests the real-time alerting pipeline end-to-end
+#   Heart Failure (3 patients): Borderline vitals, occasional alerts
+#     → This tests threshold-based detection sensitivity
+#   Stable (14 patients): Normal vitals, no alerts
+#     → This provides baseline comparison and realistic volume
 
 patient_profiles = []
 facilities = ["Metro General Hospital", "Community Medical Center", "Riverside Health Center"]
@@ -246,7 +266,17 @@ def generate_vital_reading(profile):
     return reading
 
 
-# ── Send Data to Eventstream ───────────────────────────────
+# ── Send Data to Eventstream via Event Hub Protocol ─────────
+# The EventHubProducerClient connects to the Eventstream's Custom
+# endpoint using the same protocol that Azure IoT Hub and Event Hubs
+# use. This means production medical device data flows through the
+# exact same pipeline as our simulated data.
+#
+# Batching: We group all patient readings into one batch per interval.
+# This is more efficient than sending 20 individual events because:
+#   - Fewer network round-trips (1 batch vs 20 individual sends)
+#   - Amortized connection overhead
+#   - Event Hubs charges per operation, not per event in a batch
 print("🚀 Starting vitals simulation...")
 print(f"   Patients: {NUM_PATIENTS} ({sum(1 for p in patient_profiles if p['condition']=='Sepsis Risk')} sepsis risk, "
       f"{sum(1 for p in patient_profiles if p['condition']=='Heart Failure')} heart failure, "

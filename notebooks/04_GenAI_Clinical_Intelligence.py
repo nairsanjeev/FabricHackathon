@@ -509,7 +509,13 @@ for code in codes:
 # ╚════════════════════════════════════════════════════════════════╝
 import time
 
-# Collect notes to process (limit to 20 for lab time constraints)
+# Collect notes to the driver node as a Pandas DataFrame
+# WHY toPandas()? Azure OpenAI is a REST API call — it can only
+# be called from the driver node, not from Spark executors.
+# For 20 notes, this is fine. For 10,000+ notes, you'd use:
+#   - mapPartitions() with the API calls inside the function
+#   - Azure OpenAI Batch API (async, cheaper)
+#   - Azure AI Services container for on-cluster inference
 notes_pdf = df_notes.limit(20).toPandas()
 
 results = []
@@ -524,11 +530,15 @@ for idx, row in notes_pdf.iterrows():
     
     print(f"[{idx+1}/{len(notes_pdf)}] Processing {note_id} ({note_type})...", end=" ")
     
-    # Run all 3 AI tasks for each note
+    # Run all 3 AI tasks sequentially for each note
+    # Each task is a separate API call with its own system prompt
     summary = summarize_clinical_note(note_text, note_type)
     entities = extract_medical_entities(note_text)
     codes = suggest_icd10_codes(note_text)
     
+    # Combine all AI outputs into a single record
+    # We JSON-serialize lists/dicts because Delta tables need flat columns
+    # (Delta doesn't natively support nested arrays as column types)
     results.append({
         "note_id": note_id,
         "patient_id": patient_id,
@@ -543,7 +553,9 @@ for idx, row in notes_pdf.iterrows():
     
     print("✅")
     
-    # Delay to respect rate limits
+    # Rate limit delay: 0.5s between notes prevents hitting Azure OpenAI
+    # token-per-minute (TPM) or request-per-minute (RPM) limits
+    # At 3 calls/note × 2 notes/sec = 6 RPM, well within default limits
     time.sleep(0.5)
 
 print(f"\n✅ Processed {len(results)} notes!")
@@ -581,6 +593,11 @@ print(f"\n✅ Processed {len(results)} notes!")
 # ╚════════════════════════════════════════════════════════════════╝
 from pyspark.sql.types import StructType, StructField, StringType
 
+# Define explicit schema — WHY not let Spark infer it?
+# With explicit schema, we guarantee:
+#   1. Column names match exactly what downstream consumers expect
+#   2. All columns are StringType (JSON arrays stored as strings)
+#   3. No surprises if a batch has empty/null results
 schema = StructType([
     StructField("note_id", StringType(), True),
     StructField("patient_id", StringType(), True),
@@ -593,6 +610,9 @@ schema = StructType([
     StructField("suggested_icd10_details", StringType(), True)
 ])
 
+# Convert Python list of dicts → Spark DataFrame → Delta table
+# This is the Pandas → Spark bridge: createDataFrame() distributes
+# the driver-side data across the Spark cluster for storage
 df_ai_insights = spark.createDataFrame(results, schema=schema)
 
 df_ai_insights.write.mode("overwrite").format("delta").saveAsTable("gold_clinical_ai_insights")
@@ -647,9 +667,17 @@ for row in df_insights.limit(5).collect():
 from pyspark.sql.functions import from_json, explode, col
 from pyspark.sql.types import ArrayType
 
-# Parse the ICD-10 codes array and analyze distribution
-# This shows which conditions the AI most frequently identifies
-# across the note corpus — useful for population health trending
+# Parse the JSON string column back into an actual array,
+# then explode it — this "unpivots" the array so each ICD-10 code
+# becomes its own row. This enables groupBy() counting.
+#
+# Before explode: | note_id | codes                        |
+#                 | N001    | ["E11.9", "I10", "E78.5"]    |
+#
+# After explode:  | note_id | icd10_code |
+#                 | N001    | E11.9      |
+#                 | N001    | I10        |
+#                 | N001    | E78.5      |
 df_codes = df_insights.select(
     "note_id",
     "patient_id",
@@ -660,6 +688,10 @@ df_codes = df_insights.select(
     explode("codes").alias("icd10_code")
 )
 
+# Code frequency analysis — the most frequently suggested codes
+# reveal the dominant conditions in our patient population.
+# Compare these to the condition_category counts from Notebook 02
+# to validate that the AI is identifying the same top conditions.
 print("📊 Most Frequently Suggested ICD-10 Codes:")
 print("   (Higher frequency = more prevalent in our patient population)")
 df_codes.groupBy("icd10_code").count().orderBy("count", ascending=False).show(15)
