@@ -374,6 +374,8 @@ This represents the full spectrum of what Microsoft Fabric enables for healthcar
 
 > **💡 Want to see an alternate approach?** [Module 8 (Optional)](Module08_VSCode_Agent_Mode.md) shows how to build this entire lab using VS Code Agent Mode — an AI-assisted approach where you describe what you want and GitHub Copilot builds it for you.
 
+> **🔮 Want to build a predictive model?** [Module 9 (Optional)](Module09_Readmission_Prediction.md) uses Gen AI-assisted feature engineering to predict 30-day hospital readmissions with XGBoost — turning your Gold layer data into actionable risk scores.
+
 ---
 
 **[← Module 6: Prep Data for AI](Module06_Prep_Data_for_AI.md)** | **[Module 8 (Optional): VS Code Agent Mode →](Module08_VSCode_Agent_Mode.md)** | **[Back to Overview](../README.md)**

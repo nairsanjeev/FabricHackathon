@@ -475,4 +475,4 @@ Confirm you have completed:
 
 ---
 
-**[← Module 7: Data Agent & Power BI Copilot](Module07_Data_Agent.md)** | **[Back to Overview](../README.md)**
+**[← Module 7: Data Agent & Power BI Copilot](Module07_Data_Agent.md)** | **[Module 9 (Optional): Readmission Prediction →](Module09_Readmission_Prediction.md)** | **[Back to Overview](../README.md)**
