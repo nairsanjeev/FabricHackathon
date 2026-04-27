@@ -136,7 +136,7 @@ Paste in Cell 4:
 # Cell 4: Load Clinical Notes from Silver Layer
 # =============================================================
 
-df_notes = spark.sql("SELECT * FROM HealthcareLakehouse.silver_clinical_notes")
+df_notes = spark.sql("SELECT * FROM silver_clinical_notes")
 
 print(f"Total clinical notes: {df_notes.count()}")
 df_notes.groupBy("note_type").count().show()
@@ -437,7 +437,7 @@ Paste in Cell 10:
 # =============================================================
 
 # Load the AI insights table
-df_insights = spark.sql("SELECT * FROM HealthcareLakehouse.gold_clinical_ai_insights")
+df_insights = spark.sql("SELECT * FROM gold_clinical_ai_insights")
 
 # Show summaries
 print("=" * 60)
