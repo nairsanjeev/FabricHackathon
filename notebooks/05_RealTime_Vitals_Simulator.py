@@ -27,55 +27,120 @@
 #
 # # 📡 Real-Time Vitals Simulator
 #
-# ## What This Notebook Does
+# ## 1. What this notebook does (business meaning)
 #
 # This notebook simulates a **real-time patient monitoring system** 
 # — the kind found in ICUs, EDs, and telemetry floors. It generates 
 # synthetic vital sign readings and streams them to your Fabric 
 # Eventstream via the Event Hub protocol.
 #
-# ## Real-World Context
-#
+# ### Real-world context
 # In a hospital, bedside monitors (Philips, GE, Medtronic) 
-# continuously capture:
-# - Heart rate (ECG-derived)
-# - Blood pressure (arterial line or cuff)
-# - Temperature (oral, rectal, or axillary)
-# - Respiratory rate (impedance or capnography)
-# - SpO2 (pulse oximetry)
+# continuously capture heart rate, blood pressure, temperature, 
+# respiratory rate, and SpO2 at 1–5 minute intervals. **Early 
+# Warning Scores** calculated from these vitals can predict 
+# clinical deterioration 6–12 hours before it becomes obvious 
+# to clinicians.
 #
-# These readings stream to a central monitoring system at 
-# intervals of 1-5 minutes. **Early Warning Scores** calculated 
-# from these vitals can predict clinical deterioration 6-12 hours 
-# before it becomes obvious to clinicians.
+# ## 2. Patient archetypes and vital sign patterns
 #
-# ## Patient Archetypes
+# We simulate 3 types of patients with distinct clinical behaviors:
 #
-# We simulate 3 types of patients:
+# | Archetype | Count | HR | Temp (°F) | RR | SpO2 | Clinical Significance |
+# |-----------|-------|----|-----------|----|----- |----------------------|
+# | Sepsis Risk | 3 | 100–130 | 101.5–104 | 22–32 | 88–94% | ≥ 2 SIRS criteria → sepsis alert |
+# | Heart Failure | 3 | 90–115 | 97.5–99 | 18–24 | 90–95% | Compensatory tachycardia, borderline alerts |
+# | Stable | 14 | 65–85 | 97.5–99 | 14–18 | 96–99% | Normal baseline group |
 #
-# | Archetype | Count | Vital Pattern | Clinical Significance |
-# |-----------|-------|---------------|----------------------|
-# | Sepsis Risk | 3 | High temp (>101.5°F), high HR (>100), high RR (>22), low SpO2 | SIRS criteria → sepsis screening |
-# | Heart Failure | 3 | Elevated HR (90-115), normal temp, low SpO2 (90-95) | Fluid overload monitoring |
-# | Stable | 14 | Normal ranges | Baseline comparison group |
+# ## 3. SIRS criteria (Systemic Inflammatory Response Syndrome)
 #
-# ## SIRS Criteria (Systemic Inflammatory Response Syndrome)
+# SIRS is a clinical screening tool for sepsis. Meeting ≥2 of 
+# these criteria triggers a sepsis alert:
 #
-# SIRS is a clinical screening tool for sepsis. Meeting ≥2 
-# of these 4 criteria triggers a sepsis alert:
-#
-# 1. **Temperature** > 100.4°F (38°C) or < 96.8°F (36°C)
+# 1. **Temperature** > 100.4°F (38°C) OR < 96.8°F (36°C)
 # 2. **Heart rate** > 90 bpm
 # 3. **Respiratory rate** > 20 breaths/min
 # 4. **WBC** > 12,000 or < 4,000 (not available in vitals)
 #
-# Since we only have vitals (not WBC), we check the first 3.
-# Meeting ≥2 means SIRS_ALERT = TRUE.
+# We check the first 3 (WBC is a lab value, not a vital sign). 
+# Meeting ≥2 means `SIRS_ALERT = TRUE`.
 #
 # **Why SIRS matters:** Sepsis kills ~270,000 Americans annually. 
-# Every hour of delayed treatment increases mortality by 7.6%.
+# Every hour of delayed treatment increases mortality by 7.6%. 
 # Real-time SIRS monitoring enables "Code Sepsis" activation 
 # within minutes of clinical deterioration.
+#
+# ## 4. Step-by-step walkthrough of the simulator logic
+#
+# #### Step 1: Build patient profiles
+#     patient_profiles = []
+#     for i in range(NUM_PATIENTS):
+#         if i < 3:    # Sepsis Risk archetype
+#         elif i < 6:  # Heart Failure archetype
+#         else:        # Stable archetype
+# - Creates 20 patients with baseline vital signs matching their 
+#   clinical archetype
+# - Each profile stores: patient_id, facility, department, condition, 
+#   and base values for HR, temp, RR, SpO2, systolic/diastolic BP
+# - Random facility/department assignment provides dimensional variety 
+#   for KQL dashboard analysis
+#
+# #### Step 2: Generate vital readings with variation
+#     def generate_vital_reading(profile):
+#         reading = {
+#             "heart_rate": max(40, min(180, profile["base_hr"] + random.randint(-8, 8))),
+#             "temperature_f": round(max(95, min(106, profile["base_temp"] + random.uniform(-0.5, 0.5))), 1),
+#             ...}
+# - Each reading adds random variation around the patient's baseline:
+#   - ✅ Heart rate: ±8 bpm
+#   - ✅ Temperature: ±0.5°F
+#   - ✅ Blood pressure: ±10/8 mmHg
+#   - ✅ Respiratory rate: ±2 breaths/min
+#   - ✅ SpO2: ±2%
+# - Values are clamped with `max()/min()` to physiologically possible 
+#   ranges (e.g., HR 40–180, SpO2 70–100) to avoid nonsensical data
+# - This creates realistic variation while maintaining the clinical 
+#   pattern (sepsis patients stay consistently abnormal)
+#
+# #### Step 3: Compute SIRS score per reading
+#     sirs_count = 0
+#     if reading["temperature_f"] > 100.4 or reading["temperature_f"] < 96.8:
+#         sirs_count += 1
+#     if reading["heart_rate"] > 90:    sirs_count += 1
+#     if reading["respiratory_rate"] > 20:  sirs_count += 1
+#     reading["sirs_alert"] = sirs_count >= 2
+# - Checks 3 of 4 SIRS criteria (WBC unavailable from vitals)
+# - `sirs_criteria_met` stores the raw count (0–3)
+# - `sirs_alert` is a boolean: TRUE when ≥2 criteria are met
+# - Sepsis-risk patients should trigger alerts on nearly every reading; 
+#   stable patients should almost never trigger
+#
+# #### Step 4: Send batches via Event Hub protocol
+#     producer = EventHubProducerClient.from_connection_string(CONNECTION_STR)
+#     for batch_num in range(1, NUM_BATCHES + 1):
+#         event_batch = producer.create_batch()
+#         for profile in patient_profiles:
+#             reading = generate_vital_reading(profile)
+#             event_batch.add(EventData(json.dumps(reading)))
+#         producer.send_batch(event_batch)
+#         time.sleep(INTERVAL_SEC)
+# - `EventHubProducerClient` connects to the Eventstream's Custom 
+#   endpoint using the same protocol Azure IoT Hub uses
+# - Each batch contains 20 readings (one per patient)
+# - `json.dumps()` serializes each reading to JSON for transport
+# - `send_batch()` delivers all 20 events in a single network call 
+#   (more efficient than 20 individual sends)
+# - `time.sleep(INTERVAL_SEC)` paces delivery every 2 seconds
+# - The `finally: producer.close()` block ensures the connection is 
+#   properly cleaned up even if an error occurs
+#
+# ## 5. Summary
+#
+# The simulator creates 20 patient profiles across 3 clinical 
+# archetypes (sepsis risk, heart failure, stable), generates vital 
+# sign readings with realistic physiologic variation, computes SIRS 
+# criteria per reading, and streams batches of 20 events to the 
+# Fabric Eventstream every 2 seconds via the Event Hub protocol.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -114,38 +179,65 @@ print(f"   Estimated run time: {NUM_BATCHES * INTERVAL_SEC / 60:.1f} minutes")
 # ║  CELL 3 — MARKDOWN                                            ║
 # ╚════════════════════════════════════════════════════════════════╝
 #
-# ## The Event Hub Protocol
+# ## The Event Hub Protocol & Send Loop
+#
+# ### 1. What this protocol is (business meaning)
 #
 # Fabric Eventstream's Custom endpoint source exposes an 
-# **Event Hub-compatible endpoint**. This is the same protocol 
-# used by:
-# - Azure IoT Hub (medical devices)
+# **Event Hub-compatible endpoint** — the same protocol used by:
+# - Azure IoT Hub (medical device ingestion)
 # - Azure Event Hubs (application telemetry)
 # - Kafka (via the Kafka protocol surface)
 #
-# The `azure-eventhub` Python SDK sends events as:
-# 1. Create a **producer client** from the connection string
-# 2. Create an **event batch** (groups events for efficient transport)
-# 3. Add **EventData** objects (JSON-serialized readings)
-# 4. **Send the batch** — delivery is guaranteed (at-least-once)
+# This means the simulator code below is identical to what you'd 
+# use in production to ingest data from real bedside monitors.
 #
-# Each batch contains one reading per patient (20 events). 
-# Events are automatically routed through the Eventstream 
-# to the Eventhouse destination.
+# ### 2. Step-by-step walkthrough of the send loop
 #
-# ## How the Simulator Generates Realistic Variation
+# #### Step 1: Create the producer client
+#     producer = EventHubProducerClient.from_connection_string(CONNECTION_STR)
+# - `from_connection_string()` parses the connection string to extract:
+#   - ✅ `Endpoint=sb://xxx.servicebus.windows.net/` → The Eventstream broker
+#   - ✅ `SharedAccessKeyName=...` / `SharedAccessKey=...` → Authentication
+#   - ✅ `EntityPath=...` → Which Eventstream topic to send to
+# - The client manages the AMQP connection, authentication, and retry logic
 #
-# Each patient has a **base profile** (e.g., base HR = 110 for 
-# sepsis-risk patients). Each reading adds random variation:
-# - Heart rate: ±8 bpm
-# - Temperature: ±0.5°F
-# - Blood pressure: ±10/8 mmHg
-# - Respiratory rate: ±2 breaths/min
-# - SpO2: ±2%
+# #### Step 2: Create an event batch
+#     event_batch = producer.create_batch()
+# - Groups multiple events for efficient transport
+# - One batch per interval = one network round-trip per 20 readings
+# - Event Hubs charges per operation, not per event in a batch, 
+#   so batching is both faster AND cheaper
 #
-# This creates realistic physiologic variation while maintaining 
-# the clinical pattern (sepsis patients stay abnormal, stable 
-# patients stay normal).
+# #### Step 3: Add events to the batch
+#     for profile in patient_profiles:
+#         reading = generate_vital_reading(profile)
+#         event_batch.add(EventData(json.dumps(reading)))
+# - `generate_vital_reading()` produces a Python dict with all vital signs
+# - `json.dumps()` serializes the dict to a JSON string
+# - `EventData()` wraps the string as an Event Hub message
+# - `event_batch.add()` appends it to the batch (raises if batch full)
+#
+# #### Step 4: Send and pace
+#     producer.send_batch(event_batch)
+#     time.sleep(INTERVAL_SEC)
+# - `send_batch()` delivers all 20 events in a single AMQP operation
+# - Delivery is **at-least-once** (guaranteed, may occasionally duplicate)
+# - `time.sleep(2)` paces batches every 2 seconds for steady stream
+#
+# #### Step 5: Cleanup
+#     finally:
+#         producer.close()
+# - `try/finally` ensures the AMQP connection is properly closed even 
+#   if an error occurs during sending
+# - Unclosed connections can leak resources in long-running notebooks
+#
+# ### 3. Summary
+#
+# The send loop creates an Event Hub producer from the Eventstream 
+# connection string, batches 20 vital readings per interval, sends 
+# each batch via AMQP, and paces delivery every 2 seconds. The 
+# `try/finally` block ensures proper connection cleanup.
 
 
 # ╔════════════════════════════════════════════════════════════════╗

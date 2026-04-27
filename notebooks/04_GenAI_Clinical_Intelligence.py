@@ -126,20 +126,57 @@ print(f"   Deployment: {AZURE_OPENAI_DEPLOYMENT}")
 #
 # ## Initializing the Azure OpenAI Client
 #
-# We use the `AzureOpenAI` client from the official `openai` 
-# Python SDK. Key configuration choices:
+# ### 1. What this step does (business meaning)
+# 
+# We create a connection to YOUR Azure-hosted GPT model. This is 
+# different from the public OpenAI API — Azure OpenAI runs within 
+# your Azure tenant, which means:
+# - ✅ **Data residency:** Clinical notes stay in YOUR Azure region 
+#   and are NOT sent to public OpenAI servers
+# - ✅ **HIPAA compliance:** Azure OpenAI supports BAA (Business 
+#   Associate Agreement) for covered entities
+# - ✅ **Network isolation:** Can be deployed in a private VNet
+# - ✅ **Enterprise SLA:** 99.9% uptime guarantee
 #
-# - **API version `2024-06-01`**: Stable GA version with full 
-#   chat completion support
-# - **`azure_endpoint`**: Points to YOUR Azure OpenAI resource 
-#   (not the public OpenAI API)
-# - **Data residency**: Your clinical notes stay within your 
-#   Azure tenant — they are NOT sent to public OpenAI servers.
-#   Azure OpenAI has BAA (Business Associate Agreement) support 
-#   for HIPAA-covered entities.
+# ### 2. Step-by-step walkthrough
 #
-# The test call below verifies the connection works before 
-# processing any clinical data.
+# #### Step 1: Import the SDK
+#     from openai import AzureOpenAI
+# - The `openai` Python package supports both public OpenAI and 
+#   Azure OpenAI. `AzureOpenAI` is the Azure-specific client class.
+# - The SDK handles authentication, retry logic, and endpoint 
+#   routing automatically.
+#
+# #### Step 2: Create the client
+#     client = AzureOpenAI(
+#         azure_endpoint=AZURE_OPENAI_ENDPOINT,
+#         api_key=AZURE_OPENAI_KEY,
+#         api_version=AZURE_OPENAI_API_VERSION)
+# - `azure_endpoint`: Your resource's base URL 
+#   (e.g., `https://my-resource.openai.azure.com/`). The SDK 
+#   appends `/openai/deployments/...` automatically.
+# - `api_key`: 32-character key from the Azure portal. In 
+#   production, you'd use Azure Key Vault or Managed Identity.
+# - `api_version`: `"2024-06-01"` is the stable GA version with 
+#   full chat completion support.
+#
+# #### Step 3: Test the connection
+#     response = client.chat.completions.create(
+#         model=AZURE_OPENAI_DEPLOYMENT,
+#         messages=[{"role": "user", "content": "Say 'Connection successful'"}],
+#         max_tokens=10)
+# - Sends a minimal test message to verify the endpoint, key, 
+#   and deployment name are all correct
+# - `model=` is actually the DEPLOYMENT name (not the model name) 
+#   in Azure OpenAI
+# - If this fails, check: endpoint URL format, API key, deployment 
+#   existence, and network access
+#
+# ### 3. Summary
+#
+# The AzureOpenAI client is initialized with your endpoint, API key, 
+# and API version. A test call verifies connectivity before processing 
+# any clinical data. All communication stays within your Azure tenant.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -170,24 +207,40 @@ print(response.choices[0].message.content)
 #
 # ## Loading Clinical Notes from the Silver Layer
 #
-# Our synthetic dataset contains 150 clinical notes across 
-# several note types:
-# - **Discharge Summaries**: Comprehensive end-of-stay documents
-# - **ED Notes**: Emergency department assessments
-# - **Progress Notes**: Daily inpatient updates
-# - **Consultation Notes**: Specialist opinions
+# ### 1. What this step does (business meaning)
 #
-# Each note contains unstructured free text that mirrors real 
-# clinical documentation — diagnoses buried in narratives, 
-# medications mentioned in passing, and follow-up instructions 
-# scattered throughout.
+# We load 150 synthetic clinical notes that mirror real hospital 
+# documentation. These notes are the INPUT to our AI pipeline.
 #
-# ### Why this is hard for traditional software
-# Traditional rule-based NLP requires thousands of hand-coded 
-# patterns (regex, keyword lists, grammar rules) and still 
-# misses context-dependent meanings. LLMs understand medical 
-# language naturally because they were trained on vast medical 
-# literature.
+# Note types in our dataset:
+# - **Discharge Summaries** — Comprehensive end-of-stay documents 
+#   (longest, most detailed, highest coding value)
+# - **ED Notes** — Emergency department assessments (time-critical, 
+#   often abbreviated)
+# - **Progress Notes** — Daily inpatient updates (brief, incremental)
+# - **Consultation Notes** — Specialist opinions (domain-specific 
+#   terminology)
+#
+# ### 2. Step-by-step walkthrough
+#
+# #### Step 1: Load from schema-enabled Lakehouse
+#     df_notes = spark.sql("SELECT * FROM HealthcareLakehouse.dbo.silver_clinical_notes")
+# - Uses **3-part naming** (`lakehouse.schema.table`) required for 
+#   schema-enabled Lakehouses in Microsoft Fabric
+# - If your Lakehouse does NOT have schema enabled, use just the 
+#   table name: `spark.table("silver_clinical_notes")`
+#
+# #### Step 2: Explore the data
+#     df_notes.groupBy("note_type").count().show()
+# - Validates all note types are present and shows volume distribution
+# - A preview of one sample note shows the raw unstructured text that 
+#   the AI will process
+#
+# ### 3. Why this is hard for traditional software
+# Traditional rule-based NLP requires thousands of hand-coded patterns 
+# (regex, keyword lists, grammar rules) and misses context-dependent 
+# meanings. LLMs understand medical language naturally because they 
+# were trained on vast medical literature.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -215,25 +268,63 @@ print(f"Note:\n{sample_note['note_text'][:800]}...")
 #
 # ## Task 1: Clinical Note Summarization
 #
-# ### The Problem
-# A typical discharge summary is 500-2,000 words. A hospitalist 
-# covering 20 patients has to read 20+ notes per shift. A concise 
-# 2-3 sentence summary enables rapid triage of what happened.
+# ### 1. What this task does (business meaning)
 #
-# ### Prompt Engineering Strategy
-# Our system prompt tells the LLM to act as a **clinical 
-# documentation specialist** and produce:
-# 1. Primary condition and presentation
-# 2. Key findings or interventions  
-# 3. Disposition or next steps
+# A typical discharge summary is 500–2,000 words. A hospitalist 
+# covering 20 patients has to read 20+ notes per shift to understand 
+# what happened to each patient. AI summarization reduces each note 
+# to a concise 2–3 sentence summary, enabling rapid triage.
 #
-# ### Temperature Setting: 0.3 (Low)
-# - **Temperature** controls randomness in text generation
-# - `0.0` = completely deterministic (always same answer)
-# - `1.0` = highly creative (great for stories, bad for facts)
-# - `0.3` = mostly consistent but allows minor phrasing variation
-# - For clinical tasks, LOW temperature is critical — we want 
-#   facts, not creativity
+# **Time savings:** 5–10 minutes per manual read → 3–5 seconds with AI
+#
+# ### 2. Step-by-step walkthrough of the function
+#
+# #### Step 1: System prompt design
+#     system_prompt = """You are a clinical documentation specialist.
+#     Summarize the following clinical note into a concise 2-3 sentence
+#     summary that captures: 1. Primary condition and presentation,
+#     2. Key findings or interventions, 3. Disposition or next steps"""
+# - The system prompt defines the AI's **persona** and **task structure**
+# - Specifying "2–3 sentences" controls output length
+# - The three-part structure ensures clinically relevant content is 
+#   consistently captured across all notes
+# - "Use medical terminology appropriately" tells the model to write 
+#   for a clinical audience, not a lay audience
+#
+# #### Step 2: Message structure
+#     messages=[
+#         {"role": "system", "content": system_prompt},
+#         {"role": "user", "content": f"Note Type: {note_type}\n\n..."}]
+# - The chat completion API uses a message array with roles:
+#   - ✅ `system` → Sets behavior, persona, and task instructions
+#   - ✅ `user` → Provides the actual input to process
+# - Including `note_type` in the user message gives context — a 
+#   Discharge Summary needs a different summary style than an ED Note
+#
+# #### Step 3: Parameters
+#     max_tokens=200, temperature=0.3
+# - `max_tokens=200` → Hard cap on output length (~150 words). 
+#   Prevents runaway generation.
+# - `temperature=0.3` → **Low randomness**. Temperature controls 
+#   "creativity" on a 0–1 scale:
+#   - ✅ 0.0 = Completely deterministic (always same output)
+#   - ✅ 0.3 = Mostly consistent with minor variation (our choice)
+#   - ✅ 1.0 = Maximum creativity (great for stories, bad for clinical)
+# - For medical summarization, we want FACTS, not creativity.
+#
+# #### Step 4: Error handling
+#     except Exception as e:
+#         return f"Error: {str(e)}"
+# - API calls can fail (network timeout, rate limit, invalid key). 
+#   The try/except ensures one bad note doesn't crash the entire 
+#   batch processing pipeline.
+#
+# ### 3. Summary
+#
+# The summarize function sends each clinical note to Azure OpenAI 
+# with a system prompt that requests a structured 2–3 sentence summary 
+# covering condition, interventions, and disposition. Low temperature 
+# (0.3) ensures factual consistency across runs.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -287,26 +378,63 @@ print(summary)
 #
 # ## Task 2: Medical Entity Extraction (Named Entity Recognition)
 #
-# ### What is entity extraction?
-# Entity extraction (a form of NER — Named Entity Recognition) 
-# identifies and categorizes specific items from unstructured text:
-# - **Diagnoses**: "Type 2 diabetes mellitus", "acute CHF exacerbation"
-# - **Medications**: "metformin 500mg BID", "lisinopril 10mg daily"
-# - **Procedures**: "chest X-ray", "CT angiography", "central line placement"
-# - **Vitals**: "BP 142/88", "SpO2 94%"
-# - **Allergies**: "NKDA", "penicillin allergy"
+# ### 1. What this task does (business meaning)
 #
-# ### Why structured JSON output?
-# We instruct the LLM to return **valid JSON** rather than free text. 
-# This enables:
-# - Direct storage in structured Delta tables
-# - Downstream analytics (medication frequency, diagnosis patterns)
-# - Integration with clinical decision support systems
+# Entity extraction (NER — Named Entity Recognition) identifies and 
+# categorizes specific clinical items from unstructured text into 
+# structured, machine-readable data:
+# - **Diagnoses:** "Type 2 diabetes mellitus", "acute CHF exacerbation"
+# - **Medications:** "metformin 500mg BID", "lisinopril 10mg daily"
+# - **Procedures:** "chest X-ray", "CT angiography", "central line"
+# - **Vitals:** "BP 142/88", "SpO2 94%"
+# - **Allergies:** "NKDA", "penicillin allergy"
 #
-# ### Temperature: 0.1 (Very Low)
-# Entity extraction needs maximum consistency — the same note 
-# should produce the same entities every time. We use 0.1 to 
-# minimize variation.
+# ### 2. Step-by-step walkthrough of the function
+#
+# #### Step 1: System prompt with JSON schema
+#     system_prompt = """You are a clinical NLP system. Extract...
+#     {
+#         "diagnoses": ["list of diagnoses"],
+#         "medications": ["list of medications"],
+#         "procedures": ["list of procedures"],
+#         "vitals_mentioned": ["any vital signs with values"],
+#         "allergies": ["any allergies"],
+#         "follow_up": "follow-up instructions"
+#     }"""
+# - The prompt INCLUDES the exact JSON schema the model should return
+# - This is a form of **structured output** prompting — telling the 
+#   LLM what format to use ensures machine-parseable results
+# - Six entity categories cover the most clinically important 
+#   information types
+# - "Only include entities that are explicitly mentioned" prevents 
+#   the model from hallucinating entities
+#
+# #### Step 2: Very low temperature
+#     temperature=0.1
+# - Entity extraction needs MAXIMUM consistency — the same note 
+#   should produce the same entities every time
+# - Temperature 0.1 is nearly deterministic while still allowing 
+#   minor phrasing flexibility
+#
+# #### Step 3: Parse the JSON response
+#     result_text = response.choices[0].message.content.strip()
+#     if result_text.startswith("```"):
+#         result_text = result_text.split("\n", 1)[-1].rsplit("```", 1)[0]
+#     return json.loads(result_text)
+# - LLMs sometimes wrap JSON in markdown code fences 
+#   (` ```json ... ``` `). We strip these before parsing.
+# - `json.loads()` converts the string to a Python dict
+# - If parsing fails, the `except json.JSONDecodeError` handler 
+#   returns the raw text so we can debug the model's output
+#
+# ### 3. Summary
+#
+# The entity extraction function sends clinical notes to Azure 
+# OpenAI with a JSON schema prompt that defines six entity 
+# categories (diagnoses, medications, procedures, vitals, allergies, 
+# follow-up). Temperature 0.1 ensures consistent extraction, and 
+# the response is parsed from JSON into a Python dict for 
+# downstream processing.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -376,28 +504,57 @@ print(json.dumps(entities, indent=2))
 #
 # ## Task 3: ICD-10 Code Suggestion
 #
-# ### What is ICD-10?
-# ICD-10-CM (International Classification of Diseases, 10th 
-# Revision, Clinical Modification) is the coding system used for:
-# - **Billing**: Every claim submitted to insurance requires ICD-10 codes
-# - **Public health**: CDC tracks disease prevalence via ICD-10
-# - **Quality reporting**: CMS quality measures reference ICD-10
-# - **Research**: Clinical trials use ICD-10 for cohort selection
+# ### 1. What this task does (business meaning)
 #
-# ### The Coding Problem
-# - There are **~72,000 ICD-10-CM codes** — no human memorizes them all
-# - Coders must read clinical notes and assign the most specific 
-#   applicable codes (e.g., E11.65 = "Type 2 diabetes with 
-#   hyperglycemia" not just E11 = "Type 2 diabetes")
-# - **Upcoding** (too aggressive) → fraud risk and audits
-# - **Undercoding** (too conservative) → lost revenue
-# - AI can suggest codes with **evidence** from the note text, 
-#   helping coders work faster and more accurately
+# ICD-10-CM is the universal coding system for clinical diagnoses. 
+# There are **~72,000 codes** — no human memorizes them all. Medical 
+# coders read clinical notes and assign codes manually, a process that 
+# takes 5–8 minutes per note and is error-prone.
 #
-# ### Confidence Scoring
-# We ask the model to rate each suggestion as high/medium/low 
-# confidence and cite the supporting evidence. Coders can focus 
-# review on low-confidence suggestions.
+# Two types of coding errors:
+# - **Upcoding** (too aggressive) → Fraud risk, CMS audits, penalties
+# - **Undercoding** (too conservative) → Lost revenue, inaccurate 
+#   risk adjustment, understated severity
+#
+# AI code suggestion helps coders work faster and more accurately by 
+# proposing codes with evidence citations from the note text.
+#
+# ### 2. Step-by-step walkthrough of the function
+#
+# #### Step 1: System prompt as a certified coder
+#     system_prompt = """You are a certified medical coder (CPC).
+#     Based on the clinical note, suggest ICD-10-CM codes.
+#     Return a JSON array: [{"code": "...", "description": "...",
+#     "confidence": "high/medium/low", "evidence": "..."}]"""
+# - The persona "certified medical coder (CPC)" primes the model 
+#   to think like a professional coder
+# - The JSON schema requires four fields per suggestion:
+#   - ✅ `code` → The ICD-10-CM code (e.g., "E11.65")
+#   - ✅ `description` → Official code description
+#   - ✅ `confidence` → high/medium/low self-assessment
+#   - ✅ `evidence` → Text from the note supporting this code
+# - Evidence citations enable coders to **verify** each suggestion 
+#   against the source text, supporting a human-in-the-loop workflow
+#
+# #### Step 2: Temperature 0.2
+#     temperature=0.2
+# - Slightly higher than entity extraction (0.1) because code 
+#   selection involves some clinical judgment (choosing between 
+#   similar codes), not just extraction
+# - Still low enough to ensure consistency across runs
+#
+# #### Step 3: Max tokens 600
+#     max_tokens=600
+# - Higher than summarization (200) because each code suggestion 
+#   includes 4 fields, and a note may have 5–10 diagnosable conditions
+#
+# ### 3. Summary
+#
+# The ICD-10 suggestion function sends clinical notes to Azure OpenAI 
+# with a certified-coder persona prompt. It returns a JSON array of 
+# code suggestions, each with the ICD-10 code, description, confidence 
+# level, and evidence from the note text. This enables a 
+# human-in-the-loop coding review workflow.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -478,30 +635,62 @@ for code in codes:
 #
 # ## Batch Processing: Scaling AI Across All Notes
 #
-# ### The batch processing pattern
+# ### 1. What this step does (business meaning)
 # 
-# Real-world clinical AI pipelines process thousands of notes. 
-# Here we demonstrate the pattern with a subset of 20 notes:
+# Real-world clinical AI pipelines process thousands of notes per day. 
+# This cell demonstrates the batch processing pattern with a subset 
+# of 20 notes, running all three AI tasks on each note.
 #
-# ```
-# For each clinical note:
-#   1. Summarize → 2-3 sentence summary
-#   2. Extract entities → structured JSON
-#   3. Suggest ICD-10 → codes with confidence
-#   4. Combine into one record
-#   5. Store in Gold layer
-# ```
+# ### 2. Step-by-step walkthrough of the logic
 #
-# ### Rate limiting considerations
-# - Azure OpenAI has rate limits (tokens-per-minute, requests-per-minute)
-# - We add a 0.5s delay between notes to stay within limits
-# - Production systems use async processing, queues, and retry logic
-# - For large volumes (10,000+ notes), use Azure OpenAI batch API
+# #### Step 1: Collect notes to the driver node
+#     notes_pdf = df_notes.limit(20).toPandas()
+# - `limit(20)` restricts to 20 notes for the lab (cost/time control)
+# - `toPandas()` moves data from Spark executors to the driver node
+# - **Why toPandas()?** Azure OpenAI is a REST API that can only be 
+#   called from the driver, not from distributed Spark executors.
+# - For 10,000+ notes in production, you'd use:
+#   - ✅ `mapPartitions()` with API calls inside the function
+#   - ✅ Azure OpenAI Batch API (async, 50% cheaper)
+#   - ✅ Azure AI Services container for on-cluster inference
 #
-# ### Cost awareness
-# - Each note triggers 3 API calls ≈ 2,000-3,000 tokens total
-# - At GPT-4o-mini pricing (~$0.15/M input tokens): 
-#   20 notes ≈ $0.01, 10,000 notes ≈ $5-10
+# #### Step 2: Process each note sequentially
+#     for idx, row in notes_pdf.iterrows():
+#         summary = summarize_clinical_note(note_text, note_type)
+#         entities = extract_medical_entities(note_text)
+#         codes = suggest_icd10_codes(note_text)
+# - Each note triggers 3 API calls (summarize, extract, code)
+# - Sequential processing with progress printing for visibility
+#
+# #### Step 3: Combine outputs into one record
+#     results.append({
+#         "note_id": note_id, ...
+#         "extracted_diagnoses": json.dumps(entities.get("diagnoses", [])),
+#         "suggested_icd10_codes": json.dumps([...])  })
+# - All AI outputs for one note are merged into a single dict
+# - `json.dumps()` serializes lists/dicts to JSON strings because 
+#   Delta tables need flat columns (no nested arrays)
+# - `entities.get("diagnoses", [])` safely handles missing keys
+#
+# #### Step 4: Rate limiting
+#     time.sleep(0.5)
+# - 0.5-second delay between notes prevents hitting Azure OpenAI 
+#   token-per-minute (TPM) or request-per-minute (RPM) limits
+# - At 3 calls/note × 2 notes/sec = 6 requests/sec, well within 
+#   default limits of 60 RPM
+#
+# ### 3. Cost awareness
+# - Each note: ~2,000–3,000 tokens across 3 calls
+# - At GPT-4o-mini pricing (~$0.15/M input tokens):
+#   - ✅ 20 notes ≈ $0.01
+#   - ✅ 10,000 notes ≈ $5–10
+#
+# ### 4. Summary
+#
+# The batch loop collects 20 notes to the driver, runs three AI 
+# tasks per note (summarize, extract, code), serializes structured 
+# outputs as JSON strings, and adds rate-limiting delays. Results 
+# are stored in a Python list for conversion to a Delta table next.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -567,8 +756,36 @@ print(f"\n✅ Processed {len(results)} notes!")
 #
 # ## Saving AI Insights to the Gold Layer
 #
-# The AI-generated insights are saved as a Delta table called 
-# `gold_clinical_ai_insights`. This table contains:
+# ### 1. What this step does (business meaning)
+#
+# The AI-generated insights are persisted as a Delta table called 
+# `gold_clinical_ai_insights`. This makes the AI outputs queryable 
+# by SQL, joinable with patient/encounter tables, and consumable 
+# by Power BI dashboards and Data Agents.
+#
+# ### 2. Step-by-step walkthrough
+#
+# #### Step 1: Define an explicit schema
+#     schema = StructType([
+#         StructField("note_id", StringType(), True),
+#         StructField("patient_id", StringType(), True),
+#         ...])
+# - **Why explicit schema?** Without it, Spark infers types from 
+#   the data — which can be wrong if a batch has unusual values. 
+#   Explicit schema guarantees:
+#   - ✅ Column names match downstream consumers' expectations
+#   - ✅ All columns are StringType (JSON arrays stored as strings)
+#   - ✅ No surprises from empty or null results
+#
+# #### Step 2: Convert Python → Spark → Delta
+#     df_ai_insights = spark.createDataFrame(results, schema=schema)
+#     df_ai_insights.write.mode("overwrite").format("delta").saveAsTable(...)
+# - `createDataFrame(results, schema)` converts the Python list of 
+#   dicts (driver-side data) into a distributed Spark DataFrame
+# - `mode("overwrite")` makes the notebook idempotent (safe to re-run)
+# - `saveAsTable()` registers it in the Lakehouse catalog
+#
+# ### 3. Output column reference
 #
 # | Column | Type | Description |
 # |--------|------|-------------|
@@ -576,16 +793,18 @@ print(f"\n✅ Processed {len(results)} notes!")
 # | patient_id | string | Links to silver_patients |
 # | note_type | string | Discharge Summary, ED Note, etc. |
 # | ai_summary | string | 2-3 sentence AI summary |
-# | extracted_diagnoses | string (JSON array) | Parsed diagnoses |
-# | extracted_medications | string (JSON array) | Parsed medications |
-# | extracted_procedures | string (JSON array) | Parsed procedures |
-# | suggested_icd10_codes | string (JSON array) | Suggested codes |
-# | suggested_icd10_details | string (JSON array) | Codes + evidence |
+# | extracted_diagnoses | string (JSON) | Parsed diagnoses array |
+# | extracted_medications | string (JSON) | Parsed medications array |
+# | extracted_procedures | string (JSON) | Parsed procedures array |
+# | suggested_icd10_codes | string (JSON) | Code strings only |
+# | suggested_icd10_details | string (JSON) | Codes + evidence + confidence |
 #
-# This table can be:
-# - Joined with patient/encounter tables for population-level analysis
-# - Surfaced in Power BI dashboards for coding review workflows
-# - Used by the Data Agent to answer questions about AI findings
+# ### 4. Summary
+#
+# The batch results are converted from a Python list to a Spark 
+# DataFrame with an explicit schema, then written as a Delta table. 
+# This table can be joined with patient data, surfaced in Power BI, 
+# or queried by the Data Agent.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -627,20 +846,44 @@ df_ai_insights.select("note_id", "note_type", "ai_summary").show(5, truncate=60)
 #
 # ## Exploring AI-Generated Insights
 #
-# Now that the AI has processed the notes, let's examine the 
-# results. Key things to look for:
+# ### 1. What this step does (business meaning)
 #
-# 1. **Summary quality**: Are the summaries concise and accurate?
-# 2. **Entity completeness**: Did the AI catch all diagnoses and meds?
-# 3. **Code plausibility**: Do the ICD-10 codes match the note content?
-# 4. **Confidence distribution**: How often does the model say "high" 
-#    vs "low" confidence?
+# Now that the AI pipeline has processed the notes, we examine the 
+# results to assess quality. In a real clinical deployment, this is 
+# the **validation phase** before any AI output reaches clinicians.
 #
-# In a real deployment, a clinical informatics team would:
-# - Compare AI-suggested codes against human coder assignments
-# - Calculate precision/recall for entity extraction
+# ### 2. Step-by-step walkthrough
+#
+# #### Step 1: Load the Gold AI table
+#     df_insights = spark.sql("SELECT * FROM HealthcareLakehouse.dbo.gold_clinical_ai_insights")
+# - Reads from the Gold table we just created, using 3-part naming 
+#   for schema-enabled Lakehouses
+#
+# #### Step 2: Display summaries for quality review
+#     for row in df_insights.limit(5).collect():
+#         print(row['ai_summary'])
+#         print(row['suggested_icd10_codes'])
+# - `.collect()` brings 5 rows to the driver for display
+# - Review checklist:
+#   - ✅ **Summary quality:** Are summaries concise and accurate?
+#   - ✅ **Entity completeness:** Did the AI catch all diagnoses/meds?
+#   - ✅ **Code plausibility:** Do ICD-10 codes match note content?
+#   - ✅ **Confidence distribution:** How often is confidence "high" 
+#     vs "low"?
+#
+# ### 3. What a real deployment would add
+# - Compare AI-suggested codes against human coder assignments 
+#   (precision/recall metrics)
 # - Track summary accuracy ratings from clinician reviewers
-# - Monitor for bias or hallucination patterns
+# - Monitor for bias, hallucination patterns, or drift over time
+# - A/B test: AI-assisted coders vs. manual coders
+#
+# ### 4. Summary
+#
+# The exploration cell loads AI insights from the Gold table and 
+# displays summaries, extracted entities, and ICD-10 code suggestions 
+# for manual quality review. This represents the validation phase 
+# of a clinical AI deployment.
 
 
 # ╔════════════════════════════════════════════════════════════════╗

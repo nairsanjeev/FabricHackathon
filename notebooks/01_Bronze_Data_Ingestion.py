@@ -22,13 +22,18 @@
 # 
 # # 🏥 Bronze Data Ingestion — Raw Healthcare Data
 # 
-# ## What is the Bronze Layer?
+# ## 1. What this notebook does (business meaning)
 # 
-# In the **Medallion Architecture** (Bronze → Silver → Gold), the 
-# Bronze layer is the **raw landing zone**. Data arrives here exactly 
-# as it was received — no transformations, no type changes, no 
-# filtering. Think of it as a digital "filing cabinet" for incoming data.
-#
+# This notebook implements the **Bronze layer** of the Medallion 
+# Architecture (Bronze → Silver → Gold). The Bronze layer is the 
+# **raw landing zone** — data arrives here exactly as received from 
+# source systems, with no transformations, no type changes, and no 
+# filtering.
+# 
+# We ingest 7 CSV files representing a year of operations at 
+# **HealthFirst Medical Group** (3 hospitals, ~200 patients) and 
+# convert them to Delta Lake tables for downstream processing.
+# 
 # ### Why keep raw data untouched?
 # - **Auditability:** Regulators (CMS, Joint Commission) may require 
 #   proof of what data was received and when
@@ -36,26 +41,70 @@
 #   Silver/Gold from the original Bronze data
 # - **Data lineage:** You can trace any downstream number back to 
 #   its exact source record
-#
-# ### What we're loading
-# We have 7 CSV files representing a year of operations at 
-# **HealthFirst Medical Group** (3 hospitals, ~200 patients):
-#
-# | File | Records | Description |
-# |------|---------|-------------|
-# | patients.csv | 200 | Patient demographics, insurance, risk scores |
-# | encounters.csv | ~1,000 | ED, Inpatient, Outpatient, Ambulatory visits |
-# | conditions.csv | 428 | ICD-10 coded diagnoses (chronic & acute) |
-# | medications.csv | 640 | Prescribed medications with dosages |
-# | vitals.csv | 3,800+ | Heart rate, BP, temperature, SpO2, pain |
-# | clinical_notes.csv | 150 | Free-text ED notes, discharge summaries |
-# | claims.csv | ~1,000 | Billing: charges, payments, denials by payer |
-#
-# ### Technical approach
-# We use **Apache Spark** (built into Fabric) to read each CSV and 
-# write it as a **Delta table**. Delta Lake adds ACID transactions, 
-# schema enforcement, and time-travel capabilities on top of Parquet 
-# files — making it ideal for healthcare data governance.
+# 
+# ## 2. Step-by-step walkthrough of the logic
+# 
+# ### Step 1: Define the source file list
+#     csv_files = ["patients", "encounters", "conditions", ...]
+# - These 7 files map to common healthcare data categories from 
+#   HL7 FHIR (Fast Healthcare Interoperability Resources):
+#   - `patients` → FHIR Patient resource (demographics, insurance)
+#   - `encounters` → FHIR Encounter resource (visits, admissions)
+#   - `conditions` → FHIR Condition resource (diagnoses, ICD-10)
+#   - `medications` → FHIR MedicationRequest (prescriptions)
+#   - `vitals` → FHIR Observation (heart rate, BP, temp, SpO2)
+#   - `clinical_notes` → FHIR DocumentReference (free-text notes)
+#   - `claims` → FHIR Claim (billing, payments, denials)
+# 
+# ### Step 2: Set the source path
+#     raw_path = "Files/raw"
+# - In Fabric, each Lakehouse has two areas:
+#   - **Files** — for unstructured/raw files (CSVs, PDFs, images)
+#   - **Tables** — for Delta tables (structured, queryable)
+# - We read from Files and write to Tables
+# 
+# ### Step 3: Read each CSV with Spark
+#     df = spark.read.format("csv")
+#         .option("header", "true")      → First row = column names
+#         .option("inferSchema", "true")  → Auto-detect data types
+#         .option("multiLine", "true")    → Handle newlines in fields
+#         .option("escape", '"')          → Handle commas inside quotes
+#         .load(f"{raw_path}/{file_name}.csv")
+# - `header=true`: Without this, Spark treats the first row as data
+# - `inferSchema=true`: Spark samples the data to guess types 
+#   (int, string, double). This is fine for Bronze; Silver will 
+#   cast to exact types
+# - `multiLine=true`: Clinical notes may contain newlines within 
+#   a single CSV field — without this, Spark splits one note across 
+#   multiple rows
+# - `escape='"'`: Fields containing commas are wrapped in quotes; 
+#   this tells Spark to treat `"hello, world"` as one field
+# 
+# ### Step 4: Write as a Delta table
+#     df.write.mode("overwrite").format("delta").saveAsTable(table_name)
+# - `mode("overwrite")`: Replaces the table if it already exists. 
+#   This makes the notebook **idempotent** — safe to re-run without 
+#   duplicating data
+# - `format("delta")`: Writes as Delta Lake (Parquet + transaction log)
+# - `saveAsTable()`: Registers the table in the Lakehouse catalog 
+#   so it appears in the Tables section and is queryable by SQL
+# 
+# ### Why Delta instead of keeping CSVs?
+# | Feature | CSV | Delta |
+# |---------|-----|-------|
+# | Schema enforcement | ❌ No | ✅ Yes |
+# | UPDATE/DELETE | ❌ No | ✅ Yes (GDPR compliance) |
+# | Time travel | ❌ No | ✅ Yes (version history) |
+# | Query performance | Slow (row scan) | Fast (columnar Parquet) |
+# | ACID transactions | ❌ No | ✅ Yes |
+# 
+# ## 3. Summary
+# 
+# Each CSV file is read by Spark with schema inference and 
+# multi-line support, then written as a Delta table with a 
+# `bronze_` prefix (e.g., `bronze_patients`). Overwrite mode 
+# ensures idempotency. The result is 7 Delta tables in the 
+# Lakehouse Tables section, ready for Silver transformations.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -134,18 +183,74 @@ print("\n✅ Bronze layer ingestion complete!")
 # ║  CELL 3 — MARKDOWN                                            ║
 # ╚════════════════════════════════════════════════════════════════╝
 #
-# # 📊 Quick Data Exploration
+# # 📊 Data Exploration — Validating the Bronze Layer
 #
-# Before moving to the Silver layer, let's verify the data loaded 
-# correctly and understand the clinical landscape:
+# ## 1. What this cell does (business meaning)
 # 
-# 1. **Patient demographics** — Do we have a realistic payer mix? 
-#    Medicare should be ~40% since this patient population skews older
-# 2. **Encounter types** — All 4 types? (ED, Inpatient, Outpatient, 
-#    Ambulatory)
-# 3. **Facility distribution** — Spread across all 3 hospitals?
-# 4. **Top diagnoses** — Hypertension and diabetes should dominate, 
-#    matching national chronic disease prevalence
+# Before moving to the Silver layer, we validate that the data 
+# loaded correctly and understand the clinical landscape of our 
+# patient population. This is a critical data quality step — if 
+# the raw data is wrong, every downstream metric will be wrong.
+#
+# ## 2. Step-by-step walkthrough
+#
+# ### Step 1: Patient Demographics — Insurance Type
+#     patients_df.groupBy("insurance_type").count()
+# - `groupBy().count()` is Spark's equivalent of SQL:
+#   `SELECT insurance_type, COUNT(*) FROM bronze_patients GROUP BY`
+# - This runs **distributed** across the Spark cluster (fast even 
+#   on millions of rows)
+# - **Why insurance type matters:** Insurance drives reimbursement 
+#   rates, denial patterns, and regulatory requirements.
+#   - Medicare patients trigger CMS quality reporting obligations
+#   - Expected distribution: Medicare ~40%, Commercial ~30%, 
+#     Medicaid ~20%, Self-Pay ~10%
+#
+# ### Step 2: Patient Demographics — Gender
+#     patients_df.groupBy("gender").count()
+# - Should be roughly 50/50 with a slight female majority 
+#   (matching US demographics)
+# - If 90%+ one gender, the data generator may have a bug
+#
+# ### Step 3: Encounter Types
+#     encounters_df.groupBy("encounter_type").count()
+# - Validates all 4 encounter types are present
+# - **Cost context:** ED visits cost $2,000-5,000 each vs. 
+#   $150-300 for outpatient. Volume distribution matters for 
+#   financial planning
+# - Expected: Outpatient > Ambulatory > Inpatient > ED
+#
+# ### Step 4: Top 10 Diagnoses
+#     encounters_df.groupBy("primary_diagnosis_description")
+#         .count().orderBy("count", ascending=False).show(10)
+# - Top diagnoses drive resource allocation, staffing models, 
+#   and quality improvement priorities
+# - Expected: Chronic conditions (hypertension, diabetes, COPD) 
+#   should dominate, matching national prevalence data
+# - `truncate=False` shows full diagnosis names without cutting 
+#   them off at 20 characters
+#
+# ### Step 5: Facility Distribution
+#     encounters_df.groupBy("facility_name").count()
+# - Validates visits are spread across all 3 hospitals
+# - Volume distribution affects capacity planning, nurse-to-patient 
+#   ratios, and capital investment decisions
+# - We want roughly even distribution across facilities
+#
+# ### Step 6: Record Counts Summary
+#     for table in csv_files:
+#         count = spark.table(f"bronze_{table}").count()
+# - Quick validation: do ALL 7 tables have data?
+# - Any table with 0 rows indicates a file upload or ingestion bug
+# - This is the most basic data quality check — "is it there?"
+#
+# ## 3. Summary
+# 
+# Data exploration queries validate that all 7 Bronze tables were 
+# populated correctly, check for realistic distributions in patient 
+# demographics, encounter types, diagnoses, and facility volumes, 
+# and establish a baseline understanding of the clinical landscape 
+# before applying Silver transformations.
 
 
 # ╔════════════════════════════════════════════════════════════════╗

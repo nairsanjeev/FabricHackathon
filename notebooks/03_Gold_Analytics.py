@@ -22,14 +22,29 @@
 #
 # # 🥇 Gold Layer — Business-Ready Healthcare KPIs
 #
-# ## What is the Gold Layer?
+# ## 1. What this notebook does (business meaning)
 #
-# The Gold layer contains **pre-computed, business-ready analytics 
-# tables** that Power BI dashboards and Data Agents consume directly. 
-# These are the "answers" to the organization's most important 
-# questions, pre-calculated for performance.
+# The Gold layer is the **final tier** of the Medallion Architecture 
+# (Bronze → Silver → Gold). It contains **pre-computed, business-ready 
+# analytics tables** that Power BI dashboards and AI Data Agents 
+# consume directly.
 #
-# ## What we'll compute
+# While Silver tables are "clean data," Gold tables are "answers" — 
+# each one pre-computes a specific healthcare KPI so Power BI doesn't 
+# have to recalculate complex joins and aggregations at query time.
+#
+# ### Why pre-compute these metrics?
+# - **Performance:** A 30-day readmission calculation requires a 
+#   self-join across millions of encounters. Pre-computing it once 
+#   means Power BI renders dashboards in <1 second.
+# - **Consistency:** Every report, dashboard, and AI agent uses the 
+#   SAME definition of "readmission" or "frequent flyer" because 
+#   the logic lives in one place (here).
+# - **Governance:** Business rule changes (e.g., CMS changes the 
+#   readmission window from 30 to 60 days) only need to be updated 
+#   in this one notebook.
+#
+# ## 2. What we'll compute
 #
 # | Gold Table | Healthcare Metric | Why It Matters |
 # |---|---|---|
@@ -39,6 +54,19 @@
 # | gold_encounter_summary | Volume with demographics | Demand forecasting & capacity planning |
 # | gold_financial | Revenue, denials, collection rates | $262B lost to denied claims annually |
 # | gold_population_health | Chronic disease prevalence | Proactive care reduces acute events |
+#
+# ## 3. Common patterns used in this notebook
+#
+# - **Self-join:** Comparing a table against itself to find 
+#   related rows (e.g., readmissions = same patient, later date)
+# - **Aggregation with `agg()`:** Computing multiple statistics 
+#   (count, sum, avg, stddev, min, max) in a single pass
+# - **Denormalization:** Pre-joining encounters + patients into 
+#   one wide table for Power BI star-schema consumption
+# - **Boolean flags:** `when(condition, True).otherwise(False)` 
+#   for easy filtering (e.g., `was_readmitted`, `is_frequent_flyer`)
+# - **Validation prints:** Each Gold table includes benchmark 
+#   comparisons to national healthcare statistics
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -59,31 +87,122 @@ from pyspark.sql.window import Window
 #
 # ## 30-Day Hospital Readmissions
 #
-# ### What is a readmission?
-# A **readmission** occurs when a patient is discharged from an 
-# inpatient stay and then returns to the hospital within 30 days 
-# for another inpatient admission.
+# ### 1. What this measure represents (business meaning)
 #
-# ### Why does this matter?
+# A **30-day readmission** occurs when a patient is discharged from 
+# an inpatient hospital stay and then returns to the hospital for 
+# another inpatient admission within 30 calendar days of discharge.
+#
+# This is one of the most important quality metrics in US healthcare:
 # - **CMS Hospital Readmissions Reduction Program (HRRP):** Hospitals 
 #   with "excess" readmissions for heart failure, heart attack, 
 #   pneumonia, COPD, hip/knee replacement, and CABG surgery face 
 #   Medicare payment reductions of up to **3%** of total DRG payments.
-# - **Patient impact:** Readmissions indicate the patient wasn't 
-#   fully recovered or didn't have adequate follow-up care.
+# - **Patient impact:** A readmission means the patient wasn't fully 
+#   recovered, didn't understand discharge instructions, or lacked 
+#   adequate follow-up care. It signals a care transition failure.
 # - **Financial impact:** The average inpatient stay costs $13,000. 
-#   A preventable readmission is $13K in avoidable cost.
-# - **National benchmark:** ~15% readmission rate nationally.
+#   Every preventable readmission = $13K in avoidable cost.
+# - **National benchmark:** ~15% readmission rate nationally. Above 
+#   15% triggers CMS scrutiny and potential payment penalties.
 #
-# ### Technical approach: Self-Join
-# The algorithm works by joining the encounters table to itself:
-# 1. Take all inpatient discharges as "index admissions"
-# 2. For each index admission, look for another inpatient admission 
-#    by the **same patient** within 30 days of discharge
-# 3. Exclude deaths and AMA (Against Medical Advice) discharges 
-#    from the index set (per CMS methodology)
-# 4. Mark each index admission as readmitted = TRUE/FALSE
-# 5. Deduplicate so each index admission appears only once
+# ### 2. Step-by-step walkthrough of the logic
+#
+# #### Step 1: Filter to Inpatient encounters only
+#     encounters = spark.table("silver_encounters")
+#         .filter(col("encounter_type") == "Inpatient")
+# - Per CMS definition, readmissions ONLY apply to inpatient stays
+# - ED visits, outpatient appointments, and ambulatory encounters 
+#   are excluded — even if the patient returned to the ED within 
+#   30 days, that's not a "readmission" by CMS rules
+#
+# #### Step 2: Create two aliases for the self-join
+#     index_admissions = encounters.alias("idx")
+#     readmissions = encounters.alias("readmit")
+# - **Why a self-join?** We need to compare EACH encounter against 
+#   ALL other encounters for the SAME patient. This requires two 
+#   "copies" of the same table — one representing the "index" 
+#   (original) admission, one representing the potential readmission.
+# - `alias("idx")` and `alias("readmit")` give each copy a name so 
+#   Spark can distinguish `idx.encounter_date` from 
+#   `readmit.encounter_date`
+# - Without aliases, Spark would throw an
+#   `AnalysisException: ambiguous reference` error
+#
+# #### Step 3: Join with 5 conditions
+#     readmission_pairs = index_admissions.join(
+#         readmissions,
+#         (col("idx.patient_id") == col("readmit.patient_id")) &
+#         (col("readmit.encounter_date") > col("idx.discharge_date")) &
+#         (datediff(col("readmit.encounter_date"), col("idx.discharge_date")) <= 30) &
+#         (col("idx.encounter_id") != col("readmit.encounter_id")) &
+#         (col("idx.discharge_disposition") != "Expired") &
+#         (col("idx.discharge_disposition") != "Against Medical Advice"),
+#         "left")
+# - ✅ **Condition 1:** Same patient (`patient_id` match). The readmission 
+#   must be by the SAME person returning.
+# - ✅ **Condition 2:** Readmission happened AFTER the index discharge. 
+#   Without this, Spark would match encounters that happened BEFORE 
+#   the index admission.
+# - ✅ **Condition 3:** Within 30 days. `datediff()` returns the number 
+#   of calendar days between two dates. This is the CMS-defined window.
+# - ✅ **Condition 4:** Not the same encounter. Without this, every 
+#   encounter matches itself (patient_id = patient_id, date within 0 
+#   days of itself).
+# - ✅ **Conditions 5-6:** CMS exclusions. Patients who died during the 
+#   index stay (`Expired`) or left against medical advice (`AMA`) are 
+#   excluded because their readmissions are not considered preventable.
+# - `"left"` join ensures ALL index admissions appear in the output, 
+#   even those WITHOUT a readmission (they get NULL in readmit columns).
+#
+# #### Step 4: Build the output table
+#     gold_readmissions = readmission_pairs.select(
+#         col("idx.encounter_id").alias("index_encounter_id"),
+#         ...
+#         when(col("readmit.encounter_id").isNotNull(), True)
+#             .otherwise(False).alias("was_readmitted"),
+#         ...)
+# - Each row = one index admission with its readmission status
+# - **Output columns explained:**
+#   - `index_encounter_id` — The original admission being evaluated
+#   - `index_admission_date` / `index_discharge_date` — When the index 
+#     stay started and ended
+#   - `index_diagnosis` — Primary diagnosis of the original stay
+#   - `index_facility` / `index_provider` — Where and who treated them
+#   - `index_los` — Length of the original stay (short stays may 
+#     indicate premature discharge)
+#   - `index_disposition` — How the patient left (Home, SNF, etc.)
+#   - `readmit_encounter_id` — The readmission encounter (NULL if none)
+#   - `readmit_date` — When the patient returned (NULL if not readmitted)
+#   - `was_readmitted` — Boolean flag: `isNotNull()` on the readmit 
+#     encounter ID. If the LEFT join found a match, it's TRUE.
+#   - `days_to_readmission` — How quickly they returned (NULL if not)
+#
+# #### Step 5: Deduplicate
+#     .dropDuplicates(["index_encounter_id"])
+# - If a patient was readmitted MULTIPLE times within 30 days, the 
+#   self-join creates multiple rows for the same index admission. 
+#   We keep only the FIRST match (earliest readmission) per index.
+#
+# #### Step 6: Validate readmission rate
+#     rate = (readmitted / total * 100)
+# - Compare to the national benchmark (~15%). Rates above 15% 
+#   indicate potential care transition gaps. Rates below 10% may 
+#   indicate insufficient case volume for statistical significance.
+# - Readmission rates by diagnosis reveal which conditions are 
+#   driving returns. Heart failure typically leads (23%+), which is 
+#   why CMS specifically targets it under HRRP.
+#
+# ### 3. Summary
+#
+# The readmission logic uses a self-join on the inpatient encounters 
+# table to pair each index admission with any subsequent inpatient 
+# admission by the same patient within 30 days of discharge. CMS 
+# exclusions (death, AMA) are applied in the join conditions. The 
+# result is a Boolean `was_readmitted` flag and `days_to_readmission` 
+# for each index admission, deduplicated to count each index event 
+# only once. This enables readmission rate reporting by diagnosis, 
+# facility, provider, and time period.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -185,24 +304,66 @@ gold_readmissions.groupBy("index_diagnosis") \
 #
 # ## ED Utilization & Frequent Flyers
 #
-# ### Business context
-# **ED frequent flyers** — patients with 4+ ED visits per year —  
-# represent a small fraction of the population but consume a 
-# disproportionate share of resources:
+# ### 1. What this measure represents (business meaning)
+#
+# **ED frequent flyers** are patients with 4+ ED visits per year. 
+# They represent a small fraction of the population but consume a 
+# disproportionate share of emergency resources:
 # - The top 5% of ED utilizers account for ~30% of all ED visits
-# - Many frequent flyers have unmanaged chronic conditions that 
-#   could be treated more effectively in outpatient settings
-# - Each ED visit costs $2,000-5,000 vs. $150-300 for primary care
+# - Each ED visit costs $2,000–$5,000 vs. $150–$300 for primary care
+# - Many frequent flyers have unmanaged chronic conditions (diabetes, 
+#   COPD, CHF) that could be treated in outpatient settings at 1/10th 
+#   the cost
+# - Identifying them enables **care management outreach** — connecting 
+#   patients with primary care, social workers, transportation, and 
+#   community health resources
 #
-# Identifying frequent flyers enables **care management outreach** — 
-# connecting these patients with primary care, social workers, and 
-# community health resources to address root causes.
+# ### 2. Step-by-step walkthrough of the logic
 #
-# ### Technical approach
-# 1. Filter to ED encounters only
-# 2. Group by patient + year to count visits
-# 3. Flag anyone with ≥4 visits as a frequent flyer
-# 4. Join with patient demographics to profile the population
+# #### Step 1: Filter to ED encounters and count visits per patient
+#     ed_visits = encounters
+#         .filter(col("encounter_type") == "ED")
+#         .groupBy("patient_id", "encounter_year")
+#         .agg(
+#             count("*").alias("ed_visit_count"),
+#             countDistinct("facility_name").alias("facilities_visited"),
+#             sum("total_charges").alias("total_ed_charges"))
+# - `filter(encounter_type == "ED")` isolates emergency department visits
+# - `groupBy("patient_id", "encounter_year")` groups by patient AND year 
+#   because the 4-visit threshold is annual (4 visits in 2 years = 2/year 
+#   = NOT a frequent flyer)
+# - Three aggregations:
+#   - ✅ `count("*")` → total ED visit count per year
+#   - ✅ `countDistinct("facility_name")` → number of different hospitals 
+#     visited. If >1, this suggests "ED shopping" (going to different EDs 
+#     to avoid follow-up coordination or to seek specific treatments)
+#   - ✅ `sum("total_charges")` → total financial impact of each patient's 
+#     ED utilization
+#
+# #### Step 2: Flag frequent flyers
+#     .withColumn("is_frequent_flyer",
+#         when(col("ed_visit_count") >= 4, True).otherwise(False))
+# - The 4+ threshold is the standard clinical definition used by 
+#   most health systems and population health platforms
+# - Boolean flag enables easy Power BI filtering and aggregation
+#
+# #### Step 3: Join with patient demographics
+#     .join(patients.select("patient_id", "first_name", "last_name",
+#                           "age", "insurance_type", "risk_score"),
+#           "patient_id", "left")
+# - LEFT join with Silver Patients to answer: "Who ARE our frequent 
+#   flyers? Are they elderly? Uninsured? High-risk?"
+# - Demographics drive intervention design:
+#   - Elderly frequent flyers → home health visits, fall prevention
+#   - Uninsured frequent flyers → Medicaid enrollment assistance
+#   - High-risk frequent flyers → care manager assignment
+#
+# ### 3. Summary
+#
+# The ED utilization analysis counts per-patient ED visits by year, 
+# flags patients with 4+ annual visits as frequent flyers, tracks 
+# multi-facility usage ("ED shopping"), and joins with demographics 
+# to profile the frequent flyer population for targeted intervention.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -254,19 +415,72 @@ ed_frequent_flyers.groupBy("ed_visit_count").count().orderBy("ed_visit_count").s
 #
 # ## Average Length of Stay (ALOS) by Diagnosis
 #
-# ### Business context
-# ALOS is a core **operational efficiency metric**:
-# - The national average for inpatient stays is ~4.5 days
-# - Each additional inpatient day costs the hospital $2,000-3,000 
-#   in direct costs (nursing, meds, supplies, food)
-# - ALOS outliers may indicate complications, care delays, or 
-#   discharge planning inefficiencies
-# - Diagnosis-specific ALOS helps set expectations (e.g., a hip 
-#   replacement should be 2-3 days; >5 days signals complications)
+# ### 1. What this measure represents (business meaning)
 #
-# ### Technical approach
-# Group inpatient encounters by diagnosis + facility, compute 
-# statistical measures (mean, std dev, min, max) and average charges.
+# ALOS is a core **operational efficiency metric** that measures how 
+# many days, on average, patients stay in the hospital for a given 
+# diagnosis. It directly impacts cost, capacity, and quality:
+# - **Cost:** Each additional inpatient day costs $2,000–$3,000 in 
+#   direct costs (nursing, medications, supplies, dietary)
+# - **Capacity:** Longer stays = fewer available beds = longer wait 
+#   times in the ED ("boarding") and cancelled elective surgeries
+# - **Quality signal:** ALOS outliers may indicate complications, 
+#   missed diagnoses, care coordination delays, or discharge 
+#   planning inefficiencies
+# - **National benchmark:** ~4.5 days for all inpatient stays
+# - **Diagnosis-specific expectations:**
+#   - Hip replacement: 2–3 days (>5 days = complications)
+#   - Pneumonia: 3–4 days
+#   - COPD exacerbation: 4–6 days
+#   - Heart failure: 4–7 days
+#
+# ### 2. Step-by-step walkthrough of the logic
+#
+# #### Step 1: Filter to valid inpatient stays
+#     encounters.filter(
+#         (col("encounter_type") == "Inpatient") &
+#         (col("length_of_stay_days") > 0))
+# - `encounter_type == "Inpatient"` — ALOS only applies to admitted 
+#   patients, not ED or outpatient visits
+# - `length_of_stay_days > 0` — Excludes observation/same-day stays 
+#   that were coded as inpatient in error. LOS of 0 would skew the 
+#   average downward and misrepresent true inpatient length.
+#
+# #### Step 2: Group by diagnosis AND facility
+#     .groupBy(
+#         "primary_diagnosis_code",
+#         "primary_diagnosis_description",
+#         "facility_name")
+# - Grouping by BOTH diagnosis and facility enables performance 
+#   comparison BETWEEN hospitals: "Does Metro General discharge 
+#   CHF patients faster than Regional Medical Center?"
+# - This is essential for internal benchmarking and best-practice 
+#   sharing across a health system
+#
+# #### Step 3: Compute statistical measures
+#     .agg(
+#         count("*").alias("admission_count"),
+#         round(avg("length_of_stay_days"), 1).alias("avg_los"),
+#         round(stddev("length_of_stay_days"), 1).alias("stddev_los"),
+#         min("length_of_stay_days").alias("min_los"),
+#         max("length_of_stay_days").alias("max_los"),
+#         round(avg("total_charges"), 2).alias("avg_charges"))
+# - ✅ `count("*")` → Volume: how many cases? Small volumes (<3) are 
+#   statistically unreliable
+# - ✅ `avg("length_of_stay_days")` → Mean LOS: the headline metric
+# - ✅ `stddev("length_of_stay_days")` → Variability: high stddev means 
+#   inconsistent care (some patients discharged quickly, others not)
+# - ✅ `min` / `max` → Range for outlier detection. A max of 30 days 
+#   when avg is 4 signals a case that needs review
+# - ✅ `avg("total_charges")` → Cost-per-case for financial analysis
+#
+# ### 3. Summary
+#
+# The ALOS analysis groups valid inpatient encounters (LOS > 0) by 
+# diagnosis and facility, then computes mean, standard deviation, 
+# min, max, count, and average charges. This enables cross-facility 
+# benchmarking, outlier detection, and cost-per-case analysis by 
+# diagnosis.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -315,18 +529,66 @@ gold_alos.groupBy("primary_diagnosis_description") \
 #
 # ## Encounter Summary (Volume & Demographics)
 #
-# ### Business context
-# This table is the **central fact table** for Power BI reporting. 
-# It combines encounter details with patient demographics, enabling 
-# slicing and dicing by:
-# - **Time:** month, quarter, year, day of week
-# - **Location:** facility, department
-# - **Patient:** age group, gender, insurance, risk level, race
-# - **Clinical:** diagnosis, encounter type, LOS category
+# ### 1. What this table represents (business meaning)
 #
-# This supports questions like: "How many Medicare ED visits did 
-# Metro General have in Q3?" or "What's the average LOS for 
-# high-risk inpatient patients aged 75+?"
+# This is the **central fact table** for Power BI reporting — the 
+# single most important Gold table. It combines encounter details 
+# with patient demographics into one wide, denormalized table that 
+# supports every slice-and-dice question a healthcare executive 
+# might ask:
+# - "How many Medicare ED visits did Metro General have in Q3?"
+# - "What's the average LOS for high-risk inpatient patients aged 75+?"
+# - "Which facility has the highest weekend admission rate?"
+# - "Show ED volume by month, filtered to Medicaid female patients"
+#
+# ### 2. Step-by-step walkthrough of the logic
+#
+# #### Step 1: Load Silver tables
+#     encounters = spark.table("silver_encounters")
+#     patients = spark.table("silver_patients")
+# - We need TWO tables: encounters (the facts) and patients (the 
+#   dimensions). Power BI works best with wide, flat tables.
+#
+# #### Step 2: Join encounters with patient demographics
+#     encounters.join(
+#         patients.select("patient_id", "age", "age_group", "gender",
+#                         "insurance_type", "risk_category", "race"),
+#         "patient_id", "left")
+# - **Denormalization:** Instead of making Power BI join 2 tables at 
+#   query time (which is slow and error-prone), we pre-join them here.
+# - `.select()` on patients picks ONLY the demographic columns we 
+#   want. This prevents:
+#   - ✅ Duplicate column names (both tables have `patient_id`)
+#   - ✅ Including sensitive data not needed for analytics
+#   - ✅ Bloating the table with unnecessary columns
+# - `"left"` join ensures encounters without a matching patient 
+#   record are still included (data quality issue, not silently lost)
+#
+# #### Step 3: Select the final column set
+#     .select(
+#         # Encounter facts
+#         "encounter_id", "encounter_date", "encounter_type", ...
+#         # Time dimensions (pre-computed in Silver)
+#         "encounter_month", "encounter_year", "encounter_quarter", ...
+#         # Patient dimensions (from the join)
+#         "age", "age_group", "gender", "insurance_type", ...)
+# - Three categories of columns in the output:
+#   - ✅ **Encounter facts:** encounter_id, dates, type, facility, 
+#     department, diagnosis, provider, disposition, LOS, charges
+#   - ✅ **Time dimensions:** month, year, quarter, day_of_week, 
+#     is_weekend, los_category (all pre-computed in Notebook 02)
+#   - ✅ **Patient dimensions:** age, age_group, gender, insurance, 
+#     risk_category, race (from the patient join)
+# - This creates a **star schema** fact table optimized for Power BI
+#
+# ### 3. Summary
+#
+# The Encounter Summary denormalizes Silver encounters and patients 
+# into one wide fact table containing encounter details, time 
+# dimensions, and patient demographics. This eliminates the need for 
+# Power BI to perform runtime joins, enabling fast interactive 
+# filtering by any combination of time, location, clinical, and 
+# demographic dimensions.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -390,20 +652,66 @@ gold_encounter_summary.groupBy("encounter_month") \
 #
 # ## Financial Analysis — Revenue, Denials, Collections
 #
-# ### Business context
-# Healthcare revenue cycle management is complex:
-# - A claim is **submitted** to the payer (insurance company)
-# - The payer can **pay** (full or partial), **deny**, or leave 
-#   the claim **pending**
-# - Denied claims must be appealed — each appeal costs $25-50 in 
-#   administrative labor
-# - The industry loses ~$262 billion to denied claims annually
+# ### 1. What this table represents (business meaning)
 #
-# Key metrics:
-# - **Collection rate** = paid/billed — How many cents on the 
-#   dollar are you actually collecting? Target: >85%
+# Healthcare revenue cycle management tracks the journey of a claim 
+# from service delivery to payment:
+# 1. Patient receives care (encounter)
+# 2. Hospital submits a **claim** to the payer (insurance company)
+# 3. Payer adjudicates: **pay** (full or partial), **deny**, or **pend**
+# 4. Denied claims must be **appealed** — each appeal costs $25–$50 
+#    in administrative labor
+# 5. The industry loses ~$262 billion to denied claims annually
+#
+# Key financial metrics this table supports:
+# - **Collection rate** = paid / billed — cents on the dollar 
+#   actually collected. Target: >85%
 # - **Denial rate** = denied claims / total claims — Target: <10%
-# - **Days to payment** — How long until you get paid? Cash flow matters.
+# - **Days to payment** — cash flow velocity. 45+ days is concerning.
+#
+# ### 2. Step-by-step walkthrough of the logic
+#
+# #### Step 1: Load and join claims with encounter context
+#     gold_financial = claims.join(
+#         encounters.select("encounter_id", "encounter_type",
+#                          "facility_name", "department",
+#                          "primary_diagnosis_description",
+#                          "encounter_month", "encounter_year"),
+#         "encounter_id", "left")
+# - Claims alone have financial data but no clinical context. Without 
+#   the join, you can't answer "What's the denial rate for ED visits 
+#   at Metro General?" or "Which diagnosis has the lowest collection 
+#   rate?"
+# - We select SPECIFIC encounter columns to add dimensional context:
+#   - ✅ `encounter_type` → Filter by ED, Inpatient, Outpatient
+#   - ✅ `facility_name` → Compare financial performance across hospitals
+#   - ✅ `department` → Drill down within a facility
+#   - ✅ `primary_diagnosis_description` → Which diagnoses earn the most/least?
+#   - ✅ `encounter_month` / `encounter_year` → Time-series revenue trending
+#
+# #### Step 2: Validate with denial analysis by payer
+#     gold_financial.groupBy("payer").agg(
+#         count("*").alias("total_claims"),
+#         sum(when(claim_status == "Denied", 1).otherwise(0)).alias("denied_claims"),
+#         round(denied / total * 100, 1).alias("denial_rate_pct"),
+#         round(sum("paid_amount") / sum("claim_amount") * 100, 1)
+#             .alias("collection_rate_pct"))
+# - This is the most actionable financial report: denial and 
+#   collection rates broken down by insurance payer
+# - High denial rates for a specific payer indicate:
+#   - ✅ Contract terms may need renegotiation
+#   - ✅ Claim documentation may not meet that payer's requirements
+#   - ✅ Prior authorization rules may be changing
+# - The revenue cycle team uses this to prioritize where to focus 
+#   denial prevention and appeal efforts
+#
+# ### 3. Summary
+#
+# The Financial Analysis table denormalizes claims with encounter 
+# context (type, facility, diagnosis, time period) to enable 
+# revenue cycle reporting. The validation query computes denial 
+# rates and collection rates by payer, revealing which insurance 
+# companies are the most difficult to collect from.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -462,23 +770,104 @@ gold_financial.groupBy("payer") \
 #
 # ## Population Health — Chronic Disease Prevalence
 #
-# ### Business context
-# **Population health management** identifies groups of patients 
-# with common risk factors or conditions to deliver targeted 
-# interventions *before* they need acute care.
+# ### 1. What this table represents (business meaning)
 #
-# - Patients with **3+ chronic conditions** (multimorbidity) 
-#   account for 70% of healthcare spending in the US
-# - Identifying these patients enables proactive outreach: 
-#   medication management, care coordination, home health visits
-# - Common "clusters" to watch: Diabetes + Hypertension + CKD 
-#   (the "cardiometabolic triad") — these patients are at very 
-#   high risk for heart failure, stroke, and dialysis
+# **Population health management** identifies groups of patients with 
+# common risk factors or chronic conditions to deliver targeted 
+# interventions BEFORE they need acute care (ED visits, hospital 
+# admissions). This is the shift from **reactive** ("treat the sick") 
+# to **proactive** ("keep the healthy from getting sick") healthcare.
 #
-# ### Technical approach
-# 1. Count chronic conditions per patient from silver_conditions
-# 2. Create boolean flags for key conditions (diabetes, CHF, etc.)
-# 3. Classify into multimorbidity tiers (None, Moderate, High)
+# Key facts driving this analysis:
+# - Patients with **3+ chronic conditions** (multimorbidity) account 
+#   for **70% of all healthcare spending** in the US
+# - Common high-cost clusters to watch:
+#   - **Cardiometabolic triad:** Diabetes + Hypertension + CKD — these 
+#     patients are at very high risk for heart failure, stroke, and 
+#     dialysis
+#   - **Cardiopulmonary:** CHF + COPD — each condition worsens the other
+#   - **Mental health comorbidity:** Depression + any chronic disease — 
+#     doubles healthcare costs and halves medication adherence
+# - Identifying these patients enables proactive outreach: medication 
+#   management, care coordination, home health visits, telehealth 
+#   check-ins
+#
+# ### 2. Step-by-step walkthrough of the logic
+#
+# #### Step 1: Count chronic conditions per patient
+#     patient_condition_count = conditions
+#         .filter(col("condition_type") == "Chronic")
+#         .groupBy("patient_id")
+#         .agg(
+#             count("*").alias("chronic_condition_count"),
+#             collect_set("condition_category").alias("condition_list"))
+# - `filter("Chronic")` excludes acute conditions (flu, fractures, 
+#   infections) that resolve — we want ongoing conditions only
+# - `groupBy("patient_id")` computes one row per patient
+# - Two aggregations:
+#   - ✅ `count("*")` → how many chronic conditions this patient has
+#   - ✅ `collect_set("condition_category")` → collects all UNIQUE 
+#     condition categories into an array: `["Diabetes", "Hypertension", 
+#     "CKD"]`. This array enables the boolean flags in Step 3.
+#
+# #### Step 2: Join with patients
+#     patients.join(patient_condition_count, "patient_id", "left")
+# - LEFT join ensures patients with ZERO chronic conditions are still 
+#   included (they appear with NULL values, which we handle next)
+#
+# #### Step 3: Handle NULLs and create condition flags
+#     .withColumn("chronic_condition_count",
+#         coalesce(col("chronic_condition_count"), lit(0)))
+#     .withColumn("has_diabetes",
+#         array_contains(col("condition_list"), "Diabetes"))
+# - `coalesce(value, 0)` replaces NULL with 0 for patients with no 
+#   chronic conditions (they had no rows in the condition table)
+# - `array_contains(array, "Diabetes")` checks if "Diabetes" exists 
+#   in the patient's collected condition list. Returns TRUE/FALSE.
+# - We create boolean flags for 5 key conditions:
+#   - ✅ `has_diabetes` — Type 2 Diabetes (E11)
+#   - ✅ `has_heart_failure` — Congestive Heart Failure (I50)
+#   - ✅ `has_copd` — Chronic Obstructive Pulmonary Disease (J44)
+#   - ✅ `has_hypertension` — Essential Hypertension (I10)
+#   - ✅ `has_ckd` — Chronic Kidney Disease (N18)
+# - **Why boolean flags?** Power BI can use these directly as slicer 
+#   filters: "Show me all patients with diabetes" = filter 
+#   `has_diabetes = TRUE`
+#
+# #### Step 4: Classify multimorbidity tiers
+#     .withColumn("multimorbidity",
+#         when(col("chronic_condition_count") >= 3, "High (3+)")
+#         .when(col("chronic_condition_count") >= 1, "Moderate (1-2)")
+#         .otherwise("None"))
+# - Three tiers with clinical implications:
+#   - ✅ **None:** Healthy, low-cost, preventive care only
+#   - ✅ **Moderate (1-2):** Standard chronic disease management 
+#     (quarterly visits, medication management)
+#   - ✅ **High (3+):** Complex care coordination needed. These patients 
+#     should have an assigned care manager, monthly check-ins, and 
+#     medication reconciliation. They represent ~5% of patients but 
+#     ~50% of total cost.
+#
+# #### Step 5: Validate prevalence rates
+#     for cond in ["has_diabetes", "has_heart_failure", ...]:
+#         cnt = gold_population_health.filter(col(cond) == True).count()
+# - Compare computed prevalence to national benchmarks:
+#   - Hypertension: ~47% of US adults
+#   - Diabetes: ~15% of US adults
+#   - COPD: ~6% of US adults
+#   - Heart Failure: ~2% of US adults
+#   - CKD: ~15% of US adults
+# - If prevalence is wildly different, investigate the data generator
+#
+# ### 3. Summary
+#
+# The Population Health table combines patient demographics with 
+# per-patient chronic condition counts. It creates boolean flags 
+# for 5 key conditions using `array_contains()` on the 
+# `collect_set()` array, and classifies patients into multimorbidity 
+# tiers (None, Moderate, High). This enables population health 
+# dashboards to identify high-risk patient cohorts for targeted 
+# care management interventions.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
