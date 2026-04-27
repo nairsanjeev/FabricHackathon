@@ -23,6 +23,7 @@ Healthcare providers — hospital administrators, clinical informaticists, data 
 | 3:15 – 4:00 | [Module 5 — Gen AI: Clinical Intelligence](lab-guide/Module05_GenAI_Clinical_Intelligence.md) | Notebooks, Azure OpenAI |
 | 4:00 – 4:25 | [Module 6 — Prep Data for AI](lab-guide/Module06_Prep_Data_for_AI.md) | Data Quality, Feature Engineering |
 | 4:25 – 5:00 | [Module 7 — Data Agent & Power BI Copilot](lab-guide/Module07_Data_Agent.md) | Fabric Data Agent, Power BI Copilot |
+| *(Optional)* | [Module 8 — Building with VS Code Agent Mode](lab-guide/Module08_VSCode_Agent_Mode.md) | GitHub Copilot Agent Mode, VS Code |
 
 ## 📂 Repository Structure
 
@@ -37,7 +38,8 @@ FabricHackathon/
 │   ├── Module04_RealTime_Analytics.md
 │   ├── Module05_GenAI_Clinical_Intelligence.md
 │   ├── Module06_Prep_Data_for_AI.md   ← Data quality & AI-ready preparation
-│   └── Module07_Data_Agent.md         ← Data Agent + Power BI Copilot testing
+│   ├── Module07_Data_Agent.md         ← Data Agent + Power BI Copilot testing
+│   └── Module08_VSCode_Agent_Mode.md  ← (Optional) Build entire lab with AI agent
 ├── data/
 │   ├── generate_healthcare_data.py    ← Python script to regenerate data
 │   ├── patients.csv                   ← 200 synthetic patients
@@ -78,6 +80,7 @@ By the end of this lab, you will have:
 7. **AI-Ready Data** with quality checks, a data dictionary, and pre-built summary views (Patient 360°, Facility Summary)
 8. **A Data Agent** that lets you ask questions about your healthcare data in natural language
 9. **Power BI Copilot** tested for AI-assisted visual analytics and executive narrative generation
+10. **(Optional) VS Code Agent Mode** — experience building the entire lab through conversational AI with GitHub Copilot
 
 ## ⚠️ Important Notes
 

@@ -372,6 +372,8 @@ Congratulations! You have built an end-to-end healthcare analytics platform on M
 
 This represents the full spectrum of what Microsoft Fabric enables for healthcare — from raw data landing to AI-powered insights, all in a unified, governed platform.
 
+> **💡 Want to see an alternate approach?** [Module 8 (Optional)](Module08_VSCode_Agent_Mode.md) shows how to build this entire lab using VS Code Agent Mode — an AI-assisted approach where you describe what you want and GitHub Copilot builds it for you.
+
 ---
 
-**[← Module 6: Prep Data for AI](Module06_Prep_Data_for_AI.md)** | **[Back to Overview](../README.md)**
+**[← Module 6: Prep Data for AI](Module06_Prep_Data_for_AI.md)** | **[Module 8 (Optional): VS Code Agent Mode →](Module08_VSCode_Agent_Mode.md)** | **[Back to Overview](../README.md)**
