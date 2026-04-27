@@ -296,16 +296,7 @@ encounter_summary = encounters.groupBy("patient_id").agg(
     max("encounter_date").alias("last_encounter")
 )
 
-# Claims summary per patient
-claims_summary = claims.groupBy(
-    encounters.select("encounter_id", "patient_id")
-    .join(claims, "encounter_id")
-    .select("patient_id")
-    .distinct()
-    .columns[0]  # patient_id
-)
-
-# Simpler approach: join claims through encounters
+# Claims summary per patient (join claims through encounters)
 patient_claims = encounters.select("encounter_id", "patient_id") \
     .join(claims, "encounter_id") \
     .groupBy("patient_id") \

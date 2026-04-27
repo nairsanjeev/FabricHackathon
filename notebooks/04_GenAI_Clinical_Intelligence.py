@@ -177,7 +177,9 @@ print(response.choices[0].message.content)
 # ║  CELL 7 — CODE: Load Clinical Notes                            ║
 # ╚════════════════════════════════════════════════════════════════╝
 
-df_notes = spark.sql("SELECT * FROM silver_clinical_notes")
+# For schema-enabled lakehouses, use 3-part name: lakehouse.schema.table
+# If your lakehouse does NOT have schema enabled, use just the table name
+df_notes = spark.sql("SELECT * FROM HealthcareLakehouse.dbo.silver_clinical_notes")
 
 print(f"Total clinical notes: {df_notes.count()}")
 df_notes.groupBy("note_type").count().show()
@@ -608,7 +610,7 @@ df_ai_insights.select("note_id", "note_type", "ai_summary").show(5, truncate=60)
 # ║  CELL 19 — CODE: Explore AI-Generated Insights                ║
 # ╚════════════════════════════════════════════════════════════════╝
 
-df_insights = spark.sql("SELECT * FROM gold_clinical_ai_insights")
+df_insights = spark.sql("SELECT * FROM HealthcareLakehouse.dbo.gold_clinical_ai_insights")
 
 # Display summaries — check: are they concise? accurate? useful?
 print("=" * 60)
