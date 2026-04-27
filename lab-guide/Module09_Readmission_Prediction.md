@@ -5,7 +5,7 @@
 | Objective | Use Azure OpenAI as a feature engineering assistant to build a machine learning model that predicts 30-day hospital readmissions |
 | Tools | Fabric Notebook, Azure OpenAI, PySpark, XGBoost |
 
-> **⚠️ This module is OPTIONAL.** It builds on the data created in Modules 1–2 and the Gen AI skills from Module 5. You will use Gen AI not just for text analysis, but as an **ML feature engineering assistant** — a technique that reduced development time by 73% in a recent healthcare hackathon.
+> **⚠️ This module is OPTIONAL.** It builds on the data created in Modules 1–2 and the Gen AI skills from Module 5. You will use Gen AI not just for text analysis, but as an **ML feature engineering assistant**.
 
 ---
 
