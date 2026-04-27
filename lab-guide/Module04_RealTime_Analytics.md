@@ -327,7 +327,7 @@ PatientVitals
 #### Query 2: SIRS/Sepsis Alerts — Active Patients Meeting Criteria
 ```kql
 PatientVitals
-| where timestamp > ago(5m)
+| where todatetime(timestamp) > ago(5m)
 | where sirs_alert == true
 | summarize 
     latest_reading = max(timestamp),
@@ -351,7 +351,7 @@ PatientVitals
 #### Query 4: Department-Level Census & Alert Summary
 ```kql
 PatientVitals
-| where timestamp > ago(5m)
+| where todatetime(timestamp) > ago(5m)
 | summarize 
     patient_count = dcount(patient_id),
     sirs_alerts = dcountif(patient_id, sirs_alert == true),
@@ -365,7 +365,7 @@ PatientVitals
 #### Query 5: Vital Sign Distribution (for anomaly detection)
 ```kql
 PatientVitals
-| where timestamp > ago(10m)
+| where todatetime(timestamp) > ago(10m)
 | summarize 
     hr_p50 = percentile(heart_rate, 50),
     hr_p95 = percentile(heart_rate, 95),
@@ -379,7 +379,7 @@ PatientVitals
 #### Query 6: Alert Timeline (last 30 minutes)
 ```kql
 PatientVitals
-| where timestamp > ago(30m)
+| where todatetime(timestamp) > ago(30m)
 | where sirs_alert == true
 | summarize alert_count = count() by bin(timestamp, 1m), facility_name
 | order by timestamp asc
@@ -405,7 +405,7 @@ PatientVitals
 3. Enter this query:
 ```kql
 PatientVitals
-| where timestamp > ago(5m)
+| where todatetime(timestamp) > ago(5m)
 | where sirs_alert == true
 | summarize alert_patients = dcount(patient_id)
 ```
@@ -431,7 +431,7 @@ PatientVitals
 ```kql
 PatientVitals
 | where patient_id in ("RT-P001", "RT-P002", "RT-P003")
-| where timestamp > ago(10m)
+| where todatetime(timestamp) > ago(10m)
 | project timestamp, patient_id, heart_rate
 | render timechart
 ```
@@ -442,7 +442,7 @@ PatientVitals
 1. Add a tile:
 ```kql
 PatientVitals
-| where timestamp > ago(10m)
+| where todatetime(timestamp) > ago(10m)
 | summarize avg_spo2 = round(avg(spo2_percent), 1) by bin(timestamp, 30s), facility_name
 | render timechart
 ```
@@ -453,7 +453,7 @@ PatientVitals
 1. Add a tile:
 ```kql
 PatientVitals
-| where timestamp > ago(5m)
+| where todatetime(timestamp) > ago(5m)
 | summarize 
     total_patients = dcount(patient_id),
     sirs_alerts = dcountif(patient_id, sirs_alert == true)

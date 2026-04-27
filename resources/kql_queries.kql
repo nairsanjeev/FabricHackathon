@@ -19,7 +19,7 @@ PatientVitals
 // --- 2. Active SIRS/Sepsis Alerts (Last 5 Minutes) ---
 // Shows patients currently meeting SIRS criteria
 PatientVitals
-| where timestamp > ago(5m)
+| where todatetime(timestamp) > ago(5m)
 | where sirs_alert == true
 | summarize 
     latest_reading = max(timestamp),
@@ -43,7 +43,7 @@ PatientVitals
 // --- 4. Department Census & Alert Summary ---
 // Overview of each department's current status
 PatientVitals
-| where timestamp > ago(5m)
+| where todatetime(timestamp) > ago(5m)
 | summarize 
     patient_count = dcount(patient_id),
     sirs_alerts = dcountif(patient_id, sirs_alert == true),
@@ -57,7 +57,7 @@ PatientVitals
 // --- 5. Vital Sign Distribution by Facility ---
 // Percentile analysis for anomaly detection
 PatientVitals
-| where timestamp > ago(10m)
+| where todatetime(timestamp) > ago(10m)
 | summarize 
     hr_p50 = percentile(heart_rate, 50),
     hr_p95 = percentile(heart_rate, 95),
@@ -71,7 +71,7 @@ PatientVitals
 // --- 6. Alert Timeline (Time Chart) ---
 // Visualize alert frequency over time
 PatientVitals
-| where timestamp > ago(30m)
+| where todatetime(timestamp) > ago(30m)
 | where sirs_alert == true
 | summarize alert_count = count() by bin(timestamp, 1m), facility_name
 | order by timestamp asc
@@ -80,7 +80,7 @@ PatientVitals
 
 // --- 7. SIRS Alert Count (for Dashboard Big Number) ---
 PatientVitals
-| where timestamp > ago(5m)
+| where todatetime(timestamp) > ago(5m)
 | where sirs_alert == true
 | summarize alert_patients = dcount(patient_id)
 
@@ -88,21 +88,21 @@ PatientVitals
 // --- 8. Heart Rate Trend - High Risk Patients (Time Chart) ---
 PatientVitals
 | where patient_id in ("RT-P001", "RT-P002", "RT-P003")
-| where timestamp > ago(10m)
+| where todatetime(timestamp) > ago(10m)
 | project timestamp, patient_id, heart_rate
 | render timechart
 
 
 // --- 9. Average SpO2 by Facility (Time Chart) ---
 PatientVitals
-| where timestamp > ago(10m)
+| where todatetime(timestamp) > ago(10m)
 | summarize avg_spo2 = round(avg(spo2_percent), 1) by bin(timestamp, 30s), facility_name
 | render timechart
 
 
 // --- 10. Department Alert Heat Map Data ---
 PatientVitals
-| where timestamp > ago(5m)
+| where todatetime(timestamp) > ago(5m)
 | summarize 
     total_patients = dcount(patient_id),
     sirs_alerts = dcountif(patient_id, sirs_alert == true)
