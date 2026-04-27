@@ -445,18 +445,161 @@ print(f"{'=' * 70}")
 
 ---
 
+## Part F: Prep Data for AI in Power BI (Semantic Model Layer)
+
+In Parts A–E you cleaned and enriched data **at the Lakehouse level** (Delta tables). Power BI offers a complementary feature called **"Prep data for AI"** that works **at the Semantic Model level** — it tells Copilot in Power BI *how* to interpret your model, what business terms mean, and which visuals to return for common questions.
+
+> **Think of it this way:**
+> - Parts A–E = "Make the data itself AI-ready" (clean, joined, documented)
+> - Part F = "Make the *semantic model* AI-ready" (schema focus, business rules, curated answers)
+
+The **Prep data for AI** button (preview) is available on the **Home ribbon** in Power BI Desktop and on the **Semantic Model page ribbon** in the Power BI service. It provides three features:
+
+### Feature 1: AI Data Schema — Simplify What Copilot Sees
+
+Not every column in your semantic model is relevant for natural language Q&A. The AI Data Schema lets you **select which fields Copilot should reason over**, removing noise and ambiguity.
+
+#### Steps
+
+1. Open your healthcare report in **Power BI Desktop** (or select the semantic model in the Power BI service)
+2. Click **Prep data for AI** on the Home ribbon
+3. Go to the **Simplify data schema** tab
+4. **Deselect** columns that would confuse Copilot — for example:
+   - Internal surrogate keys (`encounter_id`, `claim_id`) — keep only human-readable identifiers
+   - ETL metadata columns (`_loaded_at`, `_source_file`)
+   - Raw codes when you also have descriptions (keep `condition_description`, hide `condition_code`)
+5. **Keep selected** the columns that users would naturally ask about:
+   - `patient_name`, `age`, `insurance_type`, `facility_name`
+   - `total_charges`, `readmission_rate_pct`, `length_of_stay_days`
+   - `chronic_condition_count`, `multimorbidity`, `claim_status`
+6. Click **Apply**
+
+> **Healthcare example:** A clinician asking "Which patients have the highest ED utilization?" doesn't need to see `encounter_id` or `payer_code`. By hiding those fields, Copilot focuses on the right columns and produces cleaner answers.
+
+---
+
+### Feature 2: AI Instructions — Teach Copilot Your Business Context
+
+AI Instructions let you provide **plain-text guidance** that Copilot uses when interpreting questions. This is where you encode domain knowledge, terminology, and analysis rules.
+
+#### Steps
+
+1. In the **Prep data for AI** dialog, go to the **Add AI instructions** tab
+2. Enter instructions that help Copilot understand your healthcare data. Here is a recommended set for our lab:
+
+```
+## Healthcare Analytics Context
+
+You are analyzing data for a hospital network with 3 facilities:
+Metro General Hospital, Community Medical Center, and Riverside Health System.
+
+## Key Terminology
+- "Readmission" = a patient returning to any facility within 30 days of discharge
+- "Frequent flyer" = a patient with 4 or more ED visits in the analysis period
+- "ALOS" = Average Length of Stay, measured in days for inpatient encounters only
+- "Denial rate" = percentage of claims with claim_status = 'Denied'
+- "Multimorbidity" = patients with 3 or more chronic conditions (High tier)
+- "Payment ratio" = paid_amount / claim_amount (1.0 = fully paid, 0.0 = fully denied)
+
+## Analysis Rules
+- When analyzing readmissions, always group by facility and diagnosis
+- When showing financial metrics, break down by insurance_type (Medicare, Medicaid, Commercial, Self-Pay)
+- For population health questions, prioritize the gold_patient_360 table — it has pre-joined demographics, encounters, and conditions
+- A "high-risk" patient has risk_category = 'Critical' or 'High'
+- When comparing facilities, use the gold_facility_summary table for pre-computed metrics
+- ED utilization analysis should highlight frequent flyers (is_frequent_flyer = TRUE)
+
+## Data Priority
+- Use gold_patient_360 as the primary table for patient-level questions
+- Use gold_facility_summary for facility comparison questions
+- Use gold_readmissions for 30-day readmission analysis
+- Use gold_financial for revenue cycle and claims questions
+```
+
+3. Click **Apply**
+
+> **Why this matters:** Without instructions, Copilot might not know that "readmission" means a 30-day return, or that "frequent flyer" is a clinical term with a specific threshold. These instructions ground Copilot in your organization's definitions.
+
+---
+
+### Feature 3: Verified Answers — Pin Curated Visuals to Common Questions
+
+Verified Answers let you **pre-approve specific visuals** as the "correct" response to common questions. When a user asks something matching a trigger phrase, Copilot returns your curated visual instead of generating a new one.
+
+#### Steps
+
+1. First, **create a visual** in your report that answers a common question — for example, a bar chart showing *30-Day Readmission Rate by Facility*
+2. **Select the visual** on the report canvas
+3. Click the **...** menu on the visual header → **Set up a verified answer**
+4. Add **trigger phrases** (5–7 recommended per verified answer):
+   - "What is the readmission rate?"
+   - "Show readmission rates by facility"
+   - "Which hospital has the most readmissions?"
+   - "30-day readmission comparison"
+   - "Compare readmission performance across facilities"
+5. Optionally add **filters** (up to 3) — e.g., allow users to filter by `insurance_type` or `diagnosis`
+6. Click **Apply**
+
+#### Suggested Verified Answers for Healthcare Lab
+
+| Visual | Trigger Phrases |
+|--------|----------------|
+| Readmission rate by facility (bar chart) | "readmission rate", "which facility has the most readmissions" |
+| ED frequent flyers by insurance type (table) | "frequent flyer patients", "ED high utilizers" |
+| Average length of stay by diagnosis (bar chart) | "ALOS by diagnosis", "which diagnoses have the longest stays" |
+| Claim denial rate by payer (pie/bar chart) | "denial rate", "which payer denies the most claims" |
+| Population health — chronic conditions (stacked bar) | "chronic disease prevalence", "how many patients have diabetes" |
+
+> **Verified answers show a ✅ checkmark** in Copilot, signaling to users that the response was human-reviewed and approved — building trust in the AI output.
+
+---
+
+### Testing Your Prep Data for AI Configuration
+
+After configuring all three features, test them in Power BI Desktop:
+
+1. Open the **Copilot pane** in Power BI Desktop
+2. Use the **skill picker** (dropdown in the Copilot chat box) → select **Answer questions about the data**
+3. Test your AI Instructions:
+   - Ask: *"What is the readmission rate at Metro General?"*
+   - Copilot should use the correct 30-day definition and reference the right table
+4. Test your Verified Answers:
+   - Ask: *"Show readmission rates by facility"*
+   - You should see your pinned visual with a ✅ verified checkmark
+5. Test your AI Data Schema:
+   - Ask a question referencing a hidden field — Copilot should **not** use it
+   - Ask a question referencing a visible field — Copilot should answer correctly
+
+> **Tip:** After each change to the Prep data for AI settings, close and reopen the Copilot pane to refresh.
+
+### Mark Your Model as Approved for Copilot
+
+Once you're satisfied with the configuration:
+
+1. Go to the **Power BI service** and find your semantic model
+2. Click the **Settings** icon
+3. Expand the **Approved for Copilot** section
+4. Check the **Approved for Copilot** box → click **Apply**
+
+This removes friction treatments (disclaimers) from Copilot answers for your model, signaling that the data is curated and trusted.
+
+---
+
 ## 💡 Discussion: Data Preparation Best Practices for AI
 
 **Why this step matters:**
 - Data Agents generate SQL/queries from natural language. If table/column names are cryptic, the AI struggles
 - Pre-joined views reduce the chance of incorrect joins
 - A data dictionary gives the AI explicit context about the data
+- AI Data Schema, Instructions, and Verified Answers provide **semantic model–level** context that Copilot uses for Power BI Q&A
 
 **Production considerations:**
 - Schedule data quality notebooks to run daily
 - Set up alerts for data quality SLA violations (e.g., null rate > 5%)
 - Version your data dictionary alongside schema changes
 - Consider implementing Great Expectations or similar frameworks for enterprise-grade data quality
+- Keep AI Instructions updated as business rules change (e.g., new facilities, changed readmission window)
+- Review and refresh Verified Answers quarterly as dashboards evolve
 
 ---
 
@@ -470,6 +613,10 @@ Before moving to Module 7, confirm:
 - [ ] `gold_patient_360` table created (patient-level summary)
 - [ ] `gold_facility_summary` table created (facility comparison metrics)
 - [ ] AI Readiness Scorecard passed with all tables ready
+- [ ] *(Optional)* AI Data Schema configured — irrelevant fields hidden from Copilot
+- [ ] *(Optional)* AI Instructions added with healthcare terminology and analysis rules
+- [ ] *(Optional)* Verified Answers set up for common healthcare questions
+- [ ] *(Optional)* Semantic model marked as **Approved for Copilot**
 
 ---
 
