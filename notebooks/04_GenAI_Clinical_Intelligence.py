@@ -77,6 +77,15 @@
 
 # ⚠️ REPLACE these values with your Azure OpenAI resource details
 # In production, use Azure Key Vault or Fabric environment variables
+#
+# IMPORTANT: The endpoint must be ONLY the base URL — do NOT include
+# any path like /openai/v1 or /openai/deployments/...
+# The SDK appends the correct path automatically.
+#
+# ✅ Correct:   https://my-resource.openai.azure.com/
+# ❌ Wrong:     https://my-resource.openai.azure.com/openai/v1
+# ❌ Wrong:     https://my-resource.openai.azure.com/openai/deployments/gpt-4o
+
 AZURE_OPENAI_ENDPOINT = "https://<your-resource-name>.openai.azure.com/"
 AZURE_OPENAI_KEY = "<your-api-key>"
 AZURE_OPENAI_DEPLOYMENT = "<your-deployment-name>"  # e.g., "gpt-4o-mini"
