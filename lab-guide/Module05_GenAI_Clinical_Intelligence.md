@@ -51,9 +51,47 @@ To complete this module, you need:
 3. Rename to: `06 - GenAI Clinical Intelligence`
 4. Attach the notebook to your `HealthcareLakehouse`
 
-### Step 2: Configure the Connection
+### Step 2: Get Your Azure OpenAI Details from AI Foundry
 
-Paste in Cell 1:
+You need three values from **Microsoft AI Foundry** to connect your notebook to Azure OpenAI. Follow these steps to find them:
+
+#### 2a: Open AI Foundry and Select Your Project
+
+1. Go to [https://ai.azure.com](https://ai.azure.com) in your browser
+2. Sign in with your Azure account
+3. In the left navigation, click **All projects**
+4. Click on your project (or create a new one if you don't have one yet)
+
+#### 2b: Find Your Endpoint and API Key
+
+1. In your project, click **Management center** (gear icon) in the left navigation
+2. Click **Connected resources** (or **Connections**)
+3. Find your **Azure OpenAI** connection and click on it
+4. You will see:
+   - **Endpoint** — e.g., `https://my-resource.openai.azure.com/`
+   - **Key** — click **Show key** or the copy icon to reveal and copy the API key
+5. Copy both values — you'll paste them into the notebook
+
+> **Alternative path:** You can also find these in the Azure Portal:
+> 1. Go to [https://portal.azure.com](https://portal.azure.com)
+> 2. Search for your **Azure OpenAI** resource
+> 3. Click **Keys and Endpoint** in the left menu under **Resource Management**
+> 4. Copy **KEY 1** and the **Endpoint** URL
+
+#### 2c: Find Your Model Deployment Name
+
+1. Back in AI Foundry, click **Models + endpoints** in the left navigation (under your project)
+2. Click the **Deployments** tab
+3. You'll see a list of deployed models — look for your GPT model (e.g., `gpt-4o`, `gpt-4o-mini`, `gpt-4.1`)
+4. The **Deployment name** column shows the name you need — this may be different from the model name
+   - For example, the model might be `gpt-4o-mini` but the deployment could be named `gpt-4o-mini` or `my-gpt4`
+5. Copy the **deployment name** (not the model name, though they're often the same)
+
+> **Don't have a deployment yet?** Click **+ Deploy model** → **Deploy base model** → select a GPT model (e.g., `gpt-4o-mini`) → give it a deployment name → click **Deploy**. The deployment name you choose is what you'll use below.
+
+### Step 3: Configure the Connection
+
+Paste in Cell 1 and fill in the three values from AI Foundry:
 
 ```python
 # =============================================================
@@ -70,9 +108,9 @@ Paste in Cell 1:
 # ❌ Wrong:     https://my-resource.openai.azure.com/openai/v1
 # ❌ Wrong:     https://my-resource.openai.azure.com/openai/deployments/gpt-4o
 
-AZURE_OPENAI_ENDPOINT = "https://<your-resource-name>.openai.azure.com/"
-AZURE_OPENAI_KEY = "<your-api-key>"
-AZURE_OPENAI_DEPLOYMENT = "<your-deployment-name>"  # e.g., "gpt-4o-mini"
+AZURE_OPENAI_ENDPOINT = "https://<your-resource-name>.openai.azure.com/"  # From Step 2b
+AZURE_OPENAI_KEY = "<your-api-key>"                                        # From Step 2b
+AZURE_OPENAI_DEPLOYMENT = "<your-deployment-name>"                          # From Step 2c
 AZURE_OPENAI_API_VERSION = "2024-06-01"
 
 print("✅ Configuration set!")
@@ -82,7 +120,7 @@ print(f"   Deployment: {AZURE_OPENAI_DEPLOYMENT}")
 
 > **Security Note:** In a production environment, use Azure Key Vault or Fabric environment variables instead of hardcoding credentials. For this lab, hardcoded values are acceptable.
 
-### Step 3: Install the OpenAI SDK
+### Step 4: Install the OpenAI SDK
 
 Paste in Cell 2:
 
@@ -99,7 +137,7 @@ Paste in Cell 2:
 > - `A new release of pip is available` — Informational only.
 > - `PySpark kernel has been restarted` — Expected. Fabric restarts the kernel after `%pip install` so the new package is available. **Wait for the restart to complete, then continue with the next cell.**
 
-### Step 4: Initialize the Client
+### Step 5: Initialize the Client
 
 Paste in Cell 3:
 

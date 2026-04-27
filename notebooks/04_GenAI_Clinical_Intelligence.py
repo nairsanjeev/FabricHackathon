@@ -78,6 +78,17 @@
 # ⚠️ REPLACE these values with your Azure OpenAI resource details
 # In production, use Azure Key Vault or Fabric environment variables
 #
+# HOW TO GET THESE VALUES FROM AI FOUNDRY:
+#   1. Go to https://ai.azure.com → sign in → open your project
+#   2. ENDPOINT & KEY:
+#      - Click "Management center" (gear icon) → "Connected resources"
+#      - Click your Azure OpenAI connection → copy Endpoint and Key
+#      - OR: Azure Portal → your OpenAI resource → "Keys and Endpoint"
+#   3. DEPLOYMENT NAME:
+#      - In AI Foundry → "Models + endpoints" → "Deployments" tab
+#      - Copy the deployment name (e.g., "gpt-4o-mini", "gpt-4.1")
+#      - If no deployment exists: click "+ Deploy model" → select a GPT model → deploy
+#
 # IMPORTANT: The endpoint must be ONLY the base URL — do NOT include
 # any path like /openai/v1 or /openai/deployments/...
 # The SDK appends the correct path automatically.
@@ -86,9 +97,9 @@
 # ❌ Wrong:     https://my-resource.openai.azure.com/openai/v1
 # ❌ Wrong:     https://my-resource.openai.azure.com/openai/deployments/gpt-4o
 
-AZURE_OPENAI_ENDPOINT = "https://<your-resource-name>.openai.azure.com/"
-AZURE_OPENAI_KEY = "<your-api-key>"
-AZURE_OPENAI_DEPLOYMENT = "<your-deployment-name>"  # e.g., "gpt-4o-mini"
+AZURE_OPENAI_ENDPOINT = "https://<your-resource-name>.openai.azure.com/"  # From AI Foundry
+AZURE_OPENAI_KEY = "<your-api-key>"                                        # From AI Foundry
+AZURE_OPENAI_DEPLOYMENT = "<your-deployment-name>"                          # From AI Foundry
 AZURE_OPENAI_API_VERSION = "2024-06-01"
 
 print("✅ Configuration set!")
