@@ -271,6 +271,8 @@ for feat in ai_features[:5]:
 
 ### Step 5: Build the Feature Training Dataset
 
+> ⚠️ **Before running this cell:** Make sure your **HealthcareLakehouse** is attached to the notebook. In the **Explorer** pane on the left, check that you see your tables listed under **Lakehouses → HealthcareLakehouse → Tables**. If not, click **Lakehouses** → **Add** → select **HealthcareLakehouse**.
+
 Now we implement the AI-suggested features using PySpark. Create a new code cell and paste the following:
 
 ```python
