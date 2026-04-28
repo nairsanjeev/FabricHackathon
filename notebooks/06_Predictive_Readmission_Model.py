@@ -13,6 +13,11 @@
 #   3. Create one cell per section below (each "CELL" block)
 #   4. Run cells sequentially
 #
+# ⚠️ SESSION NOTE:
+#   If your Spark session expires or is stopped, you will need
+#   to re-run all cells from the top. Fabric does not preserve
+#   variables, imports, or DataFrames across session restarts.
+#
 # ⚠️ PREREQUISITES:
 #   - All Silver and Gold tables from Notebooks 01-03 populated
 #   - Azure OpenAI resource with a deployed model (for feature engineering)
