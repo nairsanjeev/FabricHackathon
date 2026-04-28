@@ -277,25 +277,60 @@ Create a bar chart showing readmission rate by facility
 ```
 **What to observe:** Copilot generates a visual using DAX queries against your semantic model.
 
-#### Prompt 3: Suggest Insights
+#### Prompt 3: Filter a Visual to a Time Window
+```
+Add a filter to the line chart to show only the last 12 months of encounter data
+```
+**What to observe:** Copilot applies a relative date filter on the encounter date field. It can change fields, filters, visual types, and titles — but **not** visual sizing or conditional formatting (those must be done manually in the Format pane).
+
+#### Prompt 4: Change Visual Type
+```
+Change the readmission rate visual to a clustered column chart 
+grouped by facility and colored by encounter type
+```
+**What to observe:** Copilot can swap visual types and reassign field mappings. This is one of the most useful Copilot capabilities — quickly iterating on chart design.
+
+#### Prompt 5: Suggest Insights
 ```
 What are the most important trends in patient volume over time?
 ```
 **What to observe:** Copilot identifies patterns and trends from the data, similar to a junior analyst.
 
-#### Prompt 4: Ask a Complex Question
+#### Prompt 6: Ask a Complex Question
 ```
-Which facility has the best financial performance based on 
-collection rates and lowest denial rates?
+Which facility has the highest 30-day readmission rate and what 
+are the top diagnoses driving those readmissions?
 ```
-**What to observe:** Copilot may create a comparison visual or provide a narrative answer.
+**What to observe:** Copilot may create a comparison visual or provide a narrative answer combining multiple measures.
 
-#### Prompt 5: Request a Narrative
+#### Prompt 7: Request a Board-Ready Narrative
 ```
 Write a summary for the hospital board about our quality metrics, 
 including readmission rates and length of stay trends
 ```
 **What to observe:** Copilot generates executive-level narrative text suitable for board presentations.
+
+#### Prompt 8: Create a Calculated Comparison
+```
+Create a table comparing each facility side by side with columns for 
+total encounters, average length of stay, and readmission count
+```
+**What to observe:** Copilot builds a table visual with the requested measures broken down by facility.
+
+> **⚠️ What Copilot Can and Cannot Do:**
+>
+> | ✅ Copilot CAN | ❌ Copilot CANNOT (do manually) |
+> |---|---|
+> | Create new visuals (bar, line, table, etc.) | Resize or reposition visuals on the canvas |
+> | Change visual types | Apply conditional formatting (color rules) |
+> | Add/change fields and measures | Change font sizes or card styling |
+> | Apply filters (including relative date) | Modify layout or spacing |
+> | Change titles and subtitles | Set custom color palettes |
+> | Generate narrative summaries | Edit DAX measures |
+>
+> **For KPI card formatting** (larger cards, conditional formatting with color thresholds), you'll need to do that manually:
+> 1. Select the KPI card → drag corners to resize
+> 2. In the **Format** pane → **Callout value** → **Color** → click **fx** → set rules (e.g., readmission rate > 15% = red, < 10% = green)
 
 ### Step 11: Compare Data Agent vs. Copilot
 
