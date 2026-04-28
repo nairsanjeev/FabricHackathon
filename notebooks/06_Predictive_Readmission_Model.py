@@ -365,6 +365,11 @@ for feat in ai_features[:5]:
 # ║  CELL 7 — CODE: Build Training Dataset with Features           ║
 # ╚════════════════════════════════════════════════════════════════╝
 
+# ── Set the default Lakehouse context ───────────────────────────
+# This ensures spark.table() can resolve unqualified table names
+# even if the notebook's default context is not set automatically.
+spark.sql("USE HealthcareLakehouse")
+
 # ── Load base tables ────────────────────────────────────────────
 readmissions = spark.table("gold_readmissions")
 patients = spark.table("silver_patients")
