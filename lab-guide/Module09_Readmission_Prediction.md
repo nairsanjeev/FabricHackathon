@@ -812,6 +812,8 @@ This generates three visualizations:
 Create a new code cell and paste the following:
 
 ```python
+from pyspark.sql.functions import col, count, avg, sum, round
+
 # Score ALL patients (not just the test set)
 X_all = pandas_df[feature_columns]
 all_probs = model.predict_proba(X_all)[:, 1]

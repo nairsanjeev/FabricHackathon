@@ -957,6 +957,8 @@ print("📈 Plots generated — see above for ROC curve, PR curve, and feature i
 # ║  CELL 14 — CODE: Score All Patients & Save to Gold             ║
 # ╚════════════════════════════════════════════════════════════════╝
 
+from pyspark.sql.functions import col, count, avg, sum, round
+
 # Score ALL patients (not just the test set)
 X_all = pandas_df[feature_columns]
 all_probs = model.predict_proba(X_all)[:, 1]
