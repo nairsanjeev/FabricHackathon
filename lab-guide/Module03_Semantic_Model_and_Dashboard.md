@@ -3,7 +3,7 @@
 | Duration | 90 minutes |
 |----------|------------|
 | Objective | Build a star-schema Semantic Model on Gold tables and create an interactive Power BI dashboard for healthcare operations |
-| Fabric Features | Default Semantic Model, Power BI Report, DAX Measures |
+| Fabric Features | Semantic Model, Power BI Report, DAX Measures |
 
 ---
 
@@ -21,18 +21,17 @@ In this module, you will:
 
 ## Part A: Create the Semantic Model
 
-### Step 1: Open the Default Semantic Model
+### Step 1: Create a New Semantic Model
 
-Every Lakehouse in Fabric automatically creates a **default Semantic Model** (also called a dataset). We'll configure this model.
+We need to create a Semantic Model on top of our Lakehouse tables. This model defines the star schema, relationships, and DAX measures that Power BI will use.
 
-1. Navigate to your workspace
-2. Find **HealthcareLakehouse** in the list — you'll notice there are multiple items with that name. Look for the one with a **semantic model icon** (it looks like a small database symbol).
-   > Alternatively, open your Lakehouse, and in the top-right corner, click on the **Lakehouse** dropdown and switch to **SQL analytics endpoint**
-3. Click on the Semantic Model item
+1. Open your **HealthcareLakehouse** in the Fabric portal
+2. In the top toolbar, click **New semantic model**
+3. Give it a name: **HealthcareLakehouse-SemanticModel** (or keep the suggested name)
 
 ### Step 2: Select Tables for the Model
 
-If prompted to select tables to include in the model:
+You'll be prompted to select which Lakehouse tables to include in the semantic model:
 
 1. Check the following **Gold tables**:
    - ✅ `gold_encounter_summary`
@@ -41,11 +40,11 @@ If prompted to select tables to include in the model:
    - ✅ `gold_financial`
    - ✅ `gold_population_health`
    - ✅ `gold_alos`
-2. Also include these Silver tables for dimension lookups:
+2. Also include this Silver table for dimension lookups:
    - ✅ `silver_patients`
-3. Click **Confirm** or **Save**
+3. Click **Confirm**
 
-> **Note:** If you opened the SQL analytics endpoint, you may need to navigate to Model view. Click on the **Model** tab at the bottom of the screen.
+The semantic model opens in the **Model view** (diagram view) where you can see your selected tables.
 
 ### Step 3: Create Relationships
 
