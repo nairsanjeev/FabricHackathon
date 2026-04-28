@@ -35,7 +35,8 @@ In this module, you will:
 2. In the search box, type **Lakehouse**
 3. Click **Lakehouse**
 4. In the **Name** field, enter: `HealthcareLakehouse`
-5. Click **Create**
+5. **Important:** If you see a checkbox for **Enable Schemas (Public Preview)**, leave it **unchecked**. This lab uses simple table names and enabling schemas will cause errors.
+6. Click **Create**
 
 You will be taken to the Lakehouse explorer view, which shows two main sections:
 - **Tables** — This is where your Delta tables (structured data) will live

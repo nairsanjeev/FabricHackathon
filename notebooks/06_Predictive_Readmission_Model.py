@@ -365,18 +365,18 @@ for feat in ai_features[:5]:
 # ║  CELL 7 — CODE: Build Training Dataset with Features           ║
 # ╚════════════════════════════════════════════════════════════════╝
 
-# ── Load base tables ────────────────────────────────────────────
-# Use fully qualified names (Lakehouse.schema.table) to avoid
-# "No default context found" errors in schema-enabled Lakehouses.
-LH = "HealthcareLakehouse.dbo"
+from pyspark.sql.functions import *
+from pyspark.sql.types import *
+from pyspark.sql.window import Window
 
-readmissions = spark.table(f"{LH}.gold_readmissions")
-patients = spark.table(f"{LH}.silver_patients")
-encounters = spark.table(f"{LH}.silver_encounters")
-conditions = spark.table(f"{LH}.silver_conditions")
-claims = spark.table(f"{LH}.silver_claims")
-vitals = spark.table(f"{LH}.silver_vitals")
-medications = spark.table(f"{LH}.silver_medications")
+# ── Load base tables ────────────────────────────────────────────
+readmissions = spark.table("gold_readmissions")
+patients = spark.table("silver_patients")
+encounters = spark.table("silver_encounters")
+conditions = spark.table("silver_conditions")
+claims = spark.table("silver_claims")
+vitals = spark.table("silver_vitals")
+medications = spark.table("silver_medications")
 
 print(f"Base: {readmissions.count()} index admissions")
 print(f"  Readmitted: {readmissions.filter(col('was_readmitted') == True).count()}")
@@ -638,7 +638,7 @@ print(f"   Label distribution: {readmit_count} readmitted ({readmit_count/(readm
       f"{no_readmit} not readmitted ({no_readmit/(readmit_count+no_readmit)*100:.1f}%)")
 
 # Save the feature-engineered dataset to the Gold layer
-training_df.write.mode("overwrite").format("delta").saveAsTable("HealthcareLakehouse.dbo.gold_readmission_training")
+training_df.write.mode("overwrite").format("delta").saveAsTable("gold_readmission_training")
 print("✓ Saved to gold_readmission_training")
 
 
@@ -750,8 +750,8 @@ feature_columns = [
     "unique_medication_count", "is_polypharmacy"
 ]
 
-# Load from Gold table (fully qualified for schema-enabled Lakehouses)
-training_spark_df = spark.table("HealthcareLakehouse.dbo.gold_readmission_training")
+# Load from Gold table
+training_spark_df = spark.table("gold_readmission_training")
 pandas_df = training_spark_df.select(feature_columns + ["label"]).toPandas()
 
 X = pandas_df[feature_columns]
@@ -989,7 +989,7 @@ scored_df = scored_df \
     .withColumn("actual_readmission", col("label").cast("int")) \
     .drop("label")
 
-scored_df.write.mode("overwrite").format("delta").saveAsTable("HealthcareLakehouse.dbo.gold_readmission_risk_scores")
+scored_df.write.mode("overwrite").format("delta").saveAsTable("gold_readmission_risk_scores")
 
 # ── Display risk distribution ────────────────────────────────
 print(f"✅ Saved {scored_df.count()} risk scores to gold_readmission_risk_scores\n")
