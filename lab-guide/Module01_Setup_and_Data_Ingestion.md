@@ -84,6 +84,8 @@ Now we'll create a Spark notebook that reads the raw CSV files and saves them as
 6. Select **Existing Lakehouse** → **Add**
 7. Find and select `HealthcareLakehouse`, then click **Add**
 
+> ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
+
 ### 4.2 Add the Ingestion Code
 
 In the first cell of your notebook, paste the following code:

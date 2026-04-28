@@ -73,6 +73,8 @@ Before starting this module, ensure you have:
 3. Rename it to: **"06 - Predictive Readmission Model"**
 4. In the **Explorer** pane on the left, click **Lakehouses** → **Add** → Select your **HealthcareLakehouse**
 
+> ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
+
 ### Step 2: Add the Configuration Cell
 
 Create the first code cell and paste the following:

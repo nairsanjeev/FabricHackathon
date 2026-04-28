@@ -38,6 +38,8 @@ This module ensures your Gold layer tables are **AI-ready** — clean, complete,
 3. Rename to: `06 - Prep Data for AI`
 4. Attach the notebook to your `HealthcareLakehouse`
 
+> ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
+
 ### Step 2: Run Comprehensive Data Quality Checks
 
 Paste in Cell 1:

@@ -31,6 +31,8 @@ The Silver layer cleanses and standardizes the raw Bronze data. We'll fix data t
 3. Rename it to: `02 - Silver Transformations`
 4. Attach your `HealthcareLakehouse` (left panel → Add Lakehouse → Existing → select it)
 
+> ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
+
 ### Step 2: Silver Patients Table
 
 Paste this code in the first cell and run it:
@@ -225,6 +227,8 @@ The Gold layer contains business-ready tables with computed KPIs and aggregated 
 2. Click **+ New item** → **Notebook**
 3. Rename it to: `03 - Gold Analytics`
 4. Attach your `HealthcareLakehouse`
+
+> ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 
 ### Step 7: Calculate 30-Day Readmissions
 

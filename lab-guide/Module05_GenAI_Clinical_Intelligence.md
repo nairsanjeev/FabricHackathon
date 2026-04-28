@@ -51,6 +51,8 @@ To complete this module, you need:
 3. Rename to: `06 - GenAI Clinical Intelligence`
 4. Attach the notebook to your `HealthcareLakehouse`
 
+> ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
+
 ### Step 2: Get Your Azure OpenAI Details from AI Foundry
 
 You need three values from **Microsoft AI Foundry** to connect your notebook to Azure OpenAI. Follow these steps to find them:

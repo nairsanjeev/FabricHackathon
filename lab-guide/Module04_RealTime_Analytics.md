@@ -226,6 +226,8 @@ We'll create a notebook that simulates real-time patient vitals streaming into t
 2. Click **+ New item** → **Notebook**
 3. Rename to: `05 - RealTime Vitals Simulator`
 
+> ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
+
 ### Step 11: Configure the Simulator
 
 Paste the following code in Cell 1:
