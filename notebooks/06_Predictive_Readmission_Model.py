@@ -178,6 +178,7 @@ AZURE_OPENAI_API_VERSION = "2024-06-01"
 # ║  CELL 5 — CODE: Ask Azure OpenAI for Feature Suggestions      ║
 # ╚════════════════════════════════════════════════════════════════╝
 
+import json
 from openai import AzureOpenAI
 
 client = AzureOpenAI(

@@ -126,6 +126,7 @@ This is the core innovation — rather than manually researching clinical featur
 Create a new code cell and paste the following:
 
 ```python
+import json
 from openai import AzureOpenAI
 
 client = AzureOpenAI(
