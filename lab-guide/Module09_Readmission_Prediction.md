@@ -610,9 +610,8 @@ from sklearn.metrics import (
     roc_curve, precision_recall_curve, average_precision_score
 )
 from xgboost import XGBClassifier
-import matplotlib
-matplotlib.use('Agg')  # Non-interactive backend for Fabric notebooks
 import matplotlib.pyplot as plt
+%matplotlib inline
 
 # ── Load feature-engineered data ────────────────────────────
 feature_columns = [
