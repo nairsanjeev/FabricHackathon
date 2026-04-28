@@ -908,8 +908,7 @@ axes[2].set_title('Top 15 Predictive Features')
 axes[2].grid(True, alpha=0.3, axis='x')
 
 plt.tight_layout()
-plt.savefig('/tmp/readmission_model_results.png', dpi=150, bbox_inches='tight')
-plt.show()
+display(fig)
 print("📈 Plots generated — see above for ROC curve, PR curve, and feature importance")
 
 
