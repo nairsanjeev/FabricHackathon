@@ -190,14 +190,99 @@ CALCULATE(
 
 ---
 
-## Part B: Build the Power BI Report
+## Part B: Build the Power BI Report Using Copilot
 
-### Step 6: Create a New Report
+Instead of manually building each visual, use **Power BI Copilot** to generate report pages using natural language prompts. This is faster and demonstrates the AI-assisted analytics experience.
+
+### Prerequisites
+- Power BI Copilot must be enabled in your Fabric tenant (your admin may need to enable this in the Admin Portal → Tenant settings → Copilot)
+- Your semantic model must have tables and measures already created (complete Part A first)
+
+### Step 6: Create a New Report and Open Copilot
+
+1. From the Semantic Model view, click **New Report** in the toolbar (or go to your workspace and click **+ New item** → **Report** → **Pick a semantic model** → select the HealthcareLakehouse model)
+2. You will be taken to the Power BI report editor
+3. In the report editor, look for the **Copilot** icon in the toolbar (it looks like a sparkle ✨)
+4. Click it to open the Copilot pane on the right side
+
+> **Note:** If you don't see the Copilot icon, Copilot may not be enabled for your tenant. Use the **Alternate Path** (manual approach) below instead.
+
+### Step 7: Generate Page 1 — Patient Volume & Flow
+
+In the Copilot chat pane, type the following prompt:
+
+```
+Create a dashboard page showing patient volume and flow for our hospital system. Include:
+- KPI cards for Total Encounters, ED Visits, Inpatient Admissions, and Average Length of Stay
+- A line chart showing monthly encounter volume trends by encounter type 
+- A bar chart showing encounters by facility name
+- Slicers for facility name, encounter year, and insurance type
+Use the gold_encounter_summary table and related measures.
+```
+
+Review what Copilot generates. You can refine by asking:
+
+```
+Change the line chart to show the last 12 months only.
+```
+
+### Step 8: Generate Page 2 — Quality & Readmissions
+
+Add a new page, then prompt Copilot:
+
+```
+Create a quality metrics page focused on 30-day hospital readmissions. Include:
+- KPI cards for Readmission Rate (as percentage), Total Readmissions, and Total Index Admissions
+- A bar chart showing readmission rate by diagnosis (index_diagnosis)
+- A column chart comparing readmission rates across facilities (index_facility)
+- A detail table with index diagnosis, total admissions, readmissions, and readmission rate
+- Slicers for index_facility and encounter_year
+Use the gold_readmissions table and readmission measures.
+```
+
+### Step 9: Generate Page 3 — Financials & Population Health
+
+Add a new page, then prompt Copilot:
+
+```
+Create a financial and population health dashboard page. Include:
+- KPI cards for Total Charges, Total Collections, Collection Rate, and Revenue Lost to Denials
+- A bar chart of denial rate by payer from gold_financial table 
+- A pie chart showing multimorbidity distribution (None, Moderate, High) from gold_population_health
+- A matrix showing collection rate by facility and payer type
+- Slicers for age group, insurance type, and gender
+```
+
+### Copilot Tips
+
+| Do | Don't |
+|----|-------|
+| Reference specific table and column names | Use vague terms like "the data" |
+| Ask for one page at a time | Try to generate the entire report in one prompt |
+| Specify chart types explicitly | Let Copilot guess which visual to use |
+| Refine iteratively with follow-up prompts | Start over if the first result isn't perfect |
+| Mention your measures by name | Expect Copilot to know your custom DAX measures |
+
+> **Key Takeaway:** Copilot is excellent for rapid prototyping and getting 80% of the way there. You'll typically still need to fine-tune layouts, conditional formatting, and interactions manually.
+
+### Step 10: Save the Report
+
+1. Click **File** → **Save**
+2. Name: `Healthcare Operations Dashboard`
+3. Save to your workspace
+
+---
+
+## Alternate Path: Build the Power BI Report Manually
+
+If Power BI Copilot is not available in your tenant, you can build the report manually by following the steps below.
+
+### Alt Step 6: Create a New Report
 
 1. From the Semantic Model view, click **New Report** in the toolbar (or go to your workspace and click **+ New item** → **Report** → **Pick a semantic model** → select the HealthcareLakehouse model)
 2. You will be taken to the Power BI report editor
 
-### Step 7: Page 1 — Patient Volume & Flow
+### Alt Step 7: Page 1 — Patient Volume & Flow
 
 Rename the first page by double-clicking the page tab and typing: `Patient Volume & Flow`
 
@@ -243,7 +328,7 @@ Add **Slicer** visuals for:
 - `gold_encounter_summary` → `encounter_year`
 - `gold_encounter_summary` → `insurance_type`
 
-### Step 8: Page 2 — Quality & Readmissions
+### Alt Step 8: Page 2 — Quality & Readmissions
 
 1. Click the **+** icon next to the page tabs to add a new page
 2. Rename it to: `Quality & Readmissions`
@@ -293,7 +378,7 @@ Add three cards:
 - `gold_readmissions` → `index_facility`
 - `gold_encounter_summary` → `encounter_year`
 
-### Step 9: Page 3 — Population Health & Financials
+### Alt Step 9: Page 3 — Population Health & Financials
 
 1. Add a new page
 2. Rename to: `Population Health & Financials`
@@ -345,87 +430,11 @@ Add four cards:
 - `gold_population_health` → `insurance_type`
 - `gold_population_health` → `gender`
 
-### Step 10: Save the Report
+### Alt Step 10: Save the Report
 
 1. Click **File** → **Save**
 2. Name: `Healthcare Operations Dashboard`
 3. Save to your workspace
-
----
-
-## Alternate Path: Create the Report Using Power BI Copilot
-
-Instead of manually building each visual, you can use **Power BI Copilot** to generate report pages using natural language prompts. This is faster and demonstrates the AI-assisted analytics experience.
-
-### Prerequisites
-- Power BI Copilot must be enabled in your Fabric tenant (your admin may need to enable this in the Admin Portal → Tenant settings → Copilot)
-- Your semantic model must have tables and measures already created (complete Part A first)
-
-### Copilot Step 1: Open Copilot in the Report Editor
-
-1. Create a new report from your semantic model (same as Step 5 above)
-2. In the report editor, look for the **Copilot** icon in the toolbar (it looks like a sparkle ✨)
-3. Click it to open the Copilot pane on the right side
-
-> **Note:** If you don't see the Copilot icon, Copilot may not be enabled for your tenant. Continue with the manual approach above.
-
-### Copilot Step 2: Generate Page 1 — Patient Volume & Flow
-
-In the Copilot chat pane, type the following prompt:
-
-```
-Create a dashboard page showing patient volume and flow for our hospital system. Include:
-- KPI cards for Total Encounters, ED Visits, Inpatient Admissions, and Average Length of Stay
-- A line chart showing monthly encounter volume trends by encounter type 
-- A bar chart showing encounters by facility name
-- Slicers for facility name, encounter year, and insurance type
-Use the gold_encounter_summary table and related measures.
-```
-
-Review what Copilot generates. You can refine by asking:
-
-```
-Change the line chart to show the last 12 months only.
-```
-
-### Copilot Step 3: Generate Page 2 — Quality & Readmissions
-
-Add a new page, then prompt Copilot:
-
-```
-Create a quality metrics page focused on 30-day hospital readmissions. Include:
-- KPI cards for Readmission Rate (as percentage), Total Readmissions, and Total Index Admissions
-- A bar chart showing readmission rate by diagnosis (index_diagnosis)
-- A column chart comparing readmission rates across facilities (index_facility)
-- A detail table with index diagnosis, total admissions, readmissions, and readmission rate
-- Slicers for index_facility and encounter_year
-Use the gold_readmissions table and readmission measures.
-```
-
-### Copilot Step 4: Generate Page 3 — Financials & Population Health
-
-Add a new page, then prompt Copilot:
-
-```
-Create a financial and population health dashboard page. Include:
-- KPI cards for Total Charges, Total Collections, Collection Rate, and Revenue Lost to Denials
-- A bar chart of denial rate by payer from gold_financial table 
-- A pie chart showing multimorbidity distribution (None, Moderate, High) from gold_population_health
-- A matrix showing collection rate by facility and payer type
-- Slicers for age group, insurance type, and gender
-```
-
-### Copilot Tips
-
-| Do | Don't |
-|----|-------|
-| Reference specific table and column names | Use vague terms like "the data" |
-| Ask for one page at a time | Try to generate the entire report in one prompt |
-| Specify chart types explicitly | Let Copilot guess which visual to use |
-| Refine iteratively with follow-up prompts | Start over if the first result isn't perfect |
-| Mention your measures by name | Expect Copilot to know your custom DAX measures |
-
-> **Key Takeaway:** Copilot is excellent for rapid prototyping and getting 80% of the way there. You'll typically still need to fine-tune layouts, conditional formatting, and interactions manually.
 
 ---
 
