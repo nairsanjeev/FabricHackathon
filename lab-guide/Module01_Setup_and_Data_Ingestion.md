@@ -80,9 +80,10 @@ Now we'll create a Spark notebook that reads the raw CSV files and saves them as
 2. Click **+ New item**
 3. Search for and select **Notebook**
 4. Click the notebook name at the top (e.g., "Notebook 1") and rename it to: `01 - Bronze Data Ingestion`
-5. In the left panel of the notebook, you will see the **Lakehouse** section. Click **Add** to attach your Lakehouse
-6. Select **Existing Lakehouse** → **Add**
-7. Find and select `HealthcareLakehouse`, then click **Add**
+5. In the **Explorer** pane on the left, click **Add data items** → **From OneLake catalog**
+6. Search for `HealthcareLakehouse` in the OneLake catalog
+7. You will see **two items** with the same name — one is the **Lakehouse** and the other is the **SQL Analytics Endpoint** (shown with a different icon). **Select the Lakehouse item** (it has a blue house/database icon, not the SQL endpoint icon). If unsure, click on the item to view its details and confirm the type is **Lakehouse**.
+8. Click **Add** to attach it
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 

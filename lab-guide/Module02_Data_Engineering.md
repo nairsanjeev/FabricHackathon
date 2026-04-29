@@ -29,7 +29,11 @@ The Silver layer cleanses and standardizes the raw Bronze data. We'll fix data t
 1. Go to your workspace
 2. Click **+ New item** → **Notebook**
 3. Rename it to: `02 - Silver Transformations`
-4. Attach your `HealthcareLakehouse` (left panel → Add Lakehouse → Existing → select it)
+4. Attach your `HealthcareLakehouse`:
+   - In the **Explorer** pane on the left, click **Add data items** → **From OneLake catalog**
+   - Search for `HealthcareLakehouse`
+   - ⚠️ You will see **two items** with the same name. One is the **Lakehouse** and the other is the **SQL Analytics Endpoint**. **Select the Lakehouse** (blue house/database icon). Click on the item details if needed to confirm the type is **Lakehouse**, not SQL Analytics Endpoint.
+   - Click **Add**
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 
@@ -226,7 +230,11 @@ The Gold layer contains business-ready tables with computed KPIs and aggregated 
 1. Go to your workspace
 2. Click **+ New item** → **Notebook**
 3. Rename it to: `03 - Gold Analytics`
-4. Attach your `HealthcareLakehouse`
+4. Attach your `HealthcareLakehouse`:
+   - In the **Explorer** pane on the left, click **Add data items** → **From OneLake catalog**
+   - Search for `HealthcareLakehouse`
+   - ⚠️ You will see **two items** with the same name. **Select the Lakehouse** (blue house/database icon), not the SQL Analytics Endpoint. Click on the item details if needed to confirm the type.
+   - Click **Add**
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 

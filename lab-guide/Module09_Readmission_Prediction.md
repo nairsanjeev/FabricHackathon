@@ -71,7 +71,9 @@ Before starting this module, ensure you have:
 1. Open your **Fabric workspace**
 2. Click **+ New item** → **Notebook**
 3. Rename it to: **"06 - Predictive Readmission Model"**
-4. In the **Explorer** pane on the left, click **Lakehouses** → **Add** → Select your **HealthcareLakehouse**
+4. In the **Explorer** pane on the left, click **Add data items** → **From OneLake catalog**
+5. Search for `HealthcareLakehouse`. You will see **two items** with the same name — one is the **Lakehouse** and the other is the **SQL Analytics Endpoint**. **Select the Lakehouse** (blue house/database icon). Click on the item details if needed to confirm the type is **Lakehouse**.
+6. Click **Add**
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 
@@ -273,7 +275,7 @@ for feat in ai_features[:5]:
 
 ### Step 5: Build the Feature Training Dataset
 
-> ⚠️ **Before running this cell:** Make sure your **HealthcareLakehouse** is attached to the notebook. In the **Explorer** pane on the left, check that you see your tables listed under **Lakehouses → HealthcareLakehouse → Tables**. If not, click **Lakehouses** → **Add** → select **HealthcareLakehouse**.
+> ⚠️ **Before running this cell:** Make sure your **HealthcareLakehouse** is attached to the notebook. In the **Explorer** pane on the left, check that you see your tables listed under **HealthcareLakehouse → Tables**. If not, click **Add data items** → **From OneLake catalog** → search for `HealthcareLakehouse` → select the **Lakehouse** item (not the SQL Analytics Endpoint) → **Add**.
 
 Now we implement the AI-suggested features using PySpark. Create a new code cell and paste the following:
 

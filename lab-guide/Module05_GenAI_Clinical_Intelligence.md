@@ -49,7 +49,11 @@ To complete this module, you need:
 1. Go to your workspace
 2. Click **+ New item** → **Notebook**
 3. Rename to: `06 - GenAI Clinical Intelligence`
-4. Attach the notebook to your `HealthcareLakehouse`
+4. Attach the notebook to your `HealthcareLakehouse`:
+   - In the **Explorer** pane on the left, click **Add data items** → **From OneLake catalog**
+   - Search for `HealthcareLakehouse`
+   - ⚠️ You will see **two items** with the same name. **Select the Lakehouse** (blue house/database icon), not the SQL Analytics Endpoint. Click on the item details if needed to confirm the type.
+   - Click **Add**
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 
