@@ -80,7 +80,7 @@ Now we need to route the incoming data to our Eventhouse for storage and KQL que
 1. In the Eventstream canvas, click **Add destination** (in the toolbar)
 2. Select **Eventhouse** from the list
 3. Configure the destination:
-   - **Data ingestion mode**: Select **Direct ingestion** (not "Event processing before ingestion")
+   - **Data ingestion mode**: Select **Event processing before ingestion** (not "Direct ingestion" — Direct ingestion does not allow creating new tables)
    - **Destination name**: `PatientVitalsDB`
    - **Workspace**: Select your workspace
    - **Eventhouse**: Select `PatientVitalsEventhouse`
@@ -88,9 +88,9 @@ Now we need to route the incoming data to our Eventhouse for storage and KQL que
    - **Destination table**: Click **Create new** → type `PatientVitals` → click **Done**
    - **Input data format**: Select **JSON**
 
-> ⚠️ **Critical:** Make sure you click **Create new** for the Destination table and the table name `PatientVitals` is confirmed. If you skip this or it doesn't save, the Eventstream will have nowhere to deliver data and the table will never appear in your KQL database. After filling in the form, verify the table name shows as `PatientVitals` before proceeding.
+> ⚠️ **Critical:** You **must** select **Event processing before ingestion** as the ingestion mode — this is what enables the **Create new** button for the destination table. If you select "Direct ingestion" instead, you will not be able to create a new table and the **Save** button will remain disabled. Make sure the table name `PatientVitals` is confirmed before proceeding.
 
-4. Click **Save**
+4. Click **Save** (the Save button only becomes active after you create a new table)
 5. On the canvas, you should now see the flow: **VitalsSimulator** → **PatientVitalsDB**
 
 ### Step 6: Verify the Table Was Created
