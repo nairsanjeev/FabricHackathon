@@ -385,7 +385,6 @@ Use the gold_encounter_summary table and related measures.
 Review what Copilot generates. You can refine by asking:
 
 ```
-Make the KPI cards larger and add conditional formatting. 
 Change the line chart to show the last 12 months only.
 ```
 
