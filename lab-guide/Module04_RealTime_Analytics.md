@@ -129,6 +129,8 @@ We build the dashboard **first** so you can watch it come alive the moment the s
 
 ### Step 8: Add Dashboard Tiles
 
+> ⚠️ **Note:** All the tile queries below reference a table named `PatientVitals`. This is the table that gets created when the Eventstream destination ingests data. If your table has a different name (you can check later by running `.show tables` in the KQL database), replace `PatientVitals` with your actual table name in each query. The tiles may show errors until you start the simulator and data begins flowing.
+
 #### Tile 1: SIRS Alert Count (Big Number)
 1. Click **+ Add tile**
 2. Select your KQL database as the data source
@@ -449,7 +451,28 @@ Now that the simulator is sending data, switch to the dashboard tab and watch it
 4. Click on the KQL database
 5. Click **Explore data** or open a new KQL queryset
 
-### Step 15: Write Clinical KQL Queries
+### Step 15: Verify the Table Exists
+
+Before running any queries, confirm data is flowing and check the actual table name:
+
+```kql
+.show tables
+```
+
+> ⚠️ **Important:** You must run the simulator (Step 12) first and let it send at least 1–2 batches before the table will appear. If `.show tables` returns no results, go back and make sure the simulator is running and sending data.
+>
+> Also verify the table name matches `PatientVitals`. If the table has a different name (e.g., `PatientVitalsDB` or something else), use that name in all the queries below instead of `PatientVitals`.
+
+You can also verify data is present by running:
+
+```kql
+PatientVitals
+| count
+```
+
+If this returns a count greater than 0, you're ready to proceed.
+
+### Step 16: Write Clinical KQL Queries
 
 Paste and run each of the following queries:
 
@@ -527,7 +550,7 @@ PatientVitals
 
 ---
 
-## Step 16: Stop the Simulator
+## Step 17: Stop the Simulator
 
 Once you've explored the dashboard, go back to your simulator notebook and stop the cell execution (click the stop button ■ next to the running cell).
 
