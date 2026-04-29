@@ -127,20 +127,110 @@ You **must publish the Eventstream before the connection string becomes availabl
 
 > **Troubleshooting:** If you don't see the **Add destination** button in the toolbar, try clicking on an empty area of the canvas first, or look for a **"+"** icon on the right edge of the source node that lets you connect directly to a new destination.
 
+### Step 8: Seed the PatientVitals Table
+
+Even though we configured the destination table in Step 5, the table may not actually be created in the KQL database until data flows through the Eventstream. To avoid `Failed to resolve table` errors when building the dashboard, we'll create a small notebook that creates the table and inserts a few sample rows directly in the KQL database.
+
+1. Go to your workspace
+2. Click **+ New item** → **Notebook**
+3. Rename to: `Seed PatientVitals Table`
+
+Paste the following in **Cell 1**:
+
+```python
+# =============================================================
+# Cell 1: Seed the PatientVitals table in the KQL database
+# This creates the table schema and inserts sample rows so
+# the Real-Time Dashboard tiles don't error out.
+# =============================================================
+
+# ⚠️ IMPORTANT: Replace these with YOUR values
+KUSTO_URI = "https://<your-eventhouse-uri>.kusto.fabric.microsoft.com"
+DATABASE_NAME = "PatientVitalsEventhouse"  # Usually same name as the Eventhouse
+```
+
+> **How to find your Eventhouse URI:**
+> 1. Go to your workspace → click on `PatientVitalsEventhouse`
+> 2. Click on the KQL database
+> 3. Click **Copy URI** in the toolbar, and select **Query URI**
+> 4. It will look like: `https://xyz123abc.kusto.fabric.microsoft.com`
+
+Paste the following in **Cell 2**:
+
+```python
+# =============================================================
+# Cell 2: Create table and insert sample data
+# =============================================================
+from azure.kusto.data import KustoClient, KustoConnectionStringBuilder
+
+# Connect using Fabric's built-in managed identity
+kcsb = KustoConnectionStringBuilder.with_az_cli_authentication(KUSTO_URI)
+client = KustoClient(kcsb)
+
+# Create the table with the expected schema
+create_table_cmd = """
+.create-merge table PatientVitals (
+    patient_id: string,
+    facility_name: string,
+    department: string,
+    condition: string,
+    timestamp: string,
+    heart_rate: int,
+    systolic_bp: int,
+    diastolic_bp: int,
+    temperature_f: real,
+    respiratory_rate: int,
+    spo2_percent: int,
+    pain_level: int,
+    sirs_criteria_met: int,
+    sirs_alert: bool
+)
+"""
+client.execute_mgmt(DATABASE_NAME, create_table_cmd)
+print("✅ Table 'PatientVitals' created (or already exists)")
+
+# Insert a few sample rows so dashboard tiles can render
+ingest_cmd = """
+.ingest inline into table PatientVitals <|
+RT-P001,Metro General Hospital,ICU,Sepsis Risk,2025-01-01T00:00:00Z,125,85,55,103.2,28,91,6,3,true
+RT-P002,Community Medical Center,Emergency,Sepsis Risk,2025-01-01T00:00:00Z,118,90,58,102.1,25,93,5,3,true
+RT-P003,Riverside Health Center,ICU,Sepsis Risk,2025-01-01T00:00:00Z,105,92,57,101.8,24,92,4,2,true
+RT-P004,Metro General Hospital,Internal Medicine,Stable,2025-01-01T00:00:00Z,75,120,75,98.2,16,98,2,0,false
+RT-P005,Community Medical Center,Cardiology,Stable,2025-01-01T00:00:00Z,80,125,78,98.6,15,97,1,0,false
+"""
+client.execute_mgmt(DATABASE_NAME, ingest_cmd)
+print("✅ Inserted 5 sample rows into PatientVitals")
+
+# Verify
+result = client.execute(DATABASE_NAME, "PatientVitals | count")
+for row in result.primary_results[0]:
+    print(f"✅ PatientVitals table has {row[0]} rows")
+```
+
+4. **Run Cell 1**, then **Run Cell 2**
+5. You should see:
+   ```
+   ✅ Table 'PatientVitals' created (or already exists)
+   ✅ Inserted 5 sample rows into PatientVitals
+   ✅ PatientVitals table has 5 rows
+   ```
+
+> **Note:** The `.create-merge` command is safe to run multiple times — it creates the table if it doesn't exist, or does nothing if it already exists. The sample data ensures the dashboard tiles can render without errors. Once the simulator runs, real data will flow in alongside these seed rows.
+
 ---
 
 ## Part C: Build the Real-Time Dashboard
 
-The `PatientVitals` table was created in Step 5 when you configured the Eventstream destination, so dashboard KQL queries will run without errors — they will simply return empty results until the simulator starts. Once we start sending data in Part D, you'll watch the dashboard come alive.
+The `PatientVitals` table now exists in the KQL database with sample data, so dashboard KQL queries will work immediately. Once we start the simulator in Part D, you'll watch the dashboard come alive with real-time data.
 
-### Step 8: Create a Real-Time Dashboard
+### Step 9: Create a Real-Time Dashboard
 
 1. Go to your workspace
 2. Click **+ New item** → **Real-Time Dashboard**
 3. Name: `ICU Command Center Dashboard`
 4. Click **Create**
 
-### Step 9: Add Dashboard Tiles
+### Step 10: Add Dashboard Tiles
 
 > ⚠️ **Note:** If your table has a different name than `PatientVitals` (as shown by `.show tables`), replace `PatientVitals` with your actual table name in each query below.
 
@@ -208,7 +298,7 @@ PatientVitals
 2. Visual type: **Table** or **Heatmap**
 3. Title: `Department Alert Summary`
 
-### Step 10: Set Continuous Auto-Refresh
+### Step 11: Set Continuous Auto-Refresh
 
 This is the key step that makes the dashboard update automatically as data flows in.
 
@@ -234,7 +324,7 @@ This is the key step that makes the dashboard update automatically as data flows
 
 Now we'll run the simulator, which pushes live patient vital signs to the Eventstream. Once data starts flowing, switch back to your dashboard tab and **watch it come alive** with real-time data.
 
-### Step 11: Create the Simulator Notebook
+### Step 12: Create the Simulator Notebook
 
 1. Go to your workspace
 2. Click **+ New item** → **Notebook**
@@ -242,7 +332,7 @@ Now we'll run the simulator, which pushes live patient vital signs to the Events
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 
-### Step 12: Configure the Simulator
+### Step 13: Configure the Simulator
 
 Paste the following code in Cell 1:
 
@@ -410,7 +500,7 @@ finally:
 print(f"\n✅ Simulation complete! Sent {NUM_BATCHES * NUM_PATIENTS} total readings.")
 ```
 
-### Step 13: Run the Simulator
+### Step 14: Run the Simulator
 
 1. First, replace the `CONNECTION_STR` value in Cell 1 with the connection string you copied from the Eventstream (see Step 7)
 2. Run Cell 1 to set the configuration
@@ -433,7 +523,7 @@ Starting vitals simulation...
 
 4. **Let the simulator run for at least 2–3 batches** so the `PatientVitals` table gets created and populated in the Eventhouse
 
-### Step 14: Verify Data is Flowing
+### Step 15: Verify Data is Flowing
 
 While the simulator is running, verify data has arrived in the Eventhouse:
 
@@ -475,7 +565,7 @@ PatientVitals
 > 5. **Wait and retry:**
 >    - After publishing, it can take **1–2 minutes** for the Eventstream to begin delivering data. Run `.show tables` again after waiting.
 
-### Step 15: Watch the Real-Time Dashboard Update
+### Step 16: Watch the Real-Time Dashboard Update
 
 Now switch back to your **ICU Command Center Dashboard** tab:
 
@@ -496,7 +586,7 @@ Now switch back to your **ICU Command Center Dashboard** tab:
 
 ## Part E: KQL Queries for Clinical Analysis
 
-### Step 16: Open the KQL Database
+### Step 17: Open the KQL Database
 
 1. Open a **new browser tab** (keep the simulator running and the dashboard open)
 2. Go to your workspace
@@ -504,7 +594,7 @@ Now switch back to your **ICU Command Center Dashboard** tab:
 4. Click on the KQL database
 5. Click **Explore data** or open a new KQL queryset
 
-### Step 17: Write Clinical KQL Queries
+### Step 18: Write Clinical KQL Queries
 
 Paste and run each of the following queries:
 
@@ -582,7 +672,7 @@ PatientVitals
 
 ---
 
-## Step 18: Stop the Simulator
+## Step 19: Stop the Simulator
 
 Once you've explored the dashboard, go back to your simulator notebook and stop the cell execution (click the stop button ■ next to the running cell).
 
