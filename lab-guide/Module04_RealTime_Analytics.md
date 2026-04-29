@@ -80,6 +80,7 @@ Now we need to route the incoming data to our Eventhouse for storage and KQL que
 1. In the Eventstream canvas, click **Add destination** (in the toolbar)
 2. Select **Eventhouse** from the list
 3. Configure the destination:
+   - **Data ingestion mode**: Select **Direct ingestion** (not "Event processing before ingestion")
    - **Destination name**: `PatientVitalsDB`
    - **Workspace**: Select your workspace
    - **Eventhouse**: Select `PatientVitalsEventhouse`
