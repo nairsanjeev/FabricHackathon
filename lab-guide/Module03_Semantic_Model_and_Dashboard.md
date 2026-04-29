@@ -416,17 +416,6 @@ Create a financial and population health dashboard page. Include:
 - Slicers for age group, insurance type, and gender
 ```
 
-### Copilot Step 5: Refine and Polish
-
-Use follow-up prompts to refine:
-
-```
-Add a title text box at the top of each page with "HealthFirst Medical Group" branding.
-Change the color theme to use blues and greens (healthcare colors).
-Format all currency values with dollar signs and no decimals.
-Format all percentage KPIs to show 1 decimal place.
-```
-
 ### Copilot Tips
 
 | Do | Don't |
