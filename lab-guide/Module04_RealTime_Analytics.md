@@ -339,6 +339,34 @@ PatientVitals
 
 > ⚠️ If the table name shown by `.show tables` is different from `PatientVitals`, use that name in all subsequent queries and dashboard tiles.
 
+> #### 🛠️ Troubleshooting: Simulator runs but `.show tables` returns nothing
+>
+> If the simulator is sending batches successfully but no table appears in the Eventhouse, the issue is in the **Eventstream pipeline** — the data is reaching the Eventstream but not being delivered to the Eventhouse. Check the following:
+>
+> 1. **Verify the Eventstream was published after adding the destination:**
+>    - Go to your workspace → open `PatientVitalsStream`
+>    - Check that the Eventstream was **published** (Step 6). If the destination was added after publishing, you need to click **Publish** again. Any changes to the Eventstream require re-publishing.
+>
+> 2. **Check for errors on the Eventstream canvas:**
+>    - On the Eventstream canvas, look at the **destination node** (`PatientVitalsDB`). If it shows a **red icon** or **error indicator**, click on it to see the error details.
+>    - Common errors include authentication issues or data format mismatches.
+>
+> 3. **Verify the source-to-destination connection:**
+>    - Make sure there is a **line/arrow** connecting the source node (`VitalsSimulator`) to the destination node (`PatientVitalsDB`) on the canvas. If they are not connected, drag from the source output to the destination input, then **Publish** again.
+>
+> 4. **Check the Data ingestion mode:**
+>    - Click on the destination node and verify **Data ingestion mode** is set to **Direct ingestion**.
+>
+> 5. **Check the Input data format:**
+>    - Click on the destination node and verify **Input data format** is set to **JSON**.
+>
+> 6. **Wait and retry:**
+>    - After publishing, it can take **1–2 minutes** for the Eventstream to fully activate and begin delivering data. Run `.show tables` again after waiting.
+>    - If using Direct ingestion, the table is auto-created on first data arrival, but there may be a delay.
+>
+> 7. **Re-create the destination if needed:**
+>    - If nothing else works, delete the destination node on the canvas, add it again (Step 5), ensure the data ingestion mode is **Direct ingestion**, the format is **JSON**, and the table name is `PatientVitals` (Create new). **Publish** the Eventstream, then restart the simulator.
+
 **Leave the simulator running** — now we'll build the dashboard in a separate tab so you can watch it update live.
 
 ---
