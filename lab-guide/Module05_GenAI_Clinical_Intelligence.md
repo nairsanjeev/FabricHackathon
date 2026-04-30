@@ -53,7 +53,6 @@ To complete this module, you need:
    - Search for `HealthcareLakehouse`
    - You will see **two items** with the same name — a **Lakehouse** and a **SQL Analytics Endpoint**. **Select both** — add them one at a time (add the Lakehouse first, then repeat and add the SQL Analytics Endpoint)
    - Click **Add** for each
-5. **Pin the Lakehouse as default:** Hover over the `HealthcareLakehouse` **Lakehouse** item (blue house icon) in the Explorer pane, click the **⋯** (three dots) menu, and select **Pin as default**. This is required for Spark SQL queries to resolve table names.
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 

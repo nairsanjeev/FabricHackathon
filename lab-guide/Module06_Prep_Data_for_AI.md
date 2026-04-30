@@ -41,7 +41,6 @@ This module ensures your Gold layer tables are **AI-ready** — clean, complete,
    - Search for `HealthcareLakehouse`
    - ⚠️ You will see **two items** with the same name. **Select the Lakehouse** (blue house/database icon), not the SQL Analytics Endpoint. Click on the item details if needed to confirm the type.
    - Click **Add**
-   - **Pin it as default:** Hover over `HealthcareLakehouse` in the Explorer pane, click the **⋯** (three dots) menu, and select **Pin as default**
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 
