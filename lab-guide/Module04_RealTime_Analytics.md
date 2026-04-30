@@ -247,6 +247,9 @@ The `PatientVitals` table now exists in the KQL database with sample data, so da
 2. Click **+ New item** → **Real-Time Dashboard**
 3. Name: `ICU Command Center Dashboard`
 4. Click **Create**
+5. After the dashboard opens, you will see a prompt: **"The Workspace contains a single KQL database, would you like to use it as a data source?"** — click **Yes**
+   - This automatically connects the dashboard to the `PatientVitalsEventhouse` KQL database
+   - If you don't see this prompt, you can add the data source manually in Step 10 when adding your first tile
 
 ### Step 10: Add Dashboard Tiles
 
