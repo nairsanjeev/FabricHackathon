@@ -391,6 +391,68 @@ print("✅ gold_facility_summary created:")
 facility_summary.show(truncate=False)
 ```
 
+### Step 6B: Create a Chronic Conditions Summary (Copilot-Friendly)
+
+The `gold_population_health` table stores chronic conditions as **boolean flag columns** (`has_diabetes`, `has_heart_failure`, etc.). This is efficient for storage but hard for Copilot to query — when a user asks "What are the most common chronic conditions?", Copilot can't easily count across multiple boolean columns.
+
+This cell **unpivots** those flags into a simple table with one row per patient-condition, making it trivially queryable.
+
+Paste in Cell 5B:
+
+```python
+# =============================================================
+# Cell 5B: Chronic Conditions Summary — Copilot-Friendly
+# =============================================================
+# Unpivots boolean condition flags into rows so Copilot can
+# answer "most common conditions" with a simple GROUP BY.
+# =============================================================
+
+from pyspark.sql.functions import *
+from functools import reduce
+
+pop_health = spark.table("gold_population_health")
+patients = spark.table("silver_patients")
+
+# Define the condition flag columns and their display names
+condition_flags = {
+    "has_diabetes": "Diabetes",
+    "has_heart_failure": "Heart Failure",
+    "has_copd": "COPD",
+    "has_hypertension": "Hypertension",
+    "has_ckd": "Chronic Kidney Disease"
+}
+
+# Unpivot: one row per patient per condition they have
+condition_dfs = []
+for flag_col, condition_name in condition_flags.items():
+    if flag_col in pop_health.columns:
+        df = pop_health.filter(col(flag_col) == True) \
+            .select("patient_id") \
+            .withColumn("condition_name", lit(condition_name))
+        condition_dfs.append(df)
+
+if condition_dfs:
+    chronic_conditions = reduce(lambda a, b: a.unionAll(b), condition_dfs)
+    
+    # Join patient demographics for richer analysis
+    chronic_conditions = chronic_conditions.join(
+        patients.select("patient_id", "age", "gender", "insurance_type"),
+        "patient_id", "left"
+    )
+    
+    chronic_conditions.write.mode("overwrite").format("delta").saveAsTable("gold_chronic_conditions")
+    
+    # Show summary
+    print("✅ gold_chronic_conditions created")
+    print("\n📊 Most Common Chronic Conditions:")
+    chronic_conditions.groupBy("condition_name") \
+        .agg(count("*").alias("patient_count")) \
+        .orderBy(col("patient_count").desc()) \
+        .show(truncate=False)
+else:
+    print("⚠️  No condition flag columns found in gold_population_health")
+```
+
 ---
 
 ## Part E: Validate AI Readiness
@@ -419,6 +481,7 @@ ai_tables = [
     ("gold_population_health", "Chronic disease prevalence"),
     ("gold_patient_360", "Patient-level comprehensive view"),
     ("gold_facility_summary", "Facility comparison metrics"),
+    ("gold_chronic_conditions", "Unpivoted chronic conditions for Copilot"),
     ("data_dictionary", "Self-describing metadata"),
 ]
 
@@ -449,6 +512,28 @@ else:
     print("  ⚠️  Some tables need attention. Review the issues above.")
 print(f"{'=' * 70}")
 ```
+
+### Step 7B: Update the Semantic Model with New Tables
+
+The semantic model you built in Module 3 only includes the original Gold and Silver tables. You've now created several new AI-ready tables (`gold_patient_360`, `gold_facility_summary`, `gold_chronic_conditions`, `data_dictionary`) that Copilot and the Data Agent need access to.
+
+> **This step is done in the browser, not in the notebook.**
+
+1. Go to your workspace in the Fabric portal
+2. Find `HealthcareLakehouse` and click on it to open the **Lakehouse** view
+3. Switch to the **SQL analytics endpoint** view (dropdown at the top right of the Lakehouse page)
+4. Click **Reporting** → **Manage default semantic model** in the top toolbar
+5. In the table selection dialog, check the following new tables:
+   - ✅ `gold_patient_360`
+   - ✅ `gold_facility_summary`
+   - ✅ `gold_chronic_conditions`
+   - ✅ `data_dictionary`
+   - ✅ `gold_clinical_ai_insights` *(if created in Module 5)*
+6. Click **Confirm** to update the semantic model
+
+> ⚠️ **Why this matters:** If these tables aren't in the semantic model, Power BI Copilot and the standalone Copilot **cannot see them**. This is the most common reason Copilot says "I can't answer that" — the data exists in the Lakehouse but isn't exposed through the semantic model.
+
+> **💡 Alternative:** If you created a separate semantic model (e.g., `HealthcareLakehouse-SemanticModel`) in Module 3, open it in the Power BI service → click **Edit** → **Add tables** → select the new tables → **Save**.
 
 ---
 
@@ -854,6 +939,7 @@ This removes friction treatments (disclaimers) from Copilot answers for your mod
 **Why this step matters:**
 - Data Agents generate SQL/queries from natural language. If table/column names are cryptic, the AI struggles
 - Pre-joined views reduce the chance of incorrect joins
+- Unpivoted tables (like `gold_chronic_conditions`) make boolean flags queryable by Copilot
 - A data dictionary gives the AI explicit context about the data
 - AI Data Schema, Instructions, and Verified Answers provide **semantic model–level** context that Copilot uses for Power BI Q&A
 - Programmatic audits (Part F) let you **continuously validate** the semantic model as it evolves — catching new tables without descriptions, missing measures, or broken relationships
@@ -877,7 +963,9 @@ Before moving to Module 7, confirm:
 - [ ] `data_dictionary` table created with column descriptions
 - [ ] `gold_patient_360` table created (patient-level summary)
 - [ ] `gold_facility_summary` table created (facility comparison metrics)
+- [ ] `gold_chronic_conditions` table created (unpivoted conditions for Copilot)
 - [ ] AI Readiness Scorecard passed with all tables ready
+- [ ] Semantic model updated to include new tables (gold_patient_360, gold_facility_summary, gold_chronic_conditions)
 - [ ] Semantic model metadata extracted via Semantic Link (tables, columns, measures, relationships)
 - [ ] LLM-powered audit completed — reviewed findings for all 5 dimensions
 - [ ] *(Optional)* Descriptions auto-generated and applied via TOM API
