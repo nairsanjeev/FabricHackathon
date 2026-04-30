@@ -304,7 +304,7 @@ encounter_summary = encounters.groupBy("patient_id").agg(
 )
 
 # Claims summary per patient (join claims through encounters)
-patient_claims = encounters.select("encounter_id", "patient_id") \
+patient_claims = encounters.select("encounter_id") \
     .join(claims, "encounter_id") \
     .groupBy("patient_id") \
     .agg(
