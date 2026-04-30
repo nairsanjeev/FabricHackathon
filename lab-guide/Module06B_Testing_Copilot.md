@@ -570,56 +570,7 @@ readmission rate, ALOS, ED frequent flyers, and denial rate
 
 ---
 
-## Part J: Testing Copilot Limitations
-
-It's important to know **what Copilot can't do** so you set realistic expectations. Try these prompts to see how Copilot handles edge cases.
-
-#### Prompt J1: Formatting Request
-```
-Make the readmission rate card red if above 15% and green if below 10%
-```
-> **Expected:** Copilot will explain it can't apply conditional formatting. Do this manually: select the card → Format pane → Callout value → Color → **fx** → set rules.
-
-#### Prompt J2: Visual Sizing
-```
-Make this chart twice as large and move it to the top-left corner
-```
-> **Expected:** Copilot can't resize or reposition visuals. Drag corners manually.
-
-#### Prompt J3: Custom Colors
-```
-Change the bar colors to our hospital brand colors: #1B4F72 and #27AE60
-```
-> **Expected:** Copilot can't set custom hex colors. Use Format pane → Data colors manually.
-
-#### Prompt J4: Write DAX
-```
-Create a DAX measure that calculates the 90-day readmission rate
-```
-> **Expected:** Copilot may describe the DAX but can't create measures in the semantic model. You'd need to open the model editor and add it manually.
-
-#### Prompt J5: Cross-Report Join
-```
-Compare readmission data from this report with the financial report 
-from a different workspace
-```
-> **Expected:** Copilot works within a single semantic model. Cross-workspace queries are not supported.
-
-#### Prompt J6: Data Modification
-```
-Delete all records where encounter_type is 'Observation'
-```
-> **Expected:** Copilot is read-only — it cannot modify underlying data.
-
-#### Prompt J7: Predictive
-```
-Predict which patients will be readmitted in the next 30 days
-```
-> **Expected:** Copilot does not run predictive models. For this, see Module 9 (Readmission Prediction).
-
----
-
-## Part K: Prompt Engineering Tips for Power BI Copilot
+## Part J: Prompt Engineering Tips for Power BI Copilot
 
 After testing all the prompts above, you've likely noticed that **how you phrase a question** matters enormously. Here are proven techniques:
 
@@ -663,7 +614,7 @@ Change the title to "Quality Dashboard — Q4"
 
 ---
 
-## Part L: Score Your Copilot Experience
+## Part K: Score Your Copilot Experience
 
 Use this rubric to rate your overall experience. Fill in after testing.
 
@@ -732,9 +683,8 @@ Use this rubric to rate your overall experience. Fill in after testing.
 - [ ] Tested **1 complex multi-step** question (Part G)
 - [ ] Generated **1 executive narrative** (Part H)
 - [ ] Tested the **standalone Copilot** with at least **3 prompts** (Part I)
-- [ ] Tested at least **2 limitation prompts** to understand boundaries (Part J)
-- [ ] Filled in the **Copilot Scorecard** (Part L)
-- [ ] Discussed prompt engineering tips with your team
+- [ ] Discussed prompt engineering tips with your team (Part J)
+- [ ] Filled in the **Copilot Scorecard** (Part K)
 
 ---
 
