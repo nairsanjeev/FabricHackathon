@@ -139,9 +139,7 @@ Paste the following in **Cell 1**:
 
 ```python
 # =============================================================
-# Cell 1: Seed the PatientVitals table in the KQL database
-# This creates the table schema and inserts sample rows so
-# the Real-Time Dashboard tiles don't error out.
+# Cell 1: Configuration
 # =============================================================
 
 # ⚠️ IMPORTANT: Replace these with YOUR values
@@ -160,25 +158,41 @@ Paste the following in **Cell 2**:
 ```python
 # =============================================================
 # Cell 2: Create table and insert sample data
+# Uses the Kusto REST API — no extra packages needed
 # =============================================================
+import requests
+import json
 
-# Install the Kusto SDK if not available
-import subprocess
-subprocess.check_call(["pip", "install", "azure-kusto-data", "-q"])
+# Get an access token using Fabric's built-in credentials
+access_token = mssparkutils.credentials.getToken(KUSTO_URI)
 
-from azure.kusto.data import KustoClient, KustoConnectionStringBuilder
+headers = {
+    "Authorization": f"Bearer {access_token}",
+    "Content-Type": "application/json"
+}
 
-# Connect using Fabric's built-in managed identity
-kcsb = KustoConnectionStringBuilder.with_az_cli_authentication(KUSTO_URI)
-client = KustoClient(kcsb)
+def run_kql_command(uri, db, csl):
+    """Execute a KQL management command via the REST API."""
+    url = f"{uri}/v1/rest/mgmt"
+    body = {"db": db, "csl": csl}
+    resp = requests.post(url, headers=headers, json=body)
+    resp.raise_for_status()
+    return resp.json()
 
-# Create the table with the expected schema
-create_table_cmd = """
-.create-merge table PatientVitals (
+def run_kql_query(uri, db, csl):
+    """Execute a KQL query via the REST API."""
+    url = f"{uri}/v1/rest/query"
+    body = {"db": db, "csl": csl}
+    resp = requests.post(url, headers=headers, json=body)
+    resp.raise_for_status()
+    return resp.json()
+
+# --- Step 1: Create the table with the expected schema ---
+create_table_cmd = """.create-merge table PatientVitals (
     patient_id: string,
     facility_name: string,
     department: string,
-    condition: string,
+    ['condition']: string,
     timestamp: string,
     heart_rate: int,
     systolic_bp: int,
@@ -189,27 +203,26 @@ create_table_cmd = """
     pain_level: int,
     sirs_criteria_met: int,
     sirs_alert: bool
-)
-"""
-client.execute_mgmt(DATABASE_NAME, create_table_cmd)
+)"""
+
+run_kql_command(KUSTO_URI, DATABASE_NAME, create_table_cmd)
 print("✅ Table 'PatientVitals' created (or already exists)")
 
-# Insert a few sample rows so dashboard tiles can render
-ingest_cmd = """
-.ingest inline into table PatientVitals <|
+# --- Step 2: Insert sample rows so dashboard tiles can render ---
+ingest_cmd = """.ingest inline into table PatientVitals <|
 RT-P001,Metro General Hospital,ICU,Sepsis Risk,2025-01-01T00:00:00Z,125,85,55,103.2,28,91,6,3,true
 RT-P002,Community Medical Center,Emergency,Sepsis Risk,2025-01-01T00:00:00Z,118,90,58,102.1,25,93,5,3,true
 RT-P003,Riverside Health Center,ICU,Sepsis Risk,2025-01-01T00:00:00Z,105,92,57,101.8,24,92,4,2,true
 RT-P004,Metro General Hospital,Internal Medicine,Stable,2025-01-01T00:00:00Z,75,120,75,98.2,16,98,2,0,false
-RT-P005,Community Medical Center,Cardiology,Stable,2025-01-01T00:00:00Z,80,125,78,98.6,15,97,1,0,false
-"""
-client.execute_mgmt(DATABASE_NAME, ingest_cmd)
+RT-P005,Community Medical Center,Cardiology,Stable,2025-01-01T00:00:00Z,80,125,78,98.6,15,97,1,0,false"""
+
+run_kql_command(KUSTO_URI, DATABASE_NAME, ingest_cmd)
 print("✅ Inserted 5 sample rows into PatientVitals")
 
-# Verify
-result = client.execute(DATABASE_NAME, "PatientVitals | count")
-for row in result.primary_results[0]:
-    print(f"✅ PatientVitals table has {row[0]} rows")
+# --- Step 3: Verify ---
+result = run_kql_query(KUSTO_URI, DATABASE_NAME, "PatientVitals | count")
+count = result["Tables"][0]["Rows"][0][0]
+print(f"✅ PatientVitals table has {count} rows")
 ```
 
 4. **Run Cell 1**, then **Run Cell 2**
@@ -220,7 +233,7 @@ for row in result.primary_results[0]:
    ✅ PatientVitals table has 5 rows
    ```
 
-> **Note:** The `.create-merge` command is safe to run multiple times — it creates the table if it doesn't exist, or does nothing if it already exists. The sample data ensures the dashboard tiles can render without errors. Once the simulator runs, real data will flow in alongside these seed rows.
+> **Note:** This uses the Kusto REST API with `mssparkutils.credentials.getToken()` for authentication — no extra packages to install. The `.create-merge` command is safe to run multiple times. The sample data ensures dashboard tiles render without errors. Once the simulator runs, real data will flow in alongside these seed rows.
 
 ---
 
