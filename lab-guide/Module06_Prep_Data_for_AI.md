@@ -3,7 +3,7 @@
 | Duration | 30 minutes |
 |----------|------------|
 | Objective | Prepare healthcare data for AI consumption by validating quality, creating feature-ready views, and building AI-optimized tables that the Data Agent and future ML models can use effectively |
-| Fabric Features | Spark Notebooks, Delta Lake, Data Quality Checks |
+| Fabric Features | Spark Notebooks, Delta Lake, Data Quality Checks, Semantic Link, Fabric AI Services |
 
 ---
 
@@ -26,6 +26,7 @@ This module ensures your Gold layer tables are **AI-ready** — clean, complete,
 3. Build a **data dictionary table** that helps the Data Agent understand your data
 4. Validate **referential integrity** across tables
 5. Create **materialized features** for common AI/ML use cases
+6. **Audit your Semantic Model** for AI readiness using Semantic Link and Fabric's built-in LLM
 
 ---
 
@@ -451,13 +452,270 @@ print(f"{'=' * 70}")
 
 ---
 
-## Part F: Prep Data for AI in Power BI (Semantic Model Layer)
+## Part F: Semantic Model AI-Readiness Audit (Notebook)
 
-In Parts A–E you cleaned and enriched data **at the Lakehouse level** (Delta tables). Power BI offers a complementary feature called **"Prep data for AI"** that works **at the Semantic Model level** — it tells Copilot in Power BI *how* to interpret your model, what business terms mean, and which visuals to return for common questions.
+Parts A–E validated the **data layer** (Delta tables). But AI tools like Power BI Copilot and Data Agent operate on the **Semantic Model** — the layer that defines how tables relate, what measures are available, and what each field means. A semantic model with missing descriptions, unnamed measures, or unclear column names forces Copilot to guess — and it often guesses wrong.
+
+In this section you'll use **Semantic Link** (`sempy`) to programmatically extract the model metadata and **Fabric's built-in LLM** to audit it against five AI-readiness dimensions.
+
+### Step 7: Install Semantic Link and OpenAI
+
+Paste in Cell 7:
+
+```python
+# =============================================================
+# Cell 7: Install Semantic Link and OpenAI
+# =============================================================
+%pip install -U semantic-link openai -q
+```
+
+### Step 8: Extract Semantic Model Metadata
+
+Semantic Link connects directly to the semantic model you built in Module 3 and pulls out tables, columns, measures, and relationships as pandas DataFrames.
+
+Paste in Cell 8:
+
+```python
+# =============================================================
+# Cell 8: Connect to the Semantic Model and Extract Metadata
+# =============================================================
+# Semantic Link (sempy) reads the Tabular Object Model (TOM)
+# directly — no need for REST APIs or manual inspection.
+# =============================================================
+
+import sempy.fabric as fabric
+import pandas as pd
+
+# ⚠️ Update this name if you chose a different name in Module 3
+DATASET = "HealthcareLakehouse-SemanticModel"
+
+# Pull metadata from the semantic model
+tables_df = fabric.list_tables(DATASET)
+columns_df = fabric.list_columns(DATASET)
+measures_df = fabric.list_measures(DATASET)
+relationships_df = fabric.list_relationships(DATASET)
+
+print(f"📊 Semantic Model: {DATASET}")
+print(f"   Tables: {len(tables_df)}")
+print(f"   Columns: {len(columns_df)}")
+print(f"   Measures: {len(measures_df)}")
+print(f"   Relationships: {len(relationships_df)}")
+
+# Show tables
+print(f"\n{'='*60}")
+print("📋 TABLES")
+print(f"{'='*60}")
+display(tables_df)
+
+# Show measures
+print(f"\n{'='*60}")
+print("📋 MEASURES")
+print(f"{'='*60}")
+if len(measures_df) > 0:
+    display(measures_df)
+else:
+    print("⚠️  No DAX measures defined! Go back to Module 3 to add them.")
+
+# Show relationships
+print(f"\n{'='*60}")
+print("📋 RELATIONSHIPS")
+print(f"{'='*60}")
+display(relationships_df)
+```
+
+> **What to look for:** Scan the output for tables and columns with empty Description fields — those are gaps that Copilot can't interpret. Also check whether the DAX measures from Module 3 appear in the Measures list.
+
+### Step 9: LLM-Powered Semantic Model Audit
+
+This cell sends the metadata to Fabric's built-in LLM and gets a structured AI-readiness evaluation across five dimensions: star schema design, descriptions, naming, measures, and relationships.
+
+Paste in Cell 9:
+
+```python
+# =============================================================
+# Cell 9: LLM-Powered Semantic Model AI-Readiness Audit
+# =============================================================
+# Sends the metadata extracted in Cell 8 to gpt-4.1 for a
+# structured evaluation against 5 AI-readiness dimensions.
+# =============================================================
+
+from synapse.ml.fabric.credentials import get_openai_httpx_sync_client
+import openai
+
+httpx_client = get_openai_httpx_sync_client()
+client = openai.AzureOpenAI(
+    http_client=httpx_client,
+    api_version="2025-04-01-preview"
+)
+MODEL_NAME = "gpt-4.1"
+
+# Build a concise metadata summary for the LLM
+metadata_text = f"""## TABLES
+{tables_df.to_string(index=False)}
+
+## COLUMNS
+{columns_df.to_string(index=False)}
+
+## MEASURES
+{measures_df.to_string(index=False) if len(measures_df) > 0 else "NO MEASURES DEFINED"}
+
+## RELATIONSHIPS
+{relationships_df.to_string(index=False)}
+"""
+
+prompt = f"""You are a Microsoft Fabric semantic model architect specializing in healthcare analytics.
+
+Audit this semantic model for AI readiness across five dimensions.
+For each, give a score (✅ Good, ⚠️ Needs Improvement, or ❌ Critical Gap),
+specific findings, and concrete fixes.
+
+### Dimensions:
+
+1. **Star Schema Design** — Are fact and dimension tables clearly separated?
+   Is the schema appropriate for analytics? Identify which tables are facts
+   vs. dimensions.
+
+2. **Descriptions** — Do tables, columns, and measures have meaningful
+   descriptions? Count how many are missing. Missing descriptions hurt
+   Copilot and Data Agent accuracy.
+
+3. **Human-Readable Naming** — Are table/column names intuitive for business
+   users and AI agents? Flag cryptic abbreviations, inconsistent prefixes,
+   or technical names that should be aliased.
+
+4. **Explicit Measures** — Are key healthcare KPIs defined as DAX measures
+   (Readmission Rate, Average LOS, Denial Rate, etc.)? List recommended
+   measures that are missing, with the DAX expression for each.
+
+5. **Relationship Completeness** — Are all expected joins defined? Are there
+   orphan tables? Are cardinalities correct (many-to-one for fact→dimension)?
+
+End with a **prioritized action list** (top 5 fixes that would most improve
+AI accuracy).
+
+--- SEMANTIC MODEL METADATA ---
+{metadata_text}"""
+
+response = client.chat.completions.create(
+    model=MODEL_NAME,
+    messages=[{"role": "user", "content": prompt}],
+    max_tokens=4000,
+    temperature=0.3
+)
+
+print("=" * 70)
+print("🤖 SEMANTIC MODEL AI-READINESS AUDIT")
+print("=" * 70)
+print(response.choices[0].message.content)
+```
+
+> **📖 Read the output carefully.** The LLM identifies specific gaps — missing descriptions, unnamed columns, missing measures — and recommends exactly what to fix. Use Cell 10 to apply the most impactful fix (descriptions) automatically.
+
+### Step 10 (Optional): Auto-Generate and Apply Descriptions
+
+If the audit found missing descriptions, this cell uses the LLM to generate them and applies them to the semantic model via the **TOM (Tabular Object Model)** API.
+
+> ⚠️ **Prerequisite:** This step requires **XMLA read/write** to be enabled on your Fabric capacity (enabled by default on Fabric Trial capacities). If you get an access error, skip this cell and add descriptions manually in Power BI Desktop (right-click a table/column → **Properties** → **Description**).
+
+Paste in Cell 10:
+
+```python
+# =============================================================
+# Cell 10: Auto-Generate and Apply Descriptions via LLM + TOM
+# =============================================================
+# Uses the LLM to generate concise descriptions, then applies
+# them directly to the semantic model using the TOM API.
+# =============================================================
+
+import json
+
+# Ask the LLM to generate descriptions for items missing them
+desc_prompt = f"""Based on this healthcare semantic model metadata, generate a
+concise one-sentence description for every table and column that currently has
+no description (shown as None, NaN, or empty).
+
+Return ONLY a valid JSON object in this exact format (no markdown, no explanation):
+{{
+  "tables": {{
+    "table_name": "description"
+  }},
+  "columns": {{
+    "table_name.column_name": "description"
+  }}
+}}
+
+Only include items that are currently MISSING descriptions.
+Make descriptions specific to healthcare analytics.
+Keep each description to one sentence.
+
+{metadata_text}"""
+
+response = client.chat.completions.create(
+    model=MODEL_NAME,
+    messages=[{"role": "user", "content": desc_prompt}],
+    max_tokens=4000,
+    temperature=0.2
+)
+
+# Parse the JSON response (strip code fences if present)
+raw = response.choices[0].message.content.strip()
+if raw.startswith("```"):
+    raw = raw.split("\n", 1)[1]
+    raw = raw.rsplit("```", 1)[0]
+
+descriptions = json.loads(raw)
+
+# Preview generated descriptions
+print("=" * 70)
+print("📝 GENERATED DESCRIPTIONS")
+print("=" * 70)
+
+print("\n📋 Tables:")
+for name, desc in descriptions.get("tables", {}).items():
+    print(f"  • {name}: {desc}")
+
+col_descs = descriptions.get("columns", {})
+print(f"\n📋 Columns ({len(col_descs)} descriptions):")
+for name, desc in list(col_descs.items())[:20]:
+    print(f"  • {name}: {desc}")
+if len(col_descs) > 20:
+    print(f"  ... and {len(col_descs) - 20} more")
+
+# Apply descriptions via the TOM API
+try:
+    with fabric.connect_semantic_model(DATASET, readonly=False) as tom:
+        applied = 0
+        for table in tom.model.Tables:
+            if table.Name in descriptions.get("tables", {}):
+                table.Description = descriptions["tables"][table.Name]
+                applied += 1
+            for column in table.Columns:
+                key = f"{table.Name}.{column.Name}"
+                if key in descriptions.get("columns", {}):
+                    column.Description = descriptions["columns"][key]
+                    applied += 1
+
+    print(f"\n✅ Applied {applied} descriptions to the semantic model")
+    print("   Open the semantic model in Power BI to verify the descriptions")
+except Exception as e:
+    print(f"\n⚠️  Could not apply descriptions automatically: {e}")
+    print("   This usually means XMLA read/write is not enabled.")
+    print("   Copy the descriptions above and add them manually in Power BI Desktop")
+    print("   (Right-click a table/column → Properties → Description)")
+```
+
+> **🔄 Re-run Cell 9 after applying descriptions** to see your updated AI-readiness score. The Descriptions dimension should improve from ❌/⚠️ to ✅.
+
+---
+
+## Part G: Prep Data for AI in Power BI (Semantic Model Layer)
+
+In Parts A–F you validated and enriched data **at the Lakehouse and Semantic Model levels**. Power BI offers a complementary feature called **"Prep data for AI"** that works **at the Semantic Model level** — it tells Copilot in Power BI *how* to interpret your model, what business terms mean, and which visuals to return for common questions.
 
 > **Think of it this way:**
 > - Parts A–E = "Make the data itself AI-ready" (clean, joined, documented)
-> - Part F = "Make the *semantic model* AI-ready" (schema focus, business rules, curated answers)
+> - Part F = "Audit the semantic model programmatically" (LLM-powered gap analysis + auto-fix descriptions)
+> - Part G = "Make the *semantic model* AI-ready in Power BI" (schema focus, business rules, curated answers)
 
 The **Prep data for AI** button (preview) is available on the **Home ribbon** in Power BI Desktop and on the **Semantic Model page ribbon** in the Power BI service. It provides three features:
 
@@ -598,6 +856,7 @@ This removes friction treatments (disclaimers) from Copilot answers for your mod
 - Pre-joined views reduce the chance of incorrect joins
 - A data dictionary gives the AI explicit context about the data
 - AI Data Schema, Instructions, and Verified Answers provide **semantic model–level** context that Copilot uses for Power BI Q&A
+- Programmatic audits (Part F) let you **continuously validate** the semantic model as it evolves — catching new tables without descriptions, missing measures, or broken relationships
 
 **Production considerations:**
 - Schedule data quality notebooks to run daily
@@ -619,6 +878,9 @@ Before moving to Module 7, confirm:
 - [ ] `gold_patient_360` table created (patient-level summary)
 - [ ] `gold_facility_summary` table created (facility comparison metrics)
 - [ ] AI Readiness Scorecard passed with all tables ready
+- [ ] Semantic model metadata extracted via Semantic Link (tables, columns, measures, relationships)
+- [ ] LLM-powered audit completed — reviewed findings for all 5 dimensions
+- [ ] *(Optional)* Descriptions auto-generated and applied via TOM API
 - [ ] *(Optional)* AI Data Schema configured — irrelevant fields hidden from Copilot
 - [ ] *(Optional)* AI Instructions added with healthcare terminology and analysis rules
 - [ ] *(Optional)* Verified Answers set up for common healthcare questions
