@@ -22,7 +22,8 @@ Healthcare providers — hospital administrators, clinical informaticists, data 
 | 2:15 – 3:15 | [Module 4 — Real-Time Analytics](lab-guide/Module04_RealTime_Analytics.md) | Eventhouse, KQL |
 | 3:15 – 4:00 | [Module 5 — Gen AI: Clinical Intelligence](lab-guide/Module05_GenAI_Clinical_Intelligence.md) | Notebooks, Azure OpenAI |
 | 4:00 – 4:25 | [Module 6 — Prep Data for AI](lab-guide/Module06_Prep_Data_for_AI.md) | Data Quality, Feature Engineering |
-| 4:25 – 5:00 | [Module 7 — Data Agent & Power BI Copilot](lab-guide/Module07_Data_Agent.md) | Fabric Data Agent, Power BI Copilot |
+| 4:25 – 5:00 | [Module 6B — Testing Power BI Copilot](lab-guide/Module06B_Testing_Copilot.md) | Power BI Copilot, Standalone Copilot |
+| 5:00 – 5:30 | [Module 7 — Data Agent & Power BI Copilot](lab-guide/Module07_Data_Agent.md) | Fabric Data Agent, Power BI Copilot |
 | *(Optional)* | [Module 8 — Building with VS Code Agent Mode](lab-guide/Module08_VSCode_Agent_Mode.md) | GitHub Copilot Agent Mode, VS Code |
 | *(Optional)* | [Module 9 — Predicting Readmissions with Gen AI](lab-guide/Module09_Readmission_Prediction.md) | Azure OpenAI, XGBoost, PySpark ML |
 
@@ -39,6 +40,7 @@ FabricHackathon/
 │   ├── Module04_RealTime_Analytics.md
 │   ├── Module05_GenAI_Clinical_Intelligence.md
 │   ├── Module06_Prep_Data_for_AI.md   ← Data quality & AI-ready preparation
+│   ├── Module06B_Testing_Copilot.md   ← Testing Power BI & Standalone Copilot
 │   ├── Module07_Data_Agent.md         ← Data Agent + Power BI Copilot testing
 │   ├── Module08_VSCode_Agent_Mode.md  ← (Optional) Build entire lab with AI agent
 │   └── Module09_Readmission_Prediction.md ← (Optional) GenAI-powered readmission prediction

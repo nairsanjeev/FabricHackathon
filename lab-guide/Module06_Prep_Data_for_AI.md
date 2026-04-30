@@ -888,4 +888,4 @@ Before moving to Module 7, confirm:
 
 ---
 
-**[← Module 5: Gen AI — Clinical Intelligence](Module05_GenAI_Clinical_Intelligence.md)** | **[Module 7: Data Agent →](Module07_Data_Agent.md)**
+**[← Module 5: Gen AI — Clinical Intelligence](Module05_GenAI_Clinical_Intelligence.md)** | **[Module 6B: Testing Copilot →](Module06B_Testing_Copilot.md)**
