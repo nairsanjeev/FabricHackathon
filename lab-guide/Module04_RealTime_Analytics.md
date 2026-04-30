@@ -255,6 +255,8 @@ The `PatientVitals` table now exists in the KQL database with sample data, so da
 
 > ⚠️ **Note:** If your table has a different name than `PatientVitals` (as shown by `.show tables`), replace `PatientVitals` with your actual table name in each query below.
 
+> 💡 **Tip:** For each tile, after entering the query, click **Apply changes** first. The visual formatting options (visual type, title, conditional formatting) only become available after you apply the query. Apply changes → then configure the visual settings.
+
 #### Tile 1: SIRS Alert Count (Big Number)
 1. Click **+ Add tile**
 2. Select your KQL database as the data source
