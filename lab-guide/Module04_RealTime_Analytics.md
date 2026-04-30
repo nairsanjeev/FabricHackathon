@@ -290,7 +290,7 @@ PatientVitals
 PatientVitals
 | where patient_id in ("RT-P001", "RT-P002", "RT-P003")
 | where todatetime(timestamp) > ago(10m)
-| project timestamp, patient_id, heart_rate
+| project todatetime(timestamp), patient_id, heart_rate
 | render timechart
 ```
 2. Visual type: **Time chart**
