@@ -341,6 +341,8 @@ This is the key step that makes the dashboard update automatically as data flows
 
 > **Note:** The tiles will show empty or zero results until you start the simulator in Part D. This is expected.
 
+> 📌 **Keep this dashboard tab open!** Open a **new browser tab** to create the simulator notebook in Part D. Once the simulator starts sending data, come back to this tab and watch the dashboard tiles update automatically every 30 seconds.
+
 ---
 
 ## Part D: Simulate Real-Time Vitals Data
@@ -349,9 +351,10 @@ Now we'll run the simulator, which pushes live patient vital signs to the Events
 
 ### Step 12: Create the Simulator Notebook
 
-1. Go to your workspace
-2. Click **+ New item** → **Notebook**
-3. Rename to: `05 - RealTime Vitals Simulator`
+1. **Open a new browser tab** (keep the dashboard open in the previous tab)
+2. Go to your workspace
+3. Click **+ New item** → **Notebook**
+4. Rename to: `05 - RealTime Vitals Simulator`
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 
