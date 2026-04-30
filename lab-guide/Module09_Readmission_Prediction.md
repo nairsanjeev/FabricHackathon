@@ -74,6 +74,7 @@ Before starting this module, ensure you have:
 4. In the **Explorer** pane on the left, click **Add data items** → **From OneLake catalog**
 5. Search for `HealthcareLakehouse`. You will see **two items** with the same name — one is the **Lakehouse** and the other is the **SQL Analytics Endpoint**. **Select the Lakehouse** (blue house/database icon). Click on the item details if needed to confirm the type is **Lakehouse**.
 6. Click **Add**
+7. **Pin it as the default Lakehouse:** Hover over `HealthcareLakehouse` in the Explorer pane, click the **⋯** (three dots) menu, and select **Pin as default**
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 

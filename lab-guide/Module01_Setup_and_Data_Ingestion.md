@@ -84,6 +84,7 @@ Now we'll create a Spark notebook that reads the raw CSV files and saves them as
 6. Search for `HealthcareLakehouse` in the OneLake catalog
 7. You will see **two items** with the same name — one is the **Lakehouse** and the other is the **SQL Analytics Endpoint** (shown with a different icon). **Select the Lakehouse item** (it has a blue house/database icon, not the SQL endpoint icon). If unsure, click on the item to view its details and confirm the type is **Lakehouse**.
 8. Click **Add** to attach it
+9. **Pin it as the default Lakehouse:** After adding, hover over `HealthcareLakehouse` in the Explorer pane, click the **⋯** (three dots) menu, and select **Pin as default**. You should see it appear under the **Default Lakehouse** section at the top of the Explorer. This is required for Spark SQL queries to resolve table names.
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 

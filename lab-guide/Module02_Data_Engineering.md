@@ -34,6 +34,7 @@ The Silver layer cleanses and standardizes the raw Bronze data. We'll fix data t
    - Search for `HealthcareLakehouse`
    - ⚠️ You will see **two items** with the same name. One is the **Lakehouse** and the other is the **SQL Analytics Endpoint**. **Select the Lakehouse** (blue house/database icon). Click on the item details if needed to confirm the type is **Lakehouse**, not SQL Analytics Endpoint.
    - Click **Add**
+   - **Pin it as default:** Hover over `HealthcareLakehouse` in the Explorer pane, click the **⋯** (three dots) menu, and select **Pin as default**
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 
@@ -235,6 +236,7 @@ The Gold layer contains business-ready tables with computed KPIs and aggregated 
    - Search for `HealthcareLakehouse`
    - ⚠️ You will see **two items** with the same name. **Select the Lakehouse** (blue house/database icon), not the SQL Analytics Endpoint. Click on the item details if needed to confirm the type.
    - Click **Add**
+   - **Pin it as default:** Hover over `HealthcareLakehouse` in the Explorer pane, click the **⋯** (three dots) menu, and select **Pin as default**
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 
