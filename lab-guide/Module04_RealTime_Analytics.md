@@ -161,6 +161,11 @@ Paste the following in **Cell 2**:
 # =============================================================
 # Cell 2: Create table and insert sample data
 # =============================================================
+
+# Install the Kusto SDK if not available
+import subprocess
+subprocess.check_call(["pip", "install", "azure-kusto-data", "-q"])
+
 from azure.kusto.data import KustoClient, KustoConnectionStringBuilder
 
 # Connect using Fabric's built-in managed identity
