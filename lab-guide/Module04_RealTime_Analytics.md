@@ -299,7 +299,7 @@ PatientVitals
 ```kql
 PatientVitals
 | where todatetime(timestamp) > ago(10m)
-| summarize avg_spo2 = round(avg(spo2_percent), 1) by bin(timestamp, 30s), facility_name
+| summarize avg_spo2 = round(avg(spo2_percent), 1) by bin(todatetime(timestamp), 30s), facility_name
 | render timechart
 ```
 2. Visual type: **Time chart**
@@ -686,7 +686,7 @@ PatientVitals
 PatientVitals
 | where todatetime(timestamp) > ago(30m)
 | where sirs_alert == true
-| summarize alert_count = count() by bin(timestamp, 1m), facility_name
+| summarize alert_count = count() by bin(todatetime(timestamp), 1m), facility_name
 | order by timestamp asc
 | render timechart
 ```
