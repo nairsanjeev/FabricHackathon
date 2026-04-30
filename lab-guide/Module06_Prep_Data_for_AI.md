@@ -533,6 +533,32 @@ The semantic model you built in Module 3 only includes the original Gold and Sil
 
 > ⚠️ **Why this matters:** If these tables aren't in the semantic model, Power BI Copilot and the standalone Copilot **cannot see them**. This is the most common reason Copilot says "I can't answer that" — the data exists in the Lakehouse but isn't exposed through the semantic model.
 
+### Step 7C: Add Relationships for the New Tables
+
+After the new tables appear in the semantic model, you need to create relationships so Copilot can join them correctly.
+
+1. Open the semantic model in the Power BI service (click on it in your workspace)
+2. Click **Edit** to enter edit mode (you should see **New measure**, **Manage relationships** in the toolbar)
+3. Create the following relationships by dragging columns between tables (same technique as Module 3 Step 4):
+
+| From Table | From Column | To Table | To Column | Cardinality |
+|------------|-------------|----------|-----------|-------------|
+| `gold_patient_360` | `patient_id` | `silver_patients` | `patient_id` | One-to-One |
+| `gold_chronic_conditions` | `patient_id` | `silver_patients` | `patient_id` | Many-to-One |
+| `gold_clinical_ai_insights` *(if added)* | `patient_id` | `silver_patients` | `patient_id` | Many-to-One |
+
+> **Notes on tables without relationships:**
+> - **`gold_facility_summary`** — This is a pre-aggregated summary with one row per facility. It does not have a foreign key to join to other tables (it already contains all the metrics). Copilot queries it as a standalone table for facility comparison questions.
+> - **`data_dictionary`** — This is a metadata reference table. It describes other tables but doesn't join to them. Copilot and the Data Agent use it for context, not for data queries.
+
+4. After creating all relationships, verify them by clicking **Manage relationships** in the toolbar — you should see the new relationships listed alongside the original ones from Module 3.
+
+> **💡 Alternative:** If you prefer to use the **Manage relationships** dialog instead of dragging:
+> 1. Click **Manage relationships** in the toolbar
+> 2. Click **New relationship**
+> 3. Select the From and To tables/columns from the dropdowns
+> 4. Set the cardinality and click **OK**
+
 > **💡 Alternative:** If you created a separate semantic model (e.g., `HealthcareLakehouse-SemanticModel`) in Module 3, open it in the Power BI service → click **Edit** → **Add tables** → select the new tables → **Save**.
 
 ---
@@ -966,6 +992,7 @@ Before moving to Module 7, confirm:
 - [ ] `gold_chronic_conditions` table created (unpivoted conditions for Copilot)
 - [ ] AI Readiness Scorecard passed with all tables ready
 - [ ] Semantic model updated to include new tables (gold_patient_360, gold_facility_summary, gold_chronic_conditions)
+- [ ] Relationships created for new tables (gold_patient_360, gold_chronic_conditions, gold_clinical_ai_insights → silver_patients)
 - [ ] Semantic model metadata extracted via Semantic Link (tables, columns, measures, relationships)
 - [ ] LLM-powered audit completed — reviewed findings for all 5 dimensions
 - [ ] *(Optional)* Descriptions auto-generated and applied via TOM API
