@@ -2,8 +2,8 @@
 
 | Duration | 45 minutes |
 |----------|------------|
-| Objective | Use Azure OpenAI through Fabric to summarize clinical notes, extract medical entities, and suggest ICD-10 codes — automating documentation tasks that consume hours of clinician time |
-| Fabric Features | Fabric Notebook, Azure OpenAI integration, PySpark UDFs |
+| Objective | Use Azure OpenAI through Fabric's built-in AI endpoint to summarize clinical notes, extract medical entities, and suggest ICD-10 codes — automating documentation tasks that consume hours of clinician time |
+| Fabric Features | Fabric Notebook, Fabric AI Services (built-in Azure OpenAI), PySpark UDFs |
 
 ---
 
@@ -24,17 +24,16 @@ In this module, you'll build an AI-powered clinical intelligence pipeline that p
 
 To complete this module, you need:
 
-1. **Azure OpenAI resource** with a deployed model (e.g., `gpt-4o`, `gpt-4o-mini`, or `gpt-35-turbo`)
-2. The **endpoint URL** and **API key** for your Azure OpenAI deployment
-3. The **deployment name** of your model
+1. **Fabric workspace** with your `HealthcareLakehouse` (from Modules 1-2)
+2. **Fabric capacity** — The built-in Fabric AI endpoint provides access to Azure OpenAI models (like `gpt-4.1`) directly from Fabric notebooks, with no separate Azure OpenAI resource or API key needed
 
-> **If you don't have Azure OpenAI access:** You can still read through the module to understand the approach. Instructors may provide a shared endpoint for the lab.
+> **Note:** Fabric AI Services uses your workspace's Fabric capacity. No external Azure OpenAI resource, endpoint URL, or API key is required. See [Fabric AI Services documentation](https://learn.microsoft.com/en-us/fabric/data-science/ai-services/how-to-use-openai-python-sdk) for details.
 
 ---
 
 ## What You Will Do
 
-1. Configure Azure OpenAI connection in a notebook
+1. Set up the Fabric AI endpoint connection in a notebook (no API keys needed)
 2. Summarize clinical notes using GPT
 3. Extract medical entities (diagnoses, medications, procedures)
 4. Suggest ICD-10 codes from clinical text
@@ -42,7 +41,7 @@ To complete this module, you need:
 
 ---
 
-## Part A: Set Up Azure OpenAI Connection
+## Part A: Set Up Fabric AI Endpoint Connection
 
 ### Step 1: Create a New Notebook
 
@@ -57,132 +56,69 @@ To complete this module, you need:
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 
-### Step 2: Get Your Azure OpenAI Details from AI Foundry
+### Step 2: Install the OpenAI SDK
 
-You need three values from **Microsoft AI Foundry** to connect your notebook to Azure OpenAI. Follow these steps to find them:
-
-#### 2a: Open AI Foundry and Select Your Project
-
-1. Go to [https://ai.azure.com](https://ai.azure.com) in your browser
-2. Sign in with your Azure account
-3. In the left navigation, click **All projects**
-4. Click on your project (or create a new one if you don't have one yet)
-
-#### 2b: Find Your Endpoint and API Key
-
-1. In your project, click **Management center** (gear icon) in the left navigation
-2. Click **Connected resources** (or **Connections**)
-3. Find your **Azure OpenAI** connection and click on it
-4. You will see:
-   - **Endpoint** — e.g., `https://my-resource.openai.azure.com/`
-   - **Key** — click **Show key** or the copy icon to reveal and copy the API key
-5. Copy both values — you'll paste them into the notebook
-
-> **Alternative path:** You can also find these in the Azure Portal:
-> 1. Go to [https://portal.azure.com](https://portal.azure.com)
-> 2. Search for your **Azure OpenAI** resource
-> 3. Click **Keys and Endpoint** in the left menu under **Resource Management**
-> 4. Copy **KEY 1** and the **Endpoint** URL
-
-#### 2c: Find Your Model Deployment Name
-
-1. Back in AI Foundry, click **Models + endpoints** in the left navigation (under your project)
-2. Click the **Deployments** tab
-3. You'll see a list of deployed models — look for your GPT model (e.g., `gpt-4o`, `gpt-4o-mini`, `gpt-4.1`)
-4. The **Deployment name** column shows the name you need — this may be different from the model name
-   - For example, the model might be `gpt-4o-mini` but the deployment could be named `gpt-4o-mini` or `my-gpt4`
-5. Copy the **deployment name** (not the model name, though they're often the same)
-
-> **Don't have a deployment yet?** Click **+ Deploy model** → **Deploy base model** → select a GPT model (e.g., `gpt-4o-mini`) → give it a deployment name → click **Deploy**. The deployment name you choose is what you'll use below.
-
-### Step 3: Configure the Connection
-
-Paste in Cell 1 and fill in the three values from AI Foundry:
+Paste in Cell 1:
 
 ```python
 # =============================================================
-# Cell 1: Azure OpenAI Configuration
+# Cell 1: Install OpenAI SDK
 # =============================================================
 
-# ⚠️ Replace these values with your Azure OpenAI resource details
-#
-# IMPORTANT: The endpoint must be ONLY the base URL — do NOT include
-# any path like /openai/v1 or /openai/deployments/...
-# The SDK appends the correct path automatically.
-#
-# ✅ Correct:   https://my-resource.openai.azure.com/
-# ❌ Wrong:     https://my-resource.openai.azure.com/openai/v1
-# ❌ Wrong:     https://my-resource.openai.azure.com/openai/deployments/gpt-4o
-
-AZURE_OPENAI_ENDPOINT = "https://<your-resource-name>.openai.azure.com/"  # From Step 2b
-AZURE_OPENAI_KEY = "<your-api-key>"                                        # From Step 2b
-AZURE_OPENAI_DEPLOYMENT = "<your-deployment-name>"                          # From Step 2c
-AZURE_OPENAI_API_VERSION = "2024-06-01"
-
-print("✅ Configuration set!")
-print(f"   Endpoint: {AZURE_OPENAI_ENDPOINT[:40]}...")
-print(f"   Deployment: {AZURE_OPENAI_DEPLOYMENT}")
+%pip install -U openai -q
 ```
 
-> **Security Note:** In a production environment, use Azure Key Vault or Fabric environment variables instead of hardcoding credentials. For this lab, hardcoded values are acceptable.
+> **Expected warnings — safe to ignore:**
+> - `ERROR: pip's dependency resolver...` — This is a pre-installed Fabric package with a stale dependency constraint. It does **not** affect the `openai` package or this lab.
+> - `A new release of pip is available` — Informational only.
+> - `PySpark kernel has been restarted` — Expected. Fabric restarts the kernel after `%pip install` so the new package is available. **Wait for the restart to complete, then continue with the next cell.**
 
-### Step 4: Install the OpenAI SDK
+### Step 3: Initialize the Fabric AI Client
+
+Fabric provides a **built-in AI endpoint** that gives you access to Azure OpenAI models (like `gpt-4.1`) directly — no API keys, no endpoint URLs, no separate Azure OpenAI resource needed. Authentication is handled automatically through your Fabric credentials.
 
 Paste in Cell 2:
 
 ```python
 # =============================================================
-# Cell 2: Install OpenAI SDK
+# Cell 2: Initialize Fabric AI Client
+# No API keys or endpoints needed — Fabric handles authentication
 # =============================================================
 
-%pip install openai -q
-```
+from synapse.ml.fabric.credentials import get_openai_httpx_sync_client
+import openai
 
-> **Expected warnings — safe to ignore:**
-> - `ERROR: pip's dependency resolver...` — This is a pre-installed Fabric package (`nni`) with a stale dependency constraint. It does **not** affect the `openai` package or this lab.
-> - `A new release of pip is available` — Informational only.
-> - `PySpark kernel has been restarted` — Expected. Fabric restarts the kernel after `%pip install` so the new package is available. **Wait for the restart to complete, then continue with the next cell.**
-
-### Step 5: Initialize the Client
-
-Paste in Cell 3:
-
-```python
-# =============================================================
-# Cell 3: Initialize Azure OpenAI Client
-# =============================================================
-
-from openai import AzureOpenAI
-
-client = AzureOpenAI(
-    azure_endpoint=AZURE_OPENAI_ENDPOINT,
-    api_key=AZURE_OPENAI_KEY,
-    api_version=AZURE_OPENAI_API_VERSION
+client = openai.AzureOpenAI(
+    http_client=get_openai_httpx_sync_client(),
+    api_version="2025-04-01-preview",
 )
+
+# Model to use for all AI calls
+MODEL_NAME = "gpt-4.1"
 
 # Quick test
 response = client.chat.completions.create(
-    model=AZURE_OPENAI_DEPLOYMENT,
+    model=MODEL_NAME,
     messages=[{"role": "user", "content": "Say 'Connection successful' if you can read this."}],
     max_tokens=10
 )
 
-print(response.choices[0].message.content)
+print(f"✅ {response.choices[0].message.content}")
 ```
 
-You should see: `Connection successful`
+You should see: `✅ Connection successful`
 
 ---
 
 ## Part B: Load Clinical Notes
 
-### Step 5: Load Notes from the Lakehouse
+### Step 4: Load Notes from the Lakehouse
 
-Paste in Cell 4:
+Paste in Cell 3:
 
 ```python
 # =============================================================
-# Cell 4: Load Clinical Notes from Silver Layer
+# Cell 3: Load Clinical Notes from Silver Layer
 # =============================================================
 
 # For schema-enabled lakehouses, use the 3-part name: lakehouse.schema.table
@@ -204,13 +140,13 @@ print(f"Note:\n{sample_note['note_text'][:800]}...")
 
 ## Part C: Clinical Note Summarization
 
-### Step 6: Summarize Clinical Notes
+### Step 5: Summarize Clinical Notes
 
-Paste in Cell 5:
+Paste in Cell 4:
 
 ```python
 # =============================================================
-# Cell 5: Clinical Note Summarization
+# Cell 4: Clinical Note Summarization
 # =============================================================
 
 def summarize_clinical_note(note_text, note_type):
@@ -226,7 +162,7 @@ Use medical terminology appropriately. Be concise and factual."""
     
     try:
         response = client.chat.completions.create(
-            model=AZURE_OPENAI_DEPLOYMENT,
+            model=MODEL_NAME,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Note Type: {note_type}\n\nClinical Note:\n{note_text}"}
@@ -254,13 +190,13 @@ print(summary)
 
 ## Part D: Medical Entity Extraction
 
-### Step 7: Extract Clinical Entities
+### Step 6: Extract Clinical Entities
 
-Paste in Cell 6:
+Paste in Cell 5:
 
 ```python
 # =============================================================
-# Cell 6: Medical Entity Extraction
+# Cell 5: Medical Entity Extraction
 # =============================================================
 import json
 
@@ -284,7 +220,7 @@ Return valid JSON only, no other text."""
     
     try:
         response = client.chat.completions.create(
-            model=AZURE_OPENAI_DEPLOYMENT,
+            model=MODEL_NAME,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": note_text}
@@ -318,13 +254,13 @@ print(json.dumps(entities, indent=2))
 
 ## Part E: ICD-10 Code Suggestion
 
-### Step 8: Suggest ICD-10 Codes
+### Step 7: Suggest ICD-10 Codes
 
-Paste in Cell 7:
+Paste in Cell 6:
 
 ```python
 # =============================================================
-# Cell 7: ICD-10 Code Suggestion
+# Cell 6: ICD-10 Code Suggestion
 # =============================================================
 
 def suggest_icd10_codes(note_text):
@@ -351,7 +287,7 @@ Guidelines:
     
     try:
         response = client.chat.completions.create(
-            model=AZURE_OPENAI_DEPLOYMENT,
+            model=MODEL_NAME,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": note_text}
@@ -388,13 +324,13 @@ for code in codes:
 
 ## Part F: Process Notes at Scale
 
-### Step 9: Batch Process All Clinical Notes
+### Step 8: Batch Process All Clinical Notes
 
-Paste in Cell 8:
+Paste in Cell 7:
 
 ```python
 # =============================================================
-# Cell 8: Batch Process Clinical Notes
+# Cell 7: Batch Process Clinical Notes
 # =============================================================
 import time
 
@@ -442,13 +378,13 @@ for idx, row in notes_pdf.iterrows():
 print(f"\n✅ Processed {len(results)} notes!")
 ```
 
-### Step 10: Save AI Insights to the Lakehouse
+### Step 9: Save AI Insights to the Lakehouse
 
-Paste in Cell 9:
+Paste in Cell 8:
 
 ```python
 # =============================================================
-# Cell 9: Save AI-Generated Insights to Gold Layer
+# Cell 8: Save AI-Generated Insights to Gold Layer
 # =============================================================
 from pyspark.sql.types import StructType, StructField, StringType
 
@@ -478,13 +414,13 @@ df_ai_insights.select("note_id", "note_type", "ai_summary").show(5, truncate=60)
 
 ## Part G: Explore AI Insights
 
-### Step 11: Query the Results
+### Step 10: Query the Results
 
-Paste in Cell 10:
+Paste in Cell 9:
 
 ```python
 # =============================================================
-# Cell 10: Explore AI-Generated Insights
+# Cell 9: Explore AI-Generated Insights
 # =============================================================
 
 # Load the AI insights table
@@ -502,11 +438,11 @@ for row in df_insights.limit(5).collect():
     print("-" * 60)
 ```
 
-Paste in Cell 11:
+Paste in Cell 10:
 
 ```python
 # =============================================================
-# Cell 11: ICD-10 Code Analysis
+# Cell 10: ICD-10 Code Analysis
 # =============================================================
 from pyspark.sql.functions import from_json, explode, col
 from pyspark.sql.types import ArrayType
@@ -553,7 +489,7 @@ df_codes.groupBy("icd10_code").count().orderBy("count", ascending=False).show(15
 
 Before moving to Module 6, confirm:
 
-- [ ] Azure OpenAI connection is working (test call succeeded)
+- [ ] Fabric AI endpoint connection is working (test call succeeded)
 - [ ] Clinical note summarization produces concise, accurate summaries
 - [ ] Entity extraction identifies diagnoses, medications, and procedures
 - [ ] ICD-10 code suggestion returns plausible codes with evidence
