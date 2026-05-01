@@ -2,8 +2,8 @@
 
 | Duration | 45–60 minutes |
 |----------|---------------|
-| Objective | Use Azure OpenAI as a feature engineering assistant to build a machine learning model that predicts 30-day hospital readmissions |
-| Tools | Fabric Notebook, Azure OpenAI, PySpark, XGBoost |
+| Objective | Use Fabric's built-in AI endpoint as a feature engineering assistant to build a machine learning model that predicts 30-day hospital readmissions |
+| Tools | Fabric Notebook, Fabric AI Services (built-in Azure OpenAI), PySpark, XGBoost |
 
 > **⚠️ This module is OPTIONAL.** It builds on the data created in Modules 1–2 and the Gen AI skills from Module 5. You will use Gen AI not just for text analysis, but as an **ML feature engineering assistant**.
 
@@ -42,12 +42,12 @@ In this module, you'll replicate this approach on your Fabric Lakehouse data.
 
 ## What You Will Do
 
-1. 🤖 **Ask Azure OpenAI** to analyze your data schema and suggest predictive features for readmission
+1. 🤖 **Ask Fabric's built-in AI endpoint** to analyze your data schema and suggest predictive features for readmission
 2. 🔧 **Build 25+ features** across 6 categories (Demographics, Comorbidity, Utilization, Clinical, Financial, Temporal) using PySpark
 3. 📊 **Train an XGBoost model** to predict 30-day readmissions with class imbalance handling
 4. 📈 **Evaluate the model** with AUC-ROC, Precision-Recall curves, and feature importance charts
 5. 🏥 **Score all patients** with a readmission risk probability and classify into Low/Medium/High risk tiers
-6. 💡 **Ask Azure OpenAI** to interpret the results and generate clinical recommendations
+6. 💡 **Ask the AI endpoint** to interpret the results and generate clinical recommendations
 
 ---
 
@@ -56,15 +56,14 @@ In this module, you'll replicate this approach on your Fabric Lakehouse data.
 Before starting this module, ensure you have:
 
 - ✅ **Completed Modules 1–2**: All Silver and Gold tables populated in your Lakehouse
-- ✅ **Azure OpenAI resource**: Same deployment used in Module 5 (GPT-4o recommended)
-- ✅ **Azure OpenAI endpoint URL and API key**: From Module 5 configuration
+- ✅ **Fabric capacity**: The built-in Fabric AI endpoint provides access to Azure OpenAI models (like `gpt-4.1`) directly from Fabric notebooks, with no separate Azure OpenAI resource or API key needed
 - ✅ **Fabric notebook environment**: Same workspace from previous modules
 
 > **📋 Key table needed:** `gold_readmissions` (created in Notebook 03). This table contains the target variable `was_readmitted` — a boolean flag indicating whether a patient was readmitted within 30 days of discharge.
 
 ---
 
-## Part A: Create the Notebook and Configure Azure OpenAI
+## Part A: Create the Notebook and Configure AI Endpoint
 
 ### Step 1: Create a New Notebook
 
@@ -77,67 +76,66 @@ Before starting this module, ensure you have:
 
 > ⚠️ **Session Note:** If your Spark session expires or is stopped at any point, you will need to re-run all cells from the top using **Run all**. Fabric does not preserve variables, imports, or DataFrames across session restarts.
 
-### Step 2: Add the Configuration Cell
+### Step 2: Install the OpenAI SDK
 
-Create the first code cell and paste the following:
+Paste in Cell 1:
+
+```python
+%pip install -U openai -q
+```
+
+> **Expected warnings — safe to ignore:**
+> - `ERROR: pip's dependency resolver...` — This is a pre-installed Fabric package with a stale dependency constraint. It does **not** affect the `openai` package or this lab.
+> - `A new release of pip is available` — Informational only.
+> - `PySpark kernel has been restarted` — Expected. Fabric restarts the kernel after `%pip install` so the new package is available. **Wait for the restart to complete, then continue with the next cell.**
+
+### Step 3: Initialize the Fabric AI Client
+
+Fabric provides a **built-in AI endpoint** that gives you access to Azure OpenAI models (like `gpt-4.1`) directly — no API keys, no endpoint URLs, no separate Azure OpenAI resource needed. Authentication is handled automatically through your Fabric credentials.
+
+Paste in Cell 2:
 
 ```python
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 from pyspark.sql.window import Window
+from synapse.ml.fabric.credentials import get_openai_httpx_sync_client
+import openai
 import json
 
-# ── Azure OpenAI Configuration ────────────────────────────────
-# ⚠️ REPLACE with your Azure OpenAI resource details
-AZURE_OPENAI_ENDPOINT = "https://<your-resource-name>.openai.azure.com/"
-AZURE_OPENAI_KEY = "<your-api-key>"
-AZURE_OPENAI_DEPLOYMENT = "<your-deployment-name>"
-AZURE_OPENAI_API_VERSION = "2024-06-01"
+# ── Fabric AI Endpoint ────────────────────────────────────────
+# No API keys or endpoints needed — Fabric handles authentication
+client = openai.AzureOpenAI(
+    http_client=get_openai_httpx_sync_client(),
+    api_version="2025-04-01-preview",
+)
 
-print("✅ Configuration ready")
+MODEL_NAME = "gpt-4.1"
+
+# Quick test
+response = client.chat.completions.create(
+    model=MODEL_NAME,
+    messages=[{"role": "user", "content": "Say 'Connection successful' if you can read this."}],
+    max_tokens=10
+)
+
+print(f"✅ {response.choices[0].message.content}")
 ```
 
-> ⚠️ Replace the three placeholder values with your Azure OpenAI resource details (same values used in Module 5).
-
-### Step 3: Install the OpenAI SDK
-
-Create a second code cell:
-
-```python
-%pip install openai -q
-```
-
-> After pip finishes, the kernel may restart. If so, re-run Cell 1 (Configuration).
-
-Create a third code cell to re-set the config (in case of kernel restart):
-
-```python
-# Re-set config after potential kernel restart
-AZURE_OPENAI_ENDPOINT = "https://<your-resource-name>.openai.azure.com/"
-AZURE_OPENAI_KEY = "<your-api-key>"
-AZURE_OPENAI_DEPLOYMENT = "<your-deployment-name>"
-AZURE_OPENAI_API_VERSION = "2024-06-01"
-```
+You should see: `✅ Connection successful`
 
 ---
 
 ## Part B: Use Gen AI for Feature Engineering
 
-### Step 4: Ask Azure OpenAI to Suggest Predictive Features
+### Step 4: Ask the AI Endpoint to Suggest Predictive Features
 
-This is the core innovation — rather than manually researching clinical features from published readmission risk models, we ask Azure OpenAI to analyze our data schema and suggest features grounded in medical literature.
+This is the core innovation — rather than manually researching clinical features from published readmission risk models, we ask the AI endpoint to analyze our data schema and suggest features grounded in medical literature.
 
-Create a new code cell and paste the following:
+Create a new code cell (Cell 3) and paste the following:
 
 ```python
 import json
-from openai import AzureOpenAI
-
-client = AzureOpenAI(
-    azure_endpoint=AZURE_OPENAI_ENDPOINT,
-    api_key=AZURE_OPENAI_KEY,
-    api_version=AZURE_OPENAI_API_VERSION
-)
 
 # ── Describe our data schema to the LLM ────────────────────────
 # The more detail we provide, the better the feature suggestions.
@@ -212,11 +210,11 @@ Focus on features that:
 
 Return valid JSON only, no other text."""
 
-print("🤖 Asking Azure OpenAI for feature engineering suggestions...")
+print("🤖 Asking Fabric AI endpoint for feature engineering suggestions...")
 print("   (This may take 15-30 seconds)\n")
 
 response = client.chat.completions.create(
-    model=AZURE_OPENAI_DEPLOYMENT,
+    model=MODEL_NAME,
     messages=[
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": f"Here is our data schema:\n\n{schema_description}\n\nSuggest 25 features for 30-day readmission prediction."}
@@ -234,7 +232,7 @@ if result_text.startswith("```"):
 ai_features = json.loads(result_text)
 
 # ── Display the AI-suggested features ────────────────────────
-print(f"✅ Azure OpenAI suggested {len(ai_features)} features:\n")
+print(f"✅ AI endpoint suggested {len(ai_features)} features:\n")
 print(f"{'#':<3} {'Feature':<40} {'Category':<15} {'Importance':<10}")
 print("─" * 70)
 for i, feat in enumerate(ai_features, 1):
@@ -259,7 +257,7 @@ for feat in ai_features[:5]:
 
 **Expected output:**
 ```
-✅ Azure OpenAI suggested 25 features:
+✅ AI endpoint suggested 25 features:
 
 #   Feature                                  Category        Importance
 ──────────────────────────────────────────────────────────────────────────
@@ -277,7 +275,7 @@ for feat in ai_features[:5]:
 
 > ⚠️ **Before running this cell:** Make sure your **HealthcareLakehouse** is attached to the notebook. In the **Explorer** pane on the left, check that you see your tables listed under **HealthcareLakehouse → Tables**. If not, click **Add data items** → **From OneLake catalog** → search for `HealthcareLakehouse` → select the **Lakehouse** item (not the SQL Analytics Endpoint) → **Add**.
 
-Now we implement the AI-suggested features using PySpark. Create a new code cell and paste the following:
+Now we implement the AI-suggested features using PySpark. Create a new code cell (Cell 4) and paste the following:
 
 ```python
 from pyspark.sql.functions import *
@@ -595,7 +593,7 @@ Base: 302 index admissions
 
 ### Step 6: Install ML Libraries
 
-Create a new code cell:
+Create a new code cell (Cell 5):
 
 ```python
 %pip install xgboost scikit-learn matplotlib -q
@@ -603,7 +601,7 @@ Create a new code cell:
 
 ### Step 7: Train the XGBoost Model
 
-Create a new code cell and paste the following:
+Create a new code cell (Cell 6) and paste the following:
 
 ```python
 import pandas as pd
@@ -757,7 +755,7 @@ for i, (feat, imp) in enumerate(feat_importance[:15], 1):
 
 ### Step 8: Visualize Results
 
-Create a new code cell and paste the following:
+Create a new code cell (Cell 7) and paste the following:
 
 ```python
 fig, axes = plt.subplots(1, 3, figsize=(20, 6))
@@ -813,7 +811,7 @@ This generates three visualizations:
 
 ### Step 9: Generate Risk Scores for All Patients
 
-Create a new code cell and paste the following:
+Create a new code cell (Cell 8) and paste the following:
 
 ```python
 from pyspark.sql.functions import col, count, avg, sum, round
@@ -895,7 +893,7 @@ Risk Tier Distribution:
 
 ### Step 10: Ask Gen AI to Interpret the Results
 
-Create a new code cell and paste the following:
+Create a new code cell (Cell 9) and paste the following:
 
 ```python
 # Build a summary of model results for the LLM
@@ -951,10 +949,10 @@ Given the readmission prediction model results below, provide:
 
 Write for a clinical audience, not data scientists."""
 
-print("🤖 Asking Azure OpenAI to interpret model results...\n")
+print("🤖 Asking Fabric AI endpoint to interpret model results...\n")
 
 interpretation_response = client.chat.completions.create(
-    model=AZURE_OPENAI_DEPLOYMENT,
+    model=MODEL_NAME,
     messages=[
         {"role": "system", "content": interpretation_prompt},
         {"role": "user", "content": model_summary}
@@ -986,14 +984,14 @@ This closes the loop — Gen AI suggested the features, we trained the model, an
 
 Confirm you have completed:
 
-- [ ] Azure OpenAI suggested 25+ features across 6 clinical categories
+- [ ] Fabric AI endpoint suggested 25+ features across 6 clinical categories
 - [ ] Built a training dataset with 42 features in `gold_readmission_training`
 - [ ] Trained an XGBoost model with class imbalance handling
 - [ ] AUC-ROC evaluated (target: ≥ 0.70)
 - [ ] Reviewed feature importance chart — top features align with clinical literature
 - [ ] ROC curve and Precision-Recall curve generated
 - [ ] All patients scored and classified into risk tiers in `gold_readmission_risk_scores`
-- [ ] Azure OpenAI generated clinical interpretation and recommendations
+- [ ] Fabric AI endpoint generated clinical interpretation and recommendations
 - [ ] Understand how Gen AI accelerates ML feature engineering
 
 ---
@@ -1002,7 +1000,7 @@ Confirm you have completed:
 
 | Component | Description |
 |-----------|-------------|
-| **Gen AI Feature Discovery** | Used Azure OpenAI to suggest clinically-grounded features |
+| **Gen AI Feature Discovery** | Used Fabric's built-in AI endpoint to suggest clinically-grounded features |
 | **Feature Engineering Pipeline** | Built 42 features from 7 Silver/Gold tables using PySpark |
 | **XGBoost Prediction Model** | Gradient-boosted classifier with class imbalance handling |
 | **Risk Scoring System** | Every patient scored 0.0–1.0 and classified Low/Medium/High |
@@ -1012,7 +1010,7 @@ Confirm you have completed:
 
 - **Module 2** (Data Engineering): The Silver/Gold tables you built are the foundation for all 42 ML features
 - **Module 3** (Power BI): Add the `gold_readmission_risk_scores` table to your semantic model for a "Readmission Risk" dashboard page
-- **Module 5** (Gen AI): The same Azure OpenAI deployment is used here, but for feature engineering and result interpretation instead of clinical note analysis
+- **Module 5** (Gen AI): The same Fabric built-in AI endpoint is used here, but for feature engineering and result interpretation instead of clinical note analysis
 - **Module 7** (Data Agent): The Data Agent can now answer questions like *"Which high-risk patients are being discharged this week?"* using the risk scores table
 
 ---
