@@ -717,6 +717,223 @@ Imagine this scenario:
 
 ---
 
+## Part F: Operations Agent — AI-Powered Vitals Monitoring (Preview)
+
+Now that you have real-time patient vitals streaming into your Eventhouse, imagine going a step further: instead of a human watching the dashboard 24/7, an **AI agent** continuously monitors the data, detects critical patterns, and **proactively notifies the clinical team via Microsoft Teams** with recommended actions.
+
+This is exactly what the **Operations Agent** does. It's a dedicated Fabric item that watches your KQL database, evaluates rules it generates from your goals and instructions, and sends actionable recommendations when conditions are met.
+
+> **⚠️ Preview Feature:** Operations Agent is currently in preview. It requires a **paid Fabric capacity** (not Trial) and admin enablement. If your capacity doesn't support it, review the steps below as a walkthrough and discuss the clinical implications with your team.
+
+### Prerequisites for Operations Agent
+
+- A paid Fabric capacity (Trial capacities are **not** supported for this feature)
+- Fabric admin has enabled **Operations Agent preview** and **Microsoft Copilot and Azure OpenAI** in the admin portal
+- A Microsoft Teams account (for receiving agent notifications)
+- The `PatientVitalsEventhouse` and KQL database from earlier in this module
+
+---
+
+### Step 20: Create the Operations Agent
+
+1. On the Fabric home page, click the **ellipsis (...)** icon → **Create**
+2. Go to the **Real-Time Intelligence** section
+3. Select **Operations agent**
+4. Name: `Patient Vitals Monitor`
+5. Select your workspace
+6. Click **Create**
+
+---
+
+### Step 21: Configure Business Goals
+
+The agent needs to understand **what it's monitoring and why**. In the **Business Goals** section, enter:
+
+```
+Monitor real-time patient vital signs streaming into the PatientVitals table 
+to detect clinically dangerous patterns early. The primary goals are:
+
+1. Detect SIRS (Systemic Inflammatory Response Syndrome) alerts — early 
+   warning signs of sepsis that require immediate clinical intervention
+2. Identify patients with critical vital sign combinations (high temperature 
+   + high heart rate + low SpO2) that indicate rapid deterioration
+3. Monitor facility-level alert volumes to detect potential outbreaks or 
+   systemic issues (e.g., multiple SIRS alerts from the same facility 
+   within a short time window)
+```
+
+---
+
+### Step 22: Add Agent Instructions
+
+In the **Instructions** section, provide clinical context so the agent makes medically appropriate decisions:
+
+```
+You are monitoring a hospital network with 3 facilities: Metro General Hospital, 
+Community Medical Center, and Riverside Health System.
+
+Clinical thresholds for patient vitals:
+- Temperature: Normal 97.0–99.5°F. Fever > 100.4°F. Critical > 103.0°F.
+- Heart Rate: Normal 60–100 bpm. Tachycardia > 100 bpm. Critical > 130 bpm.
+- Respiratory Rate: Normal 12–20 breaths/min. Tachypnea > 20. Critical > 30.
+- SpO2: Normal 95–100%. Concerning < 92%. Critical < 88%.
+- Systolic BP: Normal 90–140 mmHg. Hypotension < 90. Hypertensive crisis > 180.
+
+SIRS criteria (2 or more = SIRS positive):
+- Temperature > 100.4°F or < 96.8°F
+- Heart rate > 90 bpm
+- Respiratory rate > 20
+- White blood cell count abnormal (not available in this dataset — use other 3)
+
+Rules for escalation:
+- Single patient with SIRS alert persisting for more than 10 minutes: NOTIFY
+- Patient with SpO2 < 88% AND heart rate > 120: URGENT — notify immediately
+- 3 or more SIRS alerts from the same facility within 15 minutes: ESCALATE 
+  to charge nurse — possible outbreak or environmental issue
+- Any patient with temperature > 104°F: CRITICAL — notify immediately
+
+When sending notifications:
+- Include the patient_id, facility_name, and the specific vital signs that 
+  triggered the alert
+- Include how long the condition has persisted
+- Recommend specific clinical actions (e.g., "Order blood cultures and lactate 
+  level" for suspected sepsis)
+```
+
+---
+
+### Step 23: Connect the Data Source
+
+1. In the **Data source** section, click **Add data source**
+2. Select your **PatientVitalsEventhouse**
+3. Select the **KQL database** that contains the `PatientVitals` table
+4. The agent will analyze the table schema and map it to the goals you defined
+
+---
+
+### Step 24: Define Actions
+
+Actions tell the agent **what it can do** when it detects a matching condition. The agent always sends Teams notifications, but you can also define custom actions.
+
+#### Action 1: SIRS Alert Notification
+
+1. Click **Add action**
+2. Name: `SIRS Alert Notification`
+3. Description: `Notify the clinical team when a patient triggers SIRS criteria for more than 10 minutes. Include patient ID, facility, vital signs, and recommended next steps.`
+4. Parameters (optional):
+   - `patient_id` — The patient who triggered the alert
+   - `facility_name` — The facility where the patient is located
+   - `duration_minutes` — How long the SIRS condition has persisted
+
+#### Action 2: Critical Vitals Escalation
+
+1. Click **Add action**
+2. Name: `Critical Vitals Escalation`
+3. Description: `Immediately escalate when a patient has SpO2 below 88% combined with heart rate above 120 bpm. This combination suggests acute respiratory or cardiac distress requiring emergency intervention.`
+4. Parameters (optional):
+   - `patient_id` — The patient in distress
+   - `facility_name` — The facility
+   - `spo2_value` — Current SpO2 reading
+   - `heart_rate_value` — Current heart rate
+
+#### Action 3: Facility Outbreak Alert
+
+1. Click **Add action**
+2. Name: `Facility Outbreak Alert`
+3. Description: `Alert the charge nurse when 3 or more patients at the same facility trigger SIRS alerts within a 15-minute window. This may indicate an environmental issue, contamination event, or emerging outbreak.`
+4. Parameters (optional):
+   - `facility_name` — The affected facility
+   - `alert_count` — Number of SIRS alerts in the window
+   - `patient_ids` — List of affected patients
+
+> **💡 Note on Custom Actions:** Each action can optionally be connected to a **Power Automate flow** via an Activator. This lets the agent do more than just notify — it could trigger a workflow like creating a ticket in your EHR system, paging an on-call physician, or logging the event in a compliance system. For this lab, we'll focus on the Teams notification path.
+
+---
+
+### Step 25: Save and Review the Playbook
+
+1. Click **Save** to generate the agent's playbook
+2. The agent processes your goals, instructions, and data source to create:
+   - **Properties** — The data fields it monitors (mapped from your KQL table columns)
+   - **Rules** — The conditions it evaluates (derived from your instructions)
+3. Review the rules — verify they match your clinical thresholds:
+   - SIRS detection rule using temperature, heart rate, and respiratory rate
+   - Critical vitals combination rule (SpO2 + heart rate)
+   - Facility-level aggregation rule (alert count within time window)
+4. If the rules don't match your intent, update the **Instructions** and save again
+
+> **⚠️ Important:** Review the property-to-column mappings carefully. The agent may refer to properties by display names (e.g., "Heart Rate") rather than column names (e.g., `heart_rate`). Confirm the mappings match your `PatientVitals` table schema.
+
+---
+
+### Step 26: Start the Agent and Test
+
+1. Click **Start** in the toolbar to activate the agent
+2. Go back to your **simulator notebook** (from Step 12) and run it to generate new vitals data
+3. The agent begins monitoring the `PatientVitals` table for conditions matching its rules
+
+#### Install the Teams App
+
+1. Open **Microsoft Teams**
+2. Search for **"Fabric Operations Agent"** in the Teams app store
+3. Install the app
+4. The agent will send you messages in Teams when it detects matching conditions
+
+#### What to Expect
+
+After starting the simulator, you should receive Teams notifications like:
+
+> **🔴 SIRS Alert — Patient RT-P001**
+> *Facility: Metro General Hospital*
+> *Temperature: 103.2°F | Heart Rate: 128 bpm | Respiratory Rate: 26*
+> *Duration: 12 minutes*
+>
+> **Recommended Action:** Order blood cultures, serum lactate, and initiate sepsis bundle protocol. Consider broad-spectrum antibiotics within 1 hour.
+>
+> [Yes — Take Action] [No — Dismiss]
+
+If you click **Yes**, the agent executes the associated action (e.g., sends the notification parameters to a Power Automate flow). If you click **No**, it logs the dismissal and continues monitoring.
+
+---
+
+### Step 27: Stop the Agent
+
+After testing:
+
+1. Go back to the Operations Agent in Fabric
+2. Click **Stop** in the toolbar to deactivate monitoring
+3. Also stop the simulator notebook if still running
+
+---
+
+### 💡 Discussion: Operations Agent in Healthcare
+
+**Why this matters for patient safety:**
+
+| Traditional Approach | Operations Agent Approach |
+|---|---|
+| Nurse manually checks dashboard every 15–30 minutes | Agent monitors **continuously** — no gaps |
+| Alerts depend on someone being at the station | Agent sends **proactive Teams notifications** to mobile devices |
+| Single-patient focus | Agent detects **facility-wide patterns** (outbreak detection) |
+| No recommended actions — just raw data | Agent provides **clinical recommendations** with context |
+| After-hours coverage gaps | Agent works **24/7** without fatigue |
+
+**Production considerations:**
+
+- **Who receives notifications?** Configure recipients to include the charge nurse, attending physician, and rapid response team. Recipients must have Fabric workspace permissions.
+- **Action audit trail:** All agent recommendations and approvals are logged — critical for clinical compliance and quality review.
+- **False positive tuning:** Start with conservative thresholds. If the agent sends too many alerts, tighten the rules in the Instructions (e.g., require SIRS persistence for 15 minutes instead of 10).
+- **Integration with EHR:** In production, connect the Custom Actions to Power Automate flows that create alerts in your EHR (Epic, Cerner) or page on-call staff via PagerDuty.
+- **HIPAA compliance:** The agent operates within Fabric's security boundary. Teams notifications should be reviewed for PHI content — consider showing patient IDs only (not names) in notifications.
+
+**Discussion questions:**
+1. How would you configure this agent for an ICU vs. a general medical floor?
+2. What additional data sources (labs, medications, nurse assessments) would improve the agent's accuracy?
+3. How do you balance alert sensitivity (catching everything) vs. specificity (avoiding alert fatigue)?
+4. Could this agent replace or supplement existing nurse call systems?
+
+---
+
 ## ✅ Module 4 Checklist
 
 Before moving to Module 5, confirm:
@@ -727,6 +944,9 @@ Before moving to Module 5, confirm:
 - [ ] KQL queries return results (vitals, SIRS alerts, trends)
 - [ ] Real-Time Dashboard shows live patient monitoring tiles
 - [ ] You can see SIRS alerts flagged for the high-risk simulated patients
+- [ ] *(Optional — requires paid capacity)* Operations Agent `Patient Vitals Monitor` created and configured
+- [ ] *(Optional)* Agent playbook reviewed — rules match clinical thresholds
+- [ ] *(Optional)* Teams notification received from Operations Agent during simulation
 
 ---
 
