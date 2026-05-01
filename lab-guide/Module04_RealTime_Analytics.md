@@ -850,13 +850,16 @@ Actions tell the agent **what it can do** when it detects a matching condition. 
 
 ---
 
-### Step 25: Save and Review the Playbook
+### Step 25: Save and Generate the Playbook
 
-1. Click **Save** to generate the agent's playbook
-2. The agent processes your goals, instructions, and data source to create:
+1. Click **Save** to save your agent configuration
+2. Click **Generate playbook** — the agent processes your goals, instructions, and data source to create:
    - **Properties** — The data fields it monitors (mapped from your KQL table columns)
    - **Rules** — The conditions it evaluates (derived from your instructions)
-3. Review the rules — verify they match your clinical thresholds:
+
+> ⚠️ **Important:** You must click **Generate playbook** after saving. Without a generated playbook, the **Start** button will show an error: *"You must have a valid playbook saved in your configuration to activate the agent."*
+
+3. Review the generated rules — verify they match your clinical thresholds:
    - SIRS detection rule using temperature, heart rate, and respiratory rate
    - Critical vitals combination rule (SpO2 + heart rate)
    - Facility-level aggregation rule (alert count within time window)
