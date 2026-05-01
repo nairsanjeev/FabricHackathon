@@ -739,7 +739,7 @@ This is exactly what the **Operations Agent** does. It's a dedicated Fabric item
 1. On the Fabric home page, click the **ellipsis (...)** icon → **Create**
 2. Go to the **Real-Time Intelligence** section
 3. Select **Operations agent**
-4. Name: `Patient Vitals Monitor`
+4. Name: `PatientVitalsMonitor`
 5. Select your workspace
 6. Click **Create**
 
@@ -944,7 +944,7 @@ Before moving to Module 5, confirm:
 - [ ] KQL queries return results (vitals, SIRS alerts, trends)
 - [ ] Real-Time Dashboard shows live patient monitoring tiles
 - [ ] You can see SIRS alerts flagged for the high-risk simulated patients
-- [ ] *(Optional — requires paid capacity)* Operations Agent `Patient Vitals Monitor` created and configured
+- [ ] *(Optional — requires paid capacity)* Operations Agent `PatientVitalsMonitor` created and configured
 - [ ] *(Optional)* Agent playbook reviewed — rules match clinical thresholds
 - [ ] *(Optional)* Teams notification received from Operations Agent during simulation
 
