@@ -474,12 +474,87 @@ def generate_encounters(patients, patient_conditions):
             patient_encounters[pid].append(encounter)
             enc_id += 1
 
-    # Generate explicit readmissions (~15% of inpatient discharges)
+    # Generate explicit readmissions with RISK-ADJUSTED probability
+    # Instead of a flat 15% rate, readmission probability depends on
+    # patient risk factors — creating realistic correlations that an
+    # ML model can learn from.
     inpatient_encounters = [e for e in encounters if e["encounter_type"] == "Inpatient"
                            and e["discharge_disposition"] not in ("Expired", "Against Medical Advice")]
 
+    # Build a lookup for quick patient access
+    patient_lookup = {p["patient_id"]: p for p in patients}
+
+    # High-risk diagnosis codes for readmission (from CMS HRRP)
+    high_risk_dx = {"I50.9", "J44.1", "A41.9", "J96.01", "I21.9"}
+
     for enc in inpatient_encounters:
-        if random.random() < 0.15:
+        pid = enc["patient_id"]
+        pt = patient_lookup[pid]
+        conds = patient_conditions.get(pid, [])
+        cond_codes = {c["code"] for c in conds}
+        num_chronic = len(conds)
+
+        # ── Compute risk-adjusted readmission probability ─────────
+        # Base rate 8% (below national average for healthy patients)
+        readmit_prob = 0.08
+
+        # Age: older patients have higher readmission risk
+        if pt["age"] >= 75:
+            readmit_prob += 0.10
+        elif pt["age"] >= 65:
+            readmit_prob += 0.05
+
+        # Comorbidity burden: more chronic conditions → higher risk
+        if num_chronic >= 5:
+            readmit_prob += 0.14
+        elif num_chronic >= 3:
+            readmit_prob += 0.08
+        elif num_chronic >= 1:
+            readmit_prob += 0.03
+
+        # Specific high-risk conditions (from clinical literature)
+        if "I50.9" in cond_codes:   # Heart failure
+            readmit_prob += 0.10
+        if "J44.1" in cond_codes:   # COPD
+            readmit_prob += 0.07
+        if "N18.9" in cond_codes:   # CKD
+            readmit_prob += 0.05
+        if "F32.9" in cond_codes:   # Depression
+            readmit_prob += 0.04
+
+        # Index stay diagnosis: acute high-risk diagnoses
+        if enc["primary_diagnosis_code"] in high_risk_dx:
+            readmit_prob += 0.08
+
+        # Length of stay: longer stays indicate higher acuity
+        los = enc["length_of_stay_days"]
+        if los >= 14:
+            readmit_prob += 0.10
+        elif los >= 7:
+            readmit_prob += 0.05
+
+        # Discharge disposition: SNF/rehab patients have higher risk
+        if enc["discharge_disposition"] == "Skilled Nursing Facility":
+            readmit_prob += 0.06
+        elif enc["discharge_disposition"] == "Home with Home Health":
+            readmit_prob += 0.03
+
+        # Risk score (from patient record, 0.5-4.5 scale)
+        if pt["risk_score"] > 3.5:
+            readmit_prob += 0.08
+        elif pt["risk_score"] > 2.5:
+            readmit_prob += 0.03
+
+        # Insurance: Medicare/Medicaid patients have higher rates
+        if pt["insurance_type"] == "Medicare":
+            readmit_prob += 0.04
+        elif pt["insurance_type"] == "Medicaid":
+            readmit_prob += 0.03
+
+        # Cap at 70% to keep it realistic
+        readmit_prob = min(readmit_prob, 0.70)
+
+        if random.random() < readmit_prob:
             readmit_days = random.randint(1, 29)
             discharge_dt = datetime.strptime(enc["discharge_date"], "%Y-%m-%d")
             readmit_date = discharge_dt + timedelta(days=readmit_days)

@@ -18,15 +18,16 @@ E00010,P0002,2024-01-11,16:33,2024-01-11,Outpatient,FAC001,Metro General Hospita
 E00663,P0140,2024-01-14,19:22,2024-01-14,ED,FAC003,Riverside Health Center,Internal Medicine,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Sarah Chen,Home,0,5061.73
 E00772,P0160,2024-01-14,01:10,2024-01-14,ED,FAC001,Metro General Hospital,Emergency,T78.2XXA,"Anaphylactic shock, unspecified",Dr. Karen Martinez,Home,0,2884.03
 E00447,P0091,2024-01-15,23:10,2024-01-15,ED,FAC002,Community Medical Center,Emergency,R07.9,"Chest pain, unspecified",Dr. Emily Johnson,Skilled Nursing Facility,0,4477.67
-E00982,P0083,2024-01-15,17:54,2024-01-18,Inpatient,FAC002,Community Medical Center,ICU,R07.9,"Chest pain, unspecified",Dr. Robert Singh,Home,3,51458.04
 E00713,P0149,2024-01-16,14:11,2024-01-16,Ambulatory,FAC003,Riverside Health Center,Internal Medicine,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. David Kim,Home,0,414.51
 E00150,P0034,2024-01-17,20:51,2024-01-17,ED,FAC001,Metro General Hospital,Neurology,I63.9,"Cerebral infarction, unspecified (Stroke)",Dr. David Kim,Home,0,14662.16
 E00180,P0038,2024-01-17,12:07,2024-01-17,Ambulatory,FAC001,Metro General Hospital,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. Michael Patel,Home,0,1145.61
+E00995,P0083,2024-01-17,09:09,2024-01-25,Inpatient,FAC002,Community Medical Center,Internal Medicine,R07.9,"Chest pain, unspecified",Dr. Sarah Chen,Home,8,66854.87
 E00241,P0049,2024-01-18,05:45,2024-01-18,ED,FAC002,Community Medical Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Ahmed Hassan,Home,0,13511.31
 E00580,P0117,2024-01-18,09:29,2024-01-18,ED,FAC002,Community Medical Center,General Surgery,K35.80,Unspecified acute appendicitis,Dr. David Kim,Home,0,2304.29
 E00835,P0172,2024-01-18,07:11,2024-01-22,Inpatient,FAC002,Community Medical Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Steven Park,Home,4,48011.38
 E00182,P0038,2024-01-20,00:11,2024-01-20,Outpatient,FAC002,Community Medical Center,Internal Medicine,E66.01,Morbid obesity due to excess calories,Dr. David Kim,Home,0,879.51
 E00267,P0053,2024-01-21,18:01,2024-01-25,Inpatient,FAC003,Riverside Health Center,ICU,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Karen Martinez,Home,4,108957.9
+E01006,P0143,2024-01-21,19:19,2024-01-25,Inpatient,FAC001,Metro General Hospital,ICU,S72.001A,Fracture of unspecified part of neck of right femur,Dr. Emily Johnson,Expired,4,18877.75
 E00294,P0061,2024-01-24,22:54,2024-01-24,ED,FAC003,Riverside Health Center,Emergency,R07.9,"Chest pain, unspecified",Dr. William Taylor,Home,0,2701.18
 E00606,P0124,2024-01-24,22:28,2024-01-24,ED,FAC003,Riverside Health Center,Cardiology,I10,Essential (primary) hypertension,Dr. Jennifer Brown,Home,0,2435.0
 E00854,P0176,2024-01-24,21:05,2024-01-24,Outpatient,FAC002,Community Medical Center,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. Karen Martinez,Home,0,666.08
@@ -40,6 +41,7 @@ E00278,P0057,2024-01-29,06:10,2024-01-29,ED,FAC001,Metro General Hospital,Intern
 E00866,P0178,2024-01-29,08:23,2024-01-29,Outpatient,FAC001,Metro General Hospital,Cardiology,E66.01,Morbid obesity due to excess calories,Dr. Sarah Chen,Home,0,615.42
 E00279,P0057,2024-01-30,00:03,2024-02-03,Inpatient,FAC002,Community Medical Center,Internal Medicine,N39.0,"Urinary tract infection, site not specified",Dr. Karen Martinez,Rehabilitation Facility,4,27710.34
 E00407,P0083,2024-01-31,00:12,2024-01-31,ED,FAC003,Riverside Health Center,ICU,I10,Essential (primary) hypertension,Dr. Michael Patel,Home,0,9406.77
+E00984,P0034,2024-02-01,15:04,2024-02-05,Inpatient,FAC001,Metro General Hospital,Cardiology,E11.9,Type 2 diabetes mellitus without complications,Dr. Maria Rodriguez,Home with Home Health,4,23389.34
 E00198,P0041,2024-02-02,10:14,2024-02-04,Inpatient,FAC003,Riverside Health Center,Internal Medicine,N39.0,"Urinary tract infection, site not specified",Dr. Emily Johnson,Home,2,103384.95
 E00813,P0170,2024-02-02,10:23,2024-02-02,Outpatient,FAC001,Metro General Hospital,Cardiology,I10,Essential (primary) hypertension,Dr. Richard Davis,Home,0,591.48
 E00896,P0184,2024-02-02,10:40,2024-02-02,Outpatient,FAC003,Riverside Health Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Richard Davis,Home,0,1577.63
@@ -65,11 +67,11 @@ E00833,P0172,2024-02-19,14:23,2024-02-19,Outpatient,FAC002,Community Medical Cen
 E00052,P0011,2024-02-23,18:07,2024-02-23,ED,FAC003,Riverside Health Center,Cardiology,I10,Essential (primary) hypertension,Dr. William Taylor,Home,0,5880.93
 E00446,P0091,2024-02-23,00:26,2024-03-04,Inpatient,FAC003,Riverside Health Center,Cardiology,I10,Essential (primary) hypertension,Dr. James Wilson,Home,10,49960.21
 E00147,P0033,2024-02-24,07:27,2024-02-24,Outpatient,FAC001,Metro General Hospital,Internal Medicine,E66.01,Morbid obesity due to excess calories,Dr. Sarah Chen,Home,0,2611.49
+E00988,P0057,2024-02-24,04:18,2024-03-03,Inpatient,FAC001,Metro General Hospital,Internal Medicine,N39.0,"Urinary tract infection, site not specified",Dr. Steven Park,Home,8,60177.09
 E00394,P0081,2024-02-25,20:28,2024-02-25,ED,FAC002,Community Medical Center,Orthopedics,S72.001A,Fracture of unspecified part of neck of right femur,Dr. Maria Rodriguez,Home,0,11972.62
 E00207,P0044,2024-02-26,19:02,2024-02-29,Inpatient,FAC003,Riverside Health Center,Emergency,R07.9,"Chest pain, unspecified",Dr. Thomas Wright,Home,3,13775.01
 E00886,P0182,2024-02-26,08:01,2024-02-26,Ambulatory,FAC002,Community Medical Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Thomas Wright,Home,0,2455.04
 E00500,P0101,2024-02-27,18:27,2024-02-27,ED,FAC001,Metro General Hospital,Cardiology,E66.01,Morbid obesity due to excess calories,Dr. Ahmed Hassan,Home,0,3084.18
-E00981,P0057,2024-02-28,02:40,2024-03-04,Inpatient,FAC002,Community Medical Center,Internal Medicine,N39.0,"Urinary tract infection, site not specified",Dr. David Kim,Home,5,82177.37
 E00712,P0149,2024-02-29,18:02,2024-03-03,Inpatient,FAC001,Metro General Hospital,Cardiology,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Patricia Clark,Rehabilitation Facility,3,92287.74
 E00090,P0017,2024-03-04,12:42,2024-03-18,Inpatient,FAC003,Riverside Health Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Ahmed Hassan,Home,14,114301.04
 E00393,P0080,2024-03-05,08:15,2024-03-08,Inpatient,FAC003,Riverside Health Center,Pulmonology,J18.9,"Pneumonia, unspecified organism",Dr. Ahmed Hassan,Home with Home Health,3,98502.62
@@ -99,22 +101,24 @@ E00652,P0136,2024-03-25,02:31,2024-03-27,Inpatient,FAC002,Community Medical Cent
 E00828,P0172,2024-03-25,10:08,2024-03-25,ED,FAC002,Community Medical Center,Cardiology,I21.9,"Acute myocardial infarction, unspecified",Dr. Emily Johnson,Home,0,6960.39
 E00203,P0043,2024-03-26,04:22,2024-03-26,Outpatient,FAC003,Riverside Health Center,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. Robert Singh,Home,0,2249.0
 E00462,P0094,2024-03-26,14:18,2024-03-26,ED,FAC002,Community Medical Center,General Surgery,K35.80,Unspecified acute appendicitis,Dr. Jennifer Brown,Home,0,3871.94
+E00994,P0080,2024-03-26,09:40,2024-03-30,Inpatient,FAC002,Community Medical Center,Cardiology,J18.9,"Pneumonia, unspecified organism",Dr. Lisa Chang,Transfer to Another Facility,4,41076.14
 E00534,P0108,2024-03-27,00:09,2024-03-27,Outpatient,FAC003,Riverside Health Center,Cardiology,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Karen Martinez,Home,0,546.76
 E00343,P0071,2024-03-28,20:42,2024-03-28,Outpatient,FAC002,Community Medical Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Catherine Lee,Home,0,2313.57
 E00395,P0081,2024-03-28,01:58,2024-03-28,ED,FAC001,Metro General Hospital,ICU,A41.9,"Sepsis, unspecified organism",Dr. David Kim,Home,0,12943.84
 E00425,P0089,2024-03-28,04:36,2024-04-15,Inpatient,FAC002,Community Medical Center,ICU,A41.9,"Sepsis, unspecified organism",Dr. Catherine Lee,Home with Home Health,18,139994.39
 E00674,P0141,2024-03-29,15:59,2024-03-29,ED,FAC003,Riverside Health Center,Cardiology,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Michael Patel,Home,0,13896.51
-E00998,P0195,2024-03-29,09:45,2024-04-05,Inpatient,FAC003,Riverside Health Center,Internal Medicine,R07.9,"Chest pain, unspecified",Dr. Robert Singh,Home,7,88685.67
 E00115,P0024,2024-03-30,08:33,2024-03-30,Outpatient,FAC002,Community Medical Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Ahmed Hassan,Home,0,1904.76
 E00509,P0103,2024-03-30,16:19,2024-03-30,Outpatient,FAC003,Riverside Health Center,Internal Medicine,E66.01,Morbid obesity due to excess calories,Dr. Maria Rodriguez,Home,0,436.91
 E00088,P0017,2024-03-31,22:01,2024-03-31,Outpatient,FAC001,Metro General Hospital,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. Patricia Clark,Home,0,2907.02
 E00762,P0157,2024-03-31,06:45,2024-03-31,ED,FAC003,Riverside Health Center,Emergency,R10.9,Unspecified abdominal pain,Dr. Sandra Lopez,Home,0,7363.3
+E00998,P0101,2024-03-31,17:41,2024-04-03,Inpatient,FAC001,Metro General Hospital,ICU,N39.0,"Urinary tract infection, site not specified",Dr. Karen Martinez,Home,3,76631.03
 E00080,P0015,2024-04-01,06:20,2024-04-01,Ambulatory,FAC001,Metro General Hospital,Cardiology,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. Catherine Lee,Home,0,1385.91
 E00103,P0020,2024-04-02,04:25,2024-04-02,Outpatient,FAC003,Riverside Health Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Patricia Clark,Home,0,2380.45
 E00054,P0011,2024-04-03,20:09,2024-04-04,ED,FAC003,Riverside Health Center,Cardiology,I48.91,Unspecified atrial fibrillation,Dr. Catherine Lee,Home,0,11754.06
 E00072,P0014,2024-04-04,23:20,2024-04-04,Ambulatory,FAC003,Riverside Health Center,Pulmonology,I50.9,"Heart failure, unspecified",Dr. James Wilson,Home,0,2770.07
 E00168,P0036,2024-04-04,22:07,2024-04-04,ED,FAC001,Metro General Hospital,Emergency,R07.9,"Chest pain, unspecified",Dr. Maria Rodriguez,Home,0,4427.13
 E00586,P0119,2024-04-04,19:53,2024-04-04,ED,FAC003,Riverside Health Center,Cardiology,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Patricia Clark,Home,0,2255.96
+E01011,P0152,2024-04-04,13:26,2024-04-14,Inpatient,FAC002,Community Medical Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Catherine Lee,Home,10,37699.13
 E00562,P0113,2024-04-05,06:36,2024-04-05,Ambulatory,FAC002,Community Medical Center,Cardiology,I50.9,"Heart failure, unspecified",Dr. Emily Johnson,Home,0,718.08
 E00590,P0121,2024-04-05,23:22,2024-04-06,ED,FAC002,Community Medical Center,Pulmonology,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Steven Park,Home,0,8252.92
 E00626,P0129,2024-04-05,18:24,2024-04-05,ED,FAC001,Metro General Hospital,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. James Wilson,Against Medical Advice,0,11052.27
@@ -159,6 +163,7 @@ E00964,P0198,2024-05-02,05:53,2024-05-05,Inpatient,FAC001,Metro General Hospital
 E00544,P0109,2024-05-03,01:24,2024-05-03,ED,FAC001,Metro General Hospital,Cardiology,N18.9,"Chronic kidney disease, unspecified",Dr. James Wilson,Home,0,7255.09
 E00860,P0177,2024-05-03,09:51,2024-05-03,Outpatient,FAC003,Riverside Health Center,Cardiology,I50.9,"Heart failure, unspecified",Dr. Michael Patel,Home,0,1546.26
 E00783,P0163,2024-05-04,01:56,2024-05-04,Outpatient,FAC001,Metro General Hospital,Cardiology,I50.9,"Heart failure, unspecified",Dr. Maria Rodriguez,Home,0,2635.3
+E00989,P0062,2024-05-04,02:53,2024-05-13,Inpatient,FAC002,Community Medical Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Sarah Chen,Home with Home Health,9,33024.52
 E00519,P0105,2024-05-06,03:33,2024-05-06,Outpatient,FAC001,Metro General Hospital,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Karen Martinez,Home,0,2499.76
 E00599,P0122,2024-05-06,12:26,2024-05-06,Ambulatory,FAC003,Riverside Health Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Jennifer Brown,Home,0,1217.72
 E00933,P0193,2024-05-06,10:00,2024-05-06,Ambulatory,FAC003,Riverside Health Center,Internal Medicine,E66.01,Morbid obesity due to excess calories,Dr. William Taylor,Home,0,1441.47
@@ -166,6 +171,7 @@ E00465,P0094,2024-05-07,23:22,2024-05-07,Ambulatory,FAC002,Community Medical Cen
 E00615,P0126,2024-05-07,10:07,2024-05-10,Inpatient,FAC003,Riverside Health Center,ICU,I10,Essential (primary) hypertension,Dr. John Williams,Home with Home Health,3,47447.66
 E00644,P0134,2024-05-07,09:01,2024-05-11,Inpatient,FAC002,Community Medical Center,General Surgery,K35.80,Unspecified acute appendicitis,Dr. Sarah Chen,Home,4,74211.16
 E00935,P0193,2024-05-07,08:02,2024-05-09,Inpatient,FAC003,Riverside Health Center,Neurology,I63.9,"Cerebral infarction, unspecified (Stroke)",Dr. Ahmed Hassan,Skilled Nursing Facility,2,106585.41
+E00997,P0089,2024-05-07,06:15,2024-05-17,Inpatient,FAC002,Community Medical Center,Cardiology,A41.9,"Sepsis, unspecified organism",Dr. David Kim,Skilled Nursing Facility,10,55470.93
 E00743,P0154,2024-05-08,19:16,2024-05-08,Ambulatory,FAC003,Riverside Health Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. David Kim,Home,0,2087.49
 E00413,P0084,2024-05-09,21:39,2024-05-09,Outpatient,FAC003,Riverside Health Center,Internal Medicine,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Karen Martinez,Home,0,2236.44
 E00551,P0111,2024-05-10,11:57,2024-05-10,ED,FAC001,Metro General Hospital,Pulmonology,E66.01,Morbid obesity due to excess calories,Dr. Patricia Clark,Home with Home Health,0,11751.29
@@ -190,6 +196,7 @@ E00592,P0121,2024-06-02,09:10,2024-06-02,Ambulatory,FAC001,Metro General Hospita
 E00048,P0010,2024-06-03,11:29,2024-06-03,ED,FAC001,Metro General Hospital,Neurology,I63.9,"Cerebral infarction, unspecified (Stroke)",Dr. Karen Martinez,Home,0,7173.28
 E00159,P0035,2024-06-03,22:15,2024-06-03,Outpatient,FAC003,Riverside Health Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. William Taylor,Home,0,2461.95
 E00658,P0138,2024-06-03,20:24,2024-06-06,Inpatient,FAC002,Community Medical Center,ICU,J96.01,Acute respiratory failure with hypoxia,Dr. Michael Patel,Home,3,57430.15
+E01016,P0162,2024-06-03,13:50,2024-06-05,Inpatient,FAC003,Riverside Health Center,Cardiology,I21.9,"Acute myocardial infarction, unspecified",Dr. James Wilson,Home,2,67358.33
 E00692,P0145,2024-06-04,21:19,2024-06-04,ED,FAC002,Community Medical Center,Emergency,R55,Syncope and collapse,Dr. William Taylor,Home,0,11154.96
 E00911,P0188,2024-06-04,05:01,2024-06-04,Outpatient,FAC003,Riverside Health Center,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. Maria Rodriguez,Home,0,1222.19
 E00231,P0048,2024-06-06,03:41,2024-06-06,Outpatient,FAC002,Community Medical Center,Pulmonology,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. Karen Martinez,Home,0,2535.88
@@ -201,6 +208,7 @@ E00187,P0038,2024-06-10,09:26,2024-06-10,ED,FAC001,Metro General Hospital,Cardio
 E00704,P0147,2024-06-10,19:03,2024-06-17,Inpatient,FAC002,Community Medical Center,Cardiology,N18.9,"Chronic kidney disease, unspecified",Dr. Steven Park,Home with Home Health,7,112362.61
 E00691,P0145,2024-06-11,16:04,2024-06-14,Inpatient,FAC002,Community Medical Center,Neurology,R56.9,Unspecified convulsions (Seizure),Dr. Steven Park,Skilled Nursing Facility,3,47069.42
 E00495,P0101,2024-06-12,11:48,2024-06-12,Outpatient,FAC001,Metro General Hospital,Cardiology,E66.01,Morbid obesity due to excess calories,Dr. Karen Martinez,Home,0,1382.82
+E00992,P0071,2024-06-12,02:01,2024-06-22,Inpatient,FAC003,Riverside Health Center,ICU,I63.9,"Cerebral infarction, unspecified (Stroke)",Dr. Michael Patel,Transfer to Another Facility,10,61583.21
 E00246,P0051,2024-06-13,00:33,2024-06-15,Inpatient,FAC003,Riverside Health Center,Emergency,R55,Syncope and collapse,Dr. Richard Davis,Home,2,71866.36
 E00288,P0059,2024-06-13,08:55,2024-06-13,Ambulatory,FAC002,Community Medical Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Michael Patel,Home,0,1337.61
 E00609,P0124,2024-06-13,12:52,2024-06-13,Outpatient,FAC003,Riverside Health Center,Cardiology,I10,Essential (primary) hypertension,Dr. Richard Davis,Home,0,2755.27
@@ -216,6 +224,7 @@ E00039,P0008,2024-06-23,17:28,2024-06-23,ED,FAC001,Metro General Hospital,Pulmon
 E00443,P0091,2024-06-23,17:47,2024-06-23,Ambulatory,FAC001,Metro General Hospital,Internal Medicine,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Maria Rodriguez,Home,0,696.26
 E00502,P0102,2024-06-25,14:55,2024-06-25,Outpatient,FAC003,Riverside Health Center,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. James Wilson,Home,0,2975.26
 E00969,P0199,2024-06-25,03:55,2024-06-25,Ambulatory,FAC001,Metro General Hospital,Internal Medicine,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Catherine Lee,Home,0,1698.6
+E01009,P0147,2024-06-25,14:27,2024-07-01,Inpatient,FAC003,Riverside Health Center,Pulmonology,N18.9,"Chronic kidney disease, unspecified",Dr. Jennifer Brown,Home,6,69999.81
 E00073,P0014,2024-06-26,19:41,2024-06-26,Outpatient,FAC002,Community Medical Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Maria Rodriguez,Home,0,1813.45
 E00408,P0083,2024-06-27,00:11,2024-06-27,ED,FAC001,Metro General Hospital,Emergency,R10.9,Unspecified abdominal pain,Dr. Robert Singh,Home,0,12941.71
 E00698,P0145,2024-06-27,20:36,2024-06-27,Ambulatory,FAC002,Community Medical Center,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. David Kim,Home,0,1458.63
@@ -229,6 +238,7 @@ E00117,P0024,2024-07-03,00:07,2024-07-03,Outpatient,FAC003,Riverside Health Cent
 E00508,P0103,2024-07-03,18:13,2024-07-03,Outpatient,FAC001,Metro General Hospital,Cardiology,E66.01,Morbid obesity due to excess calories,Dr. David Kim,Home,0,544.53
 E00943,P0195,2024-07-04,08:22,2024-07-04,ED,FAC001,Metro General Hospital,Internal Medicine,K92.1,Melena (gastrointestinal bleeding),Dr. Thomas Wright,Home,0,13929.04
 E00921,P0191,2024-07-05,05:25,2024-07-05,Outpatient,FAC001,Metro General Hospital,Pulmonology,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Lisa Chang,Home,0,295.52
+E01007,P0145,2024-07-05,11:38,2024-07-08,Inpatient,FAC002,Community Medical Center,ICU,R56.9,Unspecified convulsions (Seizure),Dr. Jennifer Brown,Home,3,81283.82
 E00237,P0049,2024-07-06,21:51,2024-07-06,Outpatient,FAC001,Metro General Hospital,Pulmonology,I10,Essential (primary) hypertension,Dr. Ahmed Hassan,Home,0,1103.3
 E00732,P0152,2024-07-07,17:45,2024-07-07,Outpatient,FAC003,Riverside Health Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Michael Patel,Home,0,1823.69
 E00662,P0139,2024-07-08,05:20,2024-07-08,ED,FAC003,Riverside Health Center,Emergency,R55,Syncope and collapse,Dr. Lisa Chang,Against Medical Advice,0,5621.88
@@ -249,7 +259,6 @@ E00745,P0155,2024-07-21,08:48,2024-07-21,Ambulatory,FAC001,Metro General Hospita
 E00195,P0040,2024-07-22,23:26,2024-07-24,Inpatient,FAC003,Riverside Health Center,Internal Medicine,K92.1,Melena (gastrointestinal bleeding),Dr. Lisa Chang,Home,2,20334.88
 E00638,P0133,2024-07-23,13:18,2024-07-25,Inpatient,FAC003,Riverside Health Center,ICU,I10,Essential (primary) hypertension,Dr. Richard Davis,Home with Home Health,2,11781.12
 E00677,P0142,2024-07-23,03:08,2024-07-26,Inpatient,FAC002,Community Medical Center,ICU,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Rachel Green,Rehabilitation Facility,3,50108.19
-E00994,P0166,2024-07-23,00:58,2024-07-25,Inpatient,FAC001,Metro General Hospital,Internal Medicine,K92.1,Melena (gastrointestinal bleeding),Dr. James Wilson,Home,2,17195.76
 E00172,P0036,2024-07-24,20:06,2024-07-24,ED,FAC003,Riverside Health Center,ICU,E78.5,"Hyperlipidemia, unspecified",Dr. Sandra Lopez,Home,0,8798.53
 E00403,P0083,2024-07-24,19:44,2024-07-25,Inpatient,FAC003,Riverside Health Center,Emergency,T78.2XXA,"Anaphylactic shock, unspecified",Dr. Thomas Wright,Home,1,29207.82
 E00887,P0182,2024-07-26,00:20,2024-07-26,Ambulatory,FAC001,Metro General Hospital,Pulmonology,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Catherine Lee,Home,0,916.6
@@ -262,11 +271,12 @@ E00449,P0092,2024-08-06,07:04,2024-08-06,ED,FAC001,Metro General Hospital,Intern
 E00068,P0014,2024-08-07,14:25,2024-08-07,Outpatient,FAC002,Community Medical Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Thomas Wright,Home,0,911.45
 E00283,P0058,2024-08-07,17:27,2024-08-07,ED,FAC002,Community Medical Center,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. Ahmed Hassan,Against Medical Advice,0,6558.52
 E00513,P0104,2024-08-08,13:04,2024-08-08,ED,FAC001,Metro General Hospital,Emergency,R55,Syncope and collapse,Dr. Sandra Lopez,Home,0,9489.07
+E01003,P0133,2024-08-08,05:35,2024-08-16,Inpatient,FAC001,Metro General Hospital,ICU,I10,Essential (primary) hypertension,Dr. Patricia Clark,Skilled Nursing Facility,8,32498.77
 E00064,P0013,2024-08-09,18:40,2024-08-09,ED,FAC003,Riverside Health Center,Cardiology,J45.909,"Unspecified asthma, uncomplicated",Dr. Lisa Chang,Home,0,4057.72
 E00653,P0137,2024-08-09,16:54,2024-08-09,ED,FAC002,Community Medical Center,Orthopedics,S72.001A,Fracture of unspecified part of neck of right femur,Dr. John Williams,Home,0,6096.08
 E00953,P0196,2024-08-09,19:30,2024-08-09,Outpatient,FAC001,Metro General Hospital,Internal Medicine,Z00.00,General adult medical examination,Dr. Sarah Chen,Home,0,1031.02
 E00439,P0090,2024-08-10,02:48,2024-08-10,Outpatient,FAC002,Community Medical Center,Pulmonology,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Catherine Lee,Home,0,539.45
-E00983,P0083,2024-08-10,01:53,2024-08-15,Inpatient,FAC001,Metro General Hospital,ICU,T78.2XXA,"Anaphylactic shock, unspecified",Dr. Maria Rodriguez,Home,5,71003.31
+E01017,P0164,2024-08-10,15:18,2024-08-14,Inpatient,FAC001,Metro General Hospital,Internal Medicine,J96.01,Acute respiratory failure with hypoxia,Dr. Karen Martinez,Home,4,50606.75
 E00417,P0086,2024-08-11,08:35,2024-08-11,ED,FAC002,Community Medical Center,ICU,A41.9,"Sepsis, unspecified organism",Dr. Catherine Lee,Against Medical Advice,0,9213.5
 E00385,P0080,2024-08-14,22:45,2024-08-14,Ambulatory,FAC001,Metro General Hospital,Cardiology,E66.01,Morbid obesity due to excess calories,Dr. Karen Martinez,Home,0,303.03
 E00023,P0005,2024-08-15,14:07,2024-08-25,Inpatient,FAC003,Riverside Health Center,ICU,I10,Essential (primary) hypertension,Dr. Emily Johnson,Home,10,11647.02
@@ -288,7 +298,6 @@ E00956,P0197,2024-08-28,17:37,2024-09-11,Inpatient,FAC002,Community Medical Cent
 E00027,P0005,2024-08-29,05:26,2024-08-31,Inpatient,FAC003,Riverside Health Center,Cardiology,I10,Essential (primary) hypertension,Dr. Sarah Chen,Home,2,115424.57
 E00299,P0061,2024-08-29,02:00,2024-08-29,Ambulatory,FAC003,Riverside Health Center,Internal Medicine,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Thomas Wright,Home,0,1234.99
 E00126,P0028,2024-08-31,03:23,2024-08-31,ED,FAC002,Community Medical Center,Neurology,I63.9,"Cerebral infarction, unspecified (Stroke)",Dr. Emily Johnson,Home,0,5585.49
-E00975,P0015,2024-09-02,17:30,2024-09-09,Inpatient,FAC002,Community Medical Center,ICU,K35.80,Unspecified acute appendicitis,Dr. Maria Rodriguez,Home,7,89382.99
 E00589,P0121,2024-09-03,15:02,2024-09-03,Ambulatory,FAC002,Community Medical Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Richard Davis,Home,0,1781.43
 E00794,P0165,2024-09-03,11:19,2024-09-03,Outpatient,FAC003,Riverside Health Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Karen Martinez,Home,0,2366.97
 E00053,P0011,2024-09-05,02:15,2024-09-05,ED,FAC001,Metro General Hospital,Emergency,R55,Syncope and collapse,Dr. Catherine Lee,Home,0,7916.15
@@ -306,6 +315,7 @@ E00018,P0004,2024-09-11,02:35,2024-09-11,Ambulatory,FAC002,Community Medical Cen
 E00479,P0098,2024-09-11,16:26,2024-09-11,Outpatient,FAC002,Community Medical Center,Pulmonology,N18.9,"Chronic kidney disease, unspecified",Dr. Karen Martinez,Home,0,2121.32
 E00021,P0004,2024-09-12,00:48,2024-09-12,ED,FAC003,Riverside Health Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Sandra Lopez,Home,0,10623.46
 E00535,P0108,2024-09-13,13:57,2024-09-13,Outpatient,FAC001,Metro General Hospital,Cardiology,E66.01,Morbid obesity due to excess calories,Dr. Catherine Lee,Home,0,1248.07
+E00979,P0015,2024-09-13,03:29,2024-09-18,Inpatient,FAC003,Riverside Health Center,Cardiology,K35.80,Unspecified acute appendicitis,Dr. Michael Patel,Against Medical Advice,5,66992.85
 E00193,P0040,2024-09-14,05:10,2024-09-14,ED,FAC002,Community Medical Center,Cardiology,I48.91,Unspecified atrial fibrillation,Dr. Patricia Clark,Home,0,2084.79
 E00273,P0055,2024-09-14,05:36,2024-09-19,Inpatient,FAC003,Riverside Health Center,Emergency,R07.9,"Chest pain, unspecified",Dr. John Williams,Home,5,28227.3
 E00244,P0050,2024-09-16,03:58,2024-09-16,Outpatient,FAC001,Metro General Hospital,Cardiology,E11.9,Type 2 diabetes mellitus without complications,Dr. Maria Rodriguez,Home,0,2069.24
@@ -313,6 +323,7 @@ E00029,P0006,2024-09-17,17:59,2024-09-17,ED,FAC002,Community Medical Center,Card
 E00790,P0165,2024-09-17,23:13,2024-09-17,Outpatient,FAC003,Riverside Health Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Maria Rodriguez,Home,0,1859.39
 E00015,P0003,2024-09-20,18:30,2024-09-20,Outpatient,FAC003,Riverside Health Center,Pulmonology,N18.9,"Chronic kidney disease, unspecified",Dr. Steven Park,Home,0,1439.75
 E00916,P0190,2024-09-20,21:45,2024-09-20,Ambulatory,FAC001,Metro General Hospital,Pulmonology,I10,Essential (primary) hypertension,Dr. Sandra Lopez,Home,0,1711.96
+E00993,P0077,2024-09-20,21:31,2024-09-25,Inpatient,FAC002,Community Medical Center,Pulmonology,I50.9,"Heart failure, unspecified",Dr. Thomas Wright,Home,5,89038.2
 E00900,P0185,2024-09-22,11:57,2024-09-25,Inpatient,FAC001,Metro General Hospital,Emergency,T78.2XXA,"Anaphylactic shock, unspecified",Dr. Richard Davis,Home with Home Health,3,59268.37
 E00042,P0009,2024-09-23,15:19,2024-09-26,Inpatient,FAC001,Metro General Hospital,Cardiology,I10,Essential (primary) hypertension,Dr. Karen Martinez,Home,3,60550.17
 E00307,P0063,2024-09-23,11:45,2024-09-23,ED,FAC001,Metro General Hospital,ICU,A41.9,"Sepsis, unspecified organism",Dr. Thomas Wright,Home,0,13584.87
@@ -322,6 +333,7 @@ E00305,P0063,2024-09-26,10:47,2024-09-26,Ambulatory,FAC003,Riverside Health Cent
 E00763,P0158,2024-09-26,07:56,2024-09-29,Inpatient,FAC003,Riverside Health Center,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. Jennifer Brown,Home,3,81577.39
 E00791,P0165,2024-09-26,21:58,2024-09-30,Inpatient,FAC003,Riverside Health Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Sandra Lopez,Home with Home Health,4,103580.82
 E00810,P0169,2024-09-27,20:33,2024-09-27,Outpatient,FAC001,Metro General Hospital,Cardiology,E66.01,Morbid obesity due to excess calories,Dr. Catherine Lee,Home,0,1820.35
+E01025,P0197,2024-09-27,17:17,2024-10-03,Inpatient,FAC002,Community Medical Center,Cardiology,I21.9,"Acute myocardial infarction, unspecified",Dr. Emily Johnson,Home,6,58546.0
 E00049,P0011,2024-09-29,03:49,2024-09-29,ED,FAC002,Community Medical Center,Cardiology,E66.01,Morbid obesity due to excess calories,Dr. Sarah Chen,Home,0,12860.78
 E00297,P0061,2024-09-29,19:13,2024-09-29,Ambulatory,FAC002,Community Medical Center,Cardiology,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Robert Singh,Home,0,564.56
 E00277,P0056,2024-09-30,07:25,2024-09-30,Ambulatory,FAC002,Community Medical Center,Pulmonology,Z00.00,General adult medical examination,Dr. Sandra Lopez,Home,0,649.64
@@ -329,7 +341,6 @@ E00339,P0069,2024-09-30,14:53,2024-09-30,Ambulatory,FAC001,Metro General Hospita
 E00634,P0131,2024-10-01,22:35,2024-10-01,Ambulatory,FAC002,Community Medical Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Catherine Lee,Home,0,2869.04
 E00165,P0035,2024-10-06,20:37,2024-10-06,Ambulatory,FAC002,Community Medical Center,Cardiology,I10,Essential (primary) hypertension,Dr. William Taylor,Home,0,2446.49
 E00518,P0105,2024-10-06,12:06,2024-10-08,Inpatient,FAC001,Metro General Hospital,Orthopedics,S72.001A,Fracture of unspecified part of neck of right femur,Dr. Lisa Chang,Transfer to Another Facility,2,18970.05
-E00993,P0158,2024-10-06,08:47,2024-10-10,Inpatient,FAC002,Community Medical Center,Cardiology,E11.9,Type 2 diabetes mellitus without complications,Dr. Richard Davis,Home with Home Health,4,56005.53
 E00438,P0090,2024-10-07,22:46,2024-10-07,Ambulatory,FAC003,Riverside Health Center,Cardiology,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. James Wilson,Home,0,2066.64
 E00114,P0024,2024-10-08,23:40,2024-10-08,ED,FAC002,Community Medical Center,ICU,J96.01,Acute respiratory failure with hypoxia,Dr. Richard Davis,Home,0,4322.19
 E00909,P0187,2024-10-08,05:36,2024-10-08,Ambulatory,FAC003,Riverside Health Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Lisa Chang,Home,0,594.06
@@ -342,7 +353,6 @@ E00938,P0194,2024-10-13,10:26,2024-10-13,Ambulatory,FAC003,Riverside Health Cent
 E00124,P0027,2024-10-14,05:36,2024-10-14,Ambulatory,FAC001,Metro General Hospital,Cardiology,Z00.00,General adult medical examination,Dr. Patricia Clark,Home,0,2954.13
 E00546,P0110,2024-10-14,21:47,2024-10-17,Inpatient,FAC002,Community Medical Center,Orthopedics,S72.001A,Fracture of unspecified part of neck of right femur,Dr. Michael Patel,Home,3,13326.32
 E00298,P0061,2024-10-16,00:18,2024-10-16,Ambulatory,FAC003,Riverside Health Center,Cardiology,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. David Kim,Home,0,705.04
-E00989,P0105,2024-10-16,02:01,2024-10-26,Inpatient,FAC003,Riverside Health Center,ICU,S72.001A,Fracture of unspecified part of neck of right femur,Dr. Michael Patel,Transfer to Another Facility,10,61583.21
 E00002,P0001,2024-10-17,18:33,2024-10-17,Ambulatory,FAC003,Riverside Health Center,Cardiology,I10,Essential (primary) hypertension,Dr. Sarah Chen,Home,0,729.26
 E00309,P0063,2024-10-17,06:37,2024-10-17,ED,FAC001,Metro General Hospital,Emergency,R10.9,Unspecified abdominal pain,Dr. Richard Davis,Rehabilitation Facility,0,5182.69
 E00891,P0183,2024-10-18,18:19,2024-11-01,Inpatient,FAC001,Metro General Hospital,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. David Kim,Rehabilitation Facility,14,90034.29
@@ -384,6 +394,7 @@ E00795,P0165,2024-11-20,20:53,2024-11-20,Ambulatory,FAC003,Riverside Health Cent
 E00807,P0169,2024-11-21,14:05,2024-11-21,ED,FAC003,Riverside Health Center,Pulmonology,J18.9,"Pneumonia, unspecified organism",Dr. Catherine Lee,Home,0,12147.95
 E00752,P0155,2024-11-22,13:33,2024-11-29,Inpatient,FAC001,Metro General Hospital,Pulmonology,J18.9,"Pneumonia, unspecified organism",Dr. Robert Singh,Transfer to Another Facility,7,90278.08
 E00894,P0184,2024-11-24,23:59,2024-11-24,ED,FAC002,Community Medical Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Sandra Lopez,Home,0,14614.42
+E00981,P0017,2024-11-25,12:52,2024-11-29,Inpatient,FAC003,Riverside Health Center,Cardiology,E66.01,Morbid obesity due to excess calories,Dr. Ahmed Hassan,Home,4,77022.98
 E00051,P0011,2024-11-26,20:19,2024-12-01,Inpatient,FAC001,Metro General Hospital,Pulmonology,J18.9,"Pneumonia, unspecified organism",Dr. Karen Martinez,Home,5,69552.95
 E00113,P0023,2024-11-26,02:18,2024-11-26,Outpatient,FAC002,Community Medical Center,Internal Medicine,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Patricia Clark,Home,0,2323.64
 E00448,P0092,2024-11-26,12:27,2024-11-26,Ambulatory,FAC003,Riverside Health Center,Internal Medicine,E66.01,Morbid obesity due to excess calories,Dr. Patricia Clark,Home,0,1949.09
@@ -395,11 +406,13 @@ E00428,P0089,2024-12-04,12:24,2024-12-04,Ambulatory,FAC003,Riverside Health Cent
 E00703,P0147,2024-12-04,12:45,2024-12-04,Outpatient,FAC001,Metro General Hospital,Cardiology,E11.9,Type 2 diabetes mellitus without complications,Dr. William Taylor,Home,0,2782.37
 E00406,P0083,2024-12-05,11:00,2024-12-05,Outpatient,FAC003,Riverside Health Center,Internal Medicine,J45.909,"Unspecified asthma, uncomplicated",Dr. Sarah Chen,Home,0,1320.88
 E00885,P0182,2024-12-07,00:48,2024-12-07,ED,FAC003,Riverside Health Center,Pulmonology,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Rachel Green,Home,0,7241.52
+E01010,P0149,2024-12-07,23:36,2024-12-09,Inpatient,FAC001,Metro General Hospital,Internal Medicine,I48.91,Unspecified atrial fibrillation,Dr. David Kim,Home,2,25971.39
 E00350,P0074,2024-12-08,02:32,2024-12-08,ED,FAC002,Community Medical Center,Emergency,R10.9,Unspecified abdominal pain,Dr. Robert Singh,Home,0,8526.34
 E00815,P0170,2024-12-08,05:48,2024-12-10,Inpatient,FAC002,Community Medical Center,Cardiology,I21.9,"Acute myocardial infarction, unspecified",Dr. Patricia Clark,Home,2,48096.51
 E00852,P0176,2024-12-08,13:12,2024-12-08,ED,FAC002,Community Medical Center,Emergency,R07.9,"Chest pain, unspecified",Dr. Rachel Green,Home,0,6675.27
 E00033,P0006,2024-12-11,02:10,2024-12-11,Ambulatory,FAC002,Community Medical Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. James Wilson,Home,0,1800.59
 E00134,P0030,2024-12-12,02:27,2024-12-12,ED,FAC003,Riverside Health Center,Internal Medicine,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Michael Patel,Home,0,10619.2
+E00975,P0011,2024-12-12,09:40,2024-12-17,Inpatient,FAC001,Metro General Hospital,ICU,J18.9,"Pneumonia, unspecified organism",Dr. Thomas Wright,Home,5,40165.36
 E00967,P0199,2024-12-13,01:35,2024-12-13,Outpatient,FAC002,Community Medical Center,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. Sandra Lopez,Home,0,921.75
 E00177,P0037,2024-12-14,17:02,2024-12-14,Ambulatory,FAC001,Metro General Hospital,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Emily Johnson,Home,0,2013.82
 E00120,P0026,2024-12-15,21:30,2024-12-15,Outpatient,FAC002,Community Medical Center,Internal Medicine,I50.9,"Heart failure, unspecified",Dr. Ahmed Hassan,Home,0,743.24
@@ -432,6 +445,7 @@ E00318,P0065,2025-01-12,01:32,2025-01-12,Outpatient,FAC003,Riverside Health Cent
 E00360,P0076,2025-01-13,15:01,2025-01-13,ED,FAC003,Riverside Health Center,Cardiology,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. Jennifer Brown,Home,0,5616.48
 E00410,P0084,2025-01-13,13:56,2025-01-13,Outpatient,FAC002,Community Medical Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Sandra Lopez,Home,0,2935.89
 E00864,P0178,2025-01-14,22:28,2025-01-14,ED,FAC003,Riverside Health Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Karen Martinez,Home,0,3637.08
+E01020,P0169,2025-01-14,05:04,2025-01-20,Inpatient,FAC003,Riverside Health Center,Internal Medicine,R10.9,Unspecified abdominal pain,Dr. William Taylor,Home,6,37537.86
 E00785,P0164,2025-01-15,19:45,2025-01-15,Outpatient,FAC003,Riverside Health Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Robert Singh,Home,0,1012.55
 E00234,P0049,2025-01-17,04:20,2025-01-17,Ambulatory,FAC003,Riverside Health Center,Cardiology,I10,Essential (primary) hypertension,Dr. Michael Patel,Home,0,655.97
 E00968,P0199,2025-01-17,18:23,2025-01-17,ED,FAC001,Metro General Hospital,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Richard Davis,Home,0,5634.56
@@ -450,7 +464,6 @@ E00549,P0111,2025-01-28,06:45,2025-01-28,ED,FAC001,Metro General Hospital,Genera
 E00721,P0151,2025-01-28,21:27,2025-01-28,Ambulatory,FAC002,Community Medical Center,Internal Medicine,I50.9,"Heart failure, unspecified",Dr. Emily Johnson,Home,0,776.04
 E00829,P0172,2025-01-28,13:49,2025-01-28,Outpatient,FAC003,Riverside Health Center,Internal Medicine,I50.9,"Heart failure, unspecified",Dr. Steven Park,Home,0,1561.19
 E00577,P0116,2025-01-29,04:51,2025-01-29,ED,FAC002,Community Medical Center,ICU,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Ahmed Hassan,Home,0,7088.25
-E00976,P0020,2025-01-30,05:41,2025-02-09,Inpatient,FAC002,Community Medical Center,Pulmonology,I48.91,Unspecified atrial fibrillation,Dr. Richard Davis,Skilled Nursing Facility,10,52743.37
 E00197,P0041,2025-01-31,08:12,2025-01-31,Outpatient,FAC002,Community Medical Center,Cardiology,I50.9,"Heart failure, unspecified",Dr. Catherine Lee,Home,0,2215.5
 E00955,P0197,2025-01-31,08:27,2025-01-31,Outpatient,FAC003,Riverside Health Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Catherine Lee,Home,0,2431.03
 E00539,P0109,2025-02-02,04:22,2025-02-02,Ambulatory,FAC001,Metro General Hospital,Internal Medicine,I10,Essential (primary) hypertension,Dr. David Kim,Home,0,2419.6
@@ -482,7 +495,6 @@ E00097,P0019,2025-02-22,02:11,2025-02-22,ED,FAC001,Metro General Hospital,ICU,A4
 E00060,P0013,2025-02-23,06:06,2025-02-23,ED,FAC003,Riverside Health Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Michael Patel,Home,0,14160.29
 E00122,P0027,2025-02-27,18:46,2025-02-27,Outpatient,FAC003,Riverside Health Center,Internal Medicine,Z00.00,General adult medical examination,Dr. Jennifer Brown,Home,0,2538.3
 E00650,P0136,2025-02-27,07:36,2025-02-27,Ambulatory,FAC003,Riverside Health Center,Pulmonology,E66.01,Morbid obesity due to excess calories,Dr. John Williams,Home,0,542.65
-E00997,P0194,2025-02-27,10:05,2025-03-06,Inpatient,FAC003,Riverside Health Center,Pulmonology,K92.1,Melena (gastrointestinal bleeding),Dr. Richard Davis,Home,7,20795.47
 E00622,P0128,2025-02-28,10:10,2025-02-28,ED,FAC001,Metro General Hospital,Pulmonology,I50.9,"Heart failure, unspecified",Dr. Ahmed Hassan,Home,0,8506.0
 E00954,P0196,2025-02-28,13:11,2025-02-28,Ambulatory,FAC003,Riverside Health Center,Pulmonology,Z00.00,General adult medical examination,Dr. Robert Singh,Home,0,2995.44
 E00227,P0047,2025-03-01,02:09,2025-03-06,Inpatient,FAC002,Community Medical Center,ICU,E66.01,Morbid obesity due to excess calories,Dr. Sandra Lopez,Rehabilitation Facility,5,54389.7
@@ -492,14 +504,15 @@ E00358,P0076,2025-03-02,04:45,2025-03-02,Outpatient,FAC001,Metro General Hospita
 E00583,P0118,2025-03-02,15:26,2025-03-02,ED,FAC001,Metro General Hospital,Neurology,I63.9,"Cerebral infarction, unspecified (Stroke)",Dr. Jennifer Brown,Home,0,11599.45
 E00915,P0189,2025-03-05,14:08,2025-03-06,ED,FAC001,Metro General Hospital,Cardiology,I21.9,"Acute myocardial infarction, unspecified",Dr. Patricia Clark,Home,0,7769.85
 E00930,P0192,2025-03-07,00:04,2025-03-07,Ambulatory,FAC002,Community Medical Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Jennifer Brown,Home,0,581.14
+E01023,P0194,2025-03-07,04:50,2025-03-09,Inpatient,FAC002,Community Medical Center,Pulmonology,K92.1,Melena (gastrointestinal bleeding),Dr. Rachel Green,Home,2,79620.04
 E00102,P0020,2025-03-08,14:53,2025-03-08,Outpatient,FAC002,Community Medical Center,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. David Kim,Home,0,1647.52
 E00530,P0107,2025-03-08,10:58,2025-03-08,Ambulatory,FAC002,Community Medical Center,Internal Medicine,E66.01,Morbid obesity due to excess calories,Dr. Maria Rodriguez,Home,0,1245.19
 E00675,P0142,2025-03-08,09:11,2025-03-08,Outpatient,FAC002,Community Medical Center,Cardiology,I10,Essential (primary) hypertension,Dr. Sandra Lopez,Home,0,2776.54
+E00985,P0047,2025-03-09,04:33,2025-03-14,Inpatient,FAC003,Riverside Health Center,Internal Medicine,E66.01,Morbid obesity due to excess calories,Dr. Karen Martinez,Home,5,18747.51
 E00255,P0052,2025-03-10,15:42,2025-03-10,ED,FAC003,Riverside Health Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Catherine Lee,Against Medical Advice,0,12313.29
 E00526,P0106,2025-03-10,16:43,2025-03-10,Ambulatory,FAC003,Riverside Health Center,Pulmonology,E66.01,Morbid obesity due to excess calories,Dr. Karen Martinez,Home,0,582.0
 E00582,P0117,2025-03-10,11:09,2025-03-10,ED,FAC002,Community Medical Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. David Kim,Home,0,9518.0
 E00830,P0172,2025-03-11,15:45,2025-03-11,ED,FAC002,Community Medical Center,Cardiology,I21.9,"Acute myocardial infarction, unspecified",Dr. Catherine Lee,Home,0,12332.65
-E00995,P0170,2025-03-11,15:21,2025-03-20,Inpatient,FAC002,Community Medical Center,Cardiology,I10,Essential (primary) hypertension,Dr. Richard Davis,Home,9,18119.96
 E00702,P0147,2025-03-13,07:03,2025-03-13,ED,FAC003,Riverside Health Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Karen Martinez,Home,0,8482.83
 E00412,P0084,2025-03-15,01:40,2025-03-22,Inpatient,FAC003,Riverside Health Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Lisa Chang,Home,7,40948.47
 E00477,P0097,2025-03-15,19:03,2025-03-15,ED,FAC002,Community Medical Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Steven Park,Home,0,14203.38
@@ -537,6 +550,7 @@ E00170,P0036,2025-04-09,02:17,2025-04-09,ED,FAC002,Community Medical Center,Emer
 E00389,P0080,2025-04-09,10:27,2025-04-09,Outpatient,FAC001,Metro General Hospital,Pulmonology,E66.01,Morbid obesity due to excess calories,Dr. Michael Patel,Home,0,2084.68
 E00759,P0157,2025-04-09,13:06,2025-04-14,Inpatient,FAC003,Riverside Health Center,Emergency,R07.9,"Chest pain, unspecified",Dr. Michael Patel,Home,5,87162.7
 E00151,P0034,2025-04-11,07:11,2025-04-30,Inpatient,FAC003,Riverside Health Center,ICU,A41.9,"Sepsis, unspecified organism",Dr. Catherine Lee,Home,19,160410.01
+E00982,P0020,2025-04-12,13:43,2025-04-18,Inpatient,FAC003,Riverside Health Center,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. Lisa Chang,Home,6,80294.48
 E00308,P0063,2025-04-13,11:05,2025-04-13,Outpatient,FAC002,Community Medical Center,Pulmonology,I50.9,"Heart failure, unspecified",Dr. Maria Rodriguez,Home,0,2627.26
 E00616,P0126,2025-04-14,17:27,2025-04-14,Ambulatory,FAC002,Community Medical Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Emily Johnson,Home,0,1747.71
 E00666,P0141,2025-04-14,15:07,2025-04-14,ED,FAC001,Metro General Hospital,Internal Medicine,N39.0,"Urinary tract infection, site not specified",Dr. Sandra Lopez,Home,0,13533.53
@@ -573,6 +587,8 @@ E00484,P0099,2025-05-08,21:44,2025-05-08,Ambulatory,FAC003,Riverside Health Cent
 E00498,P0101,2025-05-09,11:46,2025-05-11,Inpatient,FAC002,Community Medical Center,Orthopedics,S72.001A,Fracture of unspecified part of neck of right femur,Dr. Sarah Chen,Skilled Nursing Facility,2,91818.84
 E00817,P0170,2025-05-09,16:06,2025-05-09,Outpatient,FAC003,Riverside Health Center,Cardiology,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. Lisa Chang,Home,0,312.36
 E00217,P0045,2025-05-10,19:59,2025-05-17,Inpatient,FAC002,Community Medical Center,Emergency,T78.2XXA,"Anaphylactic shock, unspecified",Dr. Emily Johnson,Home,7,24613.89
+E00990,P0065,2025-05-10,21:04,2025-05-13,Inpatient,FAC002,Community Medical Center,ICU,I10,Essential (primary) hypertension,Dr. Michael Patel,Home with Home Health,3,11396.94
+E01013,P0157,2025-05-10,02:11,2025-05-15,Inpatient,FAC001,Metro General Hospital,Pulmonology,R07.9,"Chest pain, unspecified",Dr. Maria Rodriguez,Home,5,55752.7
 E00194,P0040,2025-05-11,18:37,2025-05-11,Outpatient,FAC003,Riverside Health Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Thomas Wright,Home,0,2706.22
 E00239,P0049,2025-05-11,19:44,2025-05-13,Inpatient,FAC002,Community Medical Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Patricia Clark,Rehabilitation Facility,2,64378.88
 E00442,P0090,2025-05-11,22:28,2025-05-11,Outpatient,FAC002,Community Medical Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Lisa Chang,Home,0,1735.6
@@ -581,7 +597,6 @@ E00331,P0068,2025-05-12,00:27,2025-05-12,Outpatient,FAC003,Riverside Health Cent
 E00717,P0151,2025-05-12,07:19,2025-05-12,Ambulatory,FAC002,Community Medical Center,Internal Medicine,I50.9,"Heart failure, unspecified",Dr. John Williams,Home,0,2753.74
 E00142,P0032,2025-05-13,03:52,2025-05-13,Outpatient,FAC001,Metro General Hospital,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Patricia Clark,Home,0,1496.14
 E00672,P0141,2025-05-13,01:31,2025-05-13,ED,FAC002,Community Medical Center,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. Maria Rodriguez,Home with Home Health,0,4433.89
-E00979,P0034,2025-05-13,00:57,2025-05-19,Inpatient,FAC001,Metro General Hospital,Cardiology,A41.9,"Sepsis, unspecified organism",Dr. Maria Rodriguez,Home with Home Health,6,83219.6
 E00880,P0180,2025-05-14,15:31,2025-05-14,Ambulatory,FAC001,Metro General Hospital,Cardiology,Z00.00,General adult medical examination,Dr. John Williams,Home,0,2701.43
 E00200,P0041,2025-05-15,23:55,2025-05-15,Ambulatory,FAC001,Metro General Hospital,Cardiology,I50.9,"Heart failure, unspecified",Dr. Rachel Green,Home,0,981.68
 E00466,P0094,2025-05-15,07:30,2025-05-15,ED,FAC003,Riverside Health Center,Emergency,R10.9,Unspecified abdominal pain,Dr. Lisa Chang,Home,0,6702.0
@@ -591,7 +606,6 @@ E00630,P0130,2025-05-17,05:11,2025-05-19,Inpatient,FAC001,Metro General Hospital
 E00974,P0200,2025-05-17,03:54,2025-05-17,ED,FAC001,Metro General Hospital,Pulmonology,J18.9,"Pneumonia, unspecified organism",Dr. Richard Davis,Against Medical Advice,0,13874.24
 E00233,P0048,2025-05-19,08:40,2025-05-19,Outpatient,FAC001,Metro General Hospital,Pulmonology,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. Rachel Green,Home,0,1545.36
 E00917,P0190,2025-05-19,07:42,2025-05-19,ED,FAC003,Riverside Health Center,Emergency,R55,Syncope and collapse,Dr. David Kim,Home,0,4460.7
-E00986,P0101,2025-05-19,17:10,2025-05-25,Inpatient,FAC003,Riverside Health Center,Cardiology,S72.001A,Fracture of unspecified part of neck of right femur,Dr. John Williams,Home with Home Health,6,35404.28
 E00161,P0035,2025-05-22,06:36,2025-05-22,Ambulatory,FAC002,Community Medical Center,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. Emily Johnson,Home,0,2049.87
 E00538,P0109,2025-05-22,16:46,2025-05-22,Outpatient,FAC003,Riverside Health Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Steven Park,Home,0,2303.05
 E00257,P0052,2025-05-24,21:01,2025-05-25,Inpatient,FAC001,Metro General Hospital,General Surgery,K35.80,Unspecified acute appendicitis,Dr. Karen Martinez,Rehabilitation Facility,1,90633.42
@@ -610,15 +624,18 @@ E00905,P0186,2025-06-02,15:47,2025-06-02,Ambulatory,FAC003,Riverside Health Cent
 E00221,P0046,2025-06-03,21:09,2025-06-03,Outpatient,FAC002,Community Medical Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Richard Davis,Home,0,2708.74
 E00621,P0128,2025-06-03,21:15,2025-06-03,Outpatient,FAC002,Community Medical Center,Pulmonology,I50.9,"Heart failure, unspecified",Dr. Rachel Green,Home,0,940.6
 E00694,P0145,2025-06-03,18:37,2025-06-03,Outpatient,FAC003,Riverside Health Center,Cardiology,N18.9,"Chronic kidney disease, unspecified",Dr. Ahmed Hassan,Home,0,562.38
+E01014,P0158,2025-06-03,19:04,2025-06-10,Inpatient,FAC001,Metro General Hospital,Cardiology,A41.9,"Sepsis, unspecified organism",Dr. Sarah Chen,Home with Home Health,7,87251.55
 E00737,P0153,2025-06-04,01:42,2025-06-04,Outpatient,FAC003,Riverside Health Center,Internal Medicine,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Richard Davis,Home,0,1260.75
 E00907,P0186,2025-06-04,12:54,2025-06-04,Outpatient,FAC001,Metro General Hospital,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. Rachel Green,Home,0,220.32
 E00554,P0112,2025-06-05,22:00,2025-06-18,Inpatient,FAC002,Community Medical Center,ICU,A41.9,"Sepsis, unspecified organism",Dr. Richard Davis,Home with Home Health,13,50720.11
 E00542,P0109,2025-06-07,15:45,2025-06-08,ED,FAC001,Metro General Hospital,Pulmonology,I10,Essential (primary) hypertension,Dr. Robert Singh,Home with Home Health,0,4839.28
+E01024,P0195,2025-06-07,04:37,2025-06-11,Inpatient,FAC001,Metro General Hospital,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Rachel Green,Home,4,11311.15
 E00317,P0064,2025-06-08,08:36,2025-06-08,Ambulatory,FAC001,Metro General Hospital,Cardiology,I10,Essential (primary) hypertension,Dr. Karen Martinez,Home,0,2679.16
 E00680,P0143,2025-06-08,14:51,2025-06-08,ED,FAC002,Community Medical Center,Pulmonology,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. Sarah Chen,Home,0,12908.95
 E00401,P0082,2025-06-09,04:09,2025-06-09,Outpatient,FAC003,Riverside Health Center,Cardiology,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Patricia Clark,Home,0,1834.26
 E00420,P0088,2025-06-09,03:07,2025-06-09,Ambulatory,FAC003,Riverside Health Center,Internal Medicine,N18.9,"Chronic kidney disease, unspecified",Dr. Lisa Chang,Home,0,2400.45
 E00655,P0138,2025-06-09,05:43,2025-06-09,Ambulatory,FAC001,Metro General Hospital,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. Rachel Green,Home,0,392.19
+E01012,P0154,2025-06-11,02:58,2025-06-17,Inpatient,FAC002,Community Medical Center,ICU,R07.9,"Chest pain, unspecified",Dr. Jennifer Brown,Expired,6,16783.62
 E00345,P0072,2025-06-12,22:51,2025-06-12,Outpatient,FAC003,Riverside Health Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Sarah Chen,Home,0,1439.22
 E00681,P0143,2025-06-14,10:38,2025-06-14,Outpatient,FAC002,Community Medical Center,Internal Medicine,I50.9,"Heart failure, unspecified",Dr. Maria Rodriguez,Home,0,353.14
 E00667,P0141,2025-06-15,11:31,2025-06-16,ED,FAC003,Riverside Health Center,General Surgery,K35.80,Unspecified acute appendicitis,Dr. David Kim,Home,0,13059.58
@@ -626,6 +643,7 @@ E00770,P0160,2025-06-15,17:25,2025-06-15,Outpatient,FAC001,Metro General Hospita
 E00347,P0073,2025-06-16,09:46,2025-06-16,Outpatient,FAC002,Community Medical Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Patricia Clark,Home,0,2680.19
 E00355,P0075,2025-06-16,06:52,2025-06-16,Outpatient,FAC003,Riverside Health Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Richard Davis,Home,0,1117.97
 E00483,P0098,2025-06-16,02:19,2025-06-16,Outpatient,FAC003,Riverside Health Center,Pulmonology,J45.909,"Unspecified asthma, uncomplicated",Dr. Karen Martinez,Home,0,288.89
+E01019,P0167,2025-06-16,16:40,2025-06-24,Inpatient,FAC003,Riverside Health Center,Pulmonology,J18.9,"Pneumonia, unspecified organism",Dr. Jennifer Brown,Home,8,30075.98
 E00351,P0074,2025-06-17,18:16,2025-06-17,Outpatient,FAC002,Community Medical Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Patricia Clark,Home,0,278.1
 E00934,P0193,2025-06-17,21:28,2025-06-17,Outpatient,FAC002,Community Medical Center,Pulmonology,E66.01,Morbid obesity due to excess calories,Dr. Lisa Chang,Home,0,1875.65
 E00079,P0015,2025-06-20,10:43,2025-06-20,Ambulatory,FAC001,Metro General Hospital,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Rachel Green,Home,0,945.52
@@ -654,6 +672,7 @@ E00486,P0099,2025-07-01,07:59,2025-07-01,Outpatient,FAC003,Riverside Health Cent
 E00831,P0172,2025-07-01,00:21,2025-07-04,Inpatient,FAC002,Community Medical Center,ICU,E11.9,Type 2 diabetes mellitus without complications,Dr. David Kim,Home with Home Health,3,50948.84
 E00004,P0001,2025-07-02,17:50,2025-07-04,Inpatient,FAC002,Community Medical Center,Emergency,R55,Syncope and collapse,Dr. Rachel Green,Skilled Nursing Facility,2,84227.84
 E00218,P0045,2025-07-02,04:28,2025-07-02,ED,FAC002,Community Medical Center,Cardiology,E11.9,Type 2 diabetes mellitus without complications,Dr. Richard Davis,Transfer to Another Facility,0,3078.38
+E01005,P0135,2025-07-02,18:36,2025-07-11,Inpatient,FAC003,Riverside Health Center,Cardiology,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. Catherine Lee,Home,9,11588.53
 E00971,P0200,2025-07-04,16:10,2025-07-04,ED,FAC001,Metro General Hospital,Internal Medicine,N39.0,"Urinary tract infection, site not specified",Dr. Richard Davis,Home,0,2954.96
 E00059,P0013,2025-07-05,04:39,2025-07-05,Outpatient,FAC002,Community Medical Center,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. Patricia Clark,Home,0,2113.03
 E00491,P0100,2025-07-05,23:42,2025-07-08,Inpatient,FAC002,Community Medical Center,Cardiology,I10,Essential (primary) hypertension,Dr. David Kim,Home with Home Health,3,59047.87
@@ -667,15 +686,13 @@ E00923,P0191,2025-07-12,10:21,2025-07-12,Outpatient,FAC002,Community Medical Cen
 E00216,P0045,2025-07-15,05:50,2025-07-15,Outpatient,FAC002,Community Medical Center,Cardiology,I10,Essential (primary) hypertension,Dr. Jennifer Brown,Home,0,1788.3
 E00459,P0094,2025-07-16,13:11,2025-07-16,ED,FAC001,Metro General Hospital,ICU,E11.9,Type 2 diabetes mellitus without complications,Dr. Lisa Chang,Home,0,5704.75
 E00007,P0002,2025-07-17,04:30,2025-07-18,Inpatient,FAC003,Riverside Health Center,Emergency,R10.9,Unspecified abdominal pain,Dr. James Wilson,Home with Home Health,1,51579.61
-E00987,P0103,2025-07-17,00:39,2025-07-27,Inpatient,FAC002,Community Medical Center,Cardiology,E11.9,Type 2 diabetes mellitus without complications,Dr. John Williams,Skilled Nursing Facility,10,35732.5
 E00581,P0117,2025-07-18,12:46,2025-07-18,ED,FAC002,Community Medical Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. David Kim,Home,0,3082.68
 E00812,P0170,2025-07-18,08:13,2025-07-18,Ambulatory,FAC003,Riverside Health Center,Internal Medicine,N18.9,"Chronic kidney disease, unspecified",Dr. Robert Singh,Home,0,1637.16
-E00992,P0135,2025-07-18,22:12,2025-07-23,Inpatient,FAC001,Metro General Hospital,Cardiology,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. Lisa Chang,Transfer to Another Facility,5,68344.54
 E00332,P0068,2025-07-20,03:31,2025-07-20,Outpatient,FAC001,Metro General Hospital,Pulmonology,N18.9,"Chronic kidney disease, unspecified",Dr. Karen Martinez,Home,0,1367.98
 E00430,P0089,2025-07-20,09:13,2025-07-20,ED,FAC001,Metro General Hospital,ICU,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Steven Park,Against Medical Advice,0,4186.48
 E00872,P0179,2025-07-20,16:15,2025-07-20,ED,FAC003,Riverside Health Center,ICU,J96.01,Acute respiratory failure with hypoxia,Dr. Richard Davis,Home,0,14600.9
 E00958,P0197,2025-07-21,14:39,2025-07-21,Outpatient,FAC001,Metro General Hospital,Cardiology,I10,Essential (primary) hypertension,Dr. Michael Patel,Home,0,1807.93
-E00985,P0100,2025-07-21,02:14,2025-07-31,Inpatient,FAC001,Metro General Hospital,Cardiology,I10,Essential (primary) hypertension,Dr. Jennifer Brown,Home with Home Health,10,36871.09
+E00999,P0103,2025-07-21,21:24,2025-07-25,Inpatient,FAC002,Community Medical Center,ICU,E11.9,Type 2 diabetes mellitus without complications,Dr. Patricia Clark,Home,4,45438.43
 E00123,P0027,2025-07-22,11:04,2025-07-22,Outpatient,FAC003,Riverside Health Center,Internal Medicine,Z00.00,General adult medical examination,Dr. Ahmed Hassan,Home,0,783.13
 E00646,P0135,2025-07-23,11:39,2025-07-25,Inpatient,FAC002,Community Medical Center,ICU,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Maria Rodriguez,Home,2,118204.29
 E00729,P0152,2025-07-23,08:57,2025-07-23,Outpatient,FAC001,Metro General Hospital,Internal Medicine,I10,Essential (primary) hypertension,Dr. James Wilson,Home,0,1822.8
@@ -689,9 +706,11 @@ E00888,P0183,2025-07-27,23:30,2025-08-03,Inpatient,FAC003,Riverside Health Cente
 E00219,P0046,2025-07-29,09:07,2025-07-29,ED,FAC003,Riverside Health Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Patricia Clark,Transfer to Another Facility,0,7553.79
 E00683,P0143,2025-07-29,09:40,2025-07-29,Outpatient,FAC003,Riverside Health Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. David Kim,Home,0,825.92
 E00892,P0183,2025-07-29,21:16,2025-07-29,Outpatient,FAC001,Metro General Hospital,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. Patricia Clark,Home,0,1117.96
+E01021,P0172,2025-07-29,23:43,2025-07-31,Inpatient,FAC003,Riverside Health Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Thomas Wright,Home,2,71710.89
 E00272,P0054,2025-08-03,13:42,2025-08-08,Inpatient,FAC003,Riverside Health Center,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. Jennifer Brown,Home,5,80972.12
 E00596,P0122,2025-08-03,09:35,2025-08-03,Ambulatory,FAC003,Riverside Health Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. David Kim,Home,0,2453.23
 E00605,P0124,2025-08-04,15:13,2025-08-04,ED,FAC001,Metro General Hospital,Emergency,T78.2XXA,"Anaphylactic shock, unspecified",Dr. Rachel Green,Home,0,14142.21
+E01018,P0164,2025-08-04,18:12,2025-08-14,Inpatient,FAC002,Community Medical Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. David Kim,Skilled Nursing Facility,10,16062.38
 E00321,P0065,2025-08-05,14:42,2025-08-06,Inpatient,FAC001,Metro General Hospital,Cardiology,I48.91,Unspecified atrial fibrillation,Dr. Maria Rodriguez,Home,1,20054.8
 E00388,P0080,2025-08-06,19:16,2025-08-06,ED,FAC001,Metro General Hospital,Emergency,R10.9,Unspecified abdominal pain,Dr. Patricia Clark,Home,0,4090.0
 E00520,P0105,2025-08-08,05:22,2025-08-09,Inpatient,FAC002,Community Medical Center,Emergency,R55,Syncope and collapse,Dr. Steven Park,Home,1,13371.89
@@ -713,7 +732,6 @@ E00507,P0103,2025-08-21,05:55,2025-08-21,Outpatient,FAC003,Riverside Health Cent
 E00453,P0093,2025-08-22,07:47,2025-08-22,ED,FAC002,Community Medical Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Jennifer Brown,Rehabilitation Facility,0,9820.71
 E00811,P0170,2025-08-22,10:44,2025-08-22,ED,FAC002,Community Medical Center,ICU,I10,Essential (primary) hypertension,Dr. Robert Singh,Home,0,12447.26
 E00936,P0194,2025-08-22,03:05,2025-08-22,ED,FAC001,Metro General Hospital,Emergency,R10.9,Unspecified abdominal pain,Dr. John Williams,Home,0,8078.61
-E00978,P0032,2025-08-22,22:13,2025-08-25,Inpatient,FAC001,Metro General Hospital,ICU,E78.5,"Hyperlipidemia, unspecified",Dr. Ahmed Hassan,Home,3,61233.69
 E00372,P0078,2025-08-23,03:17,2025-08-23,Outpatient,FAC001,Metro General Hospital,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Steven Park,Home,0,2306.69
 E00890,P0183,2025-08-23,08:34,2025-08-23,Ambulatory,FAC002,Community Medical Center,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. Ahmed Hassan,Home,0,357.12
 E00245,P0050,2025-08-24,04:54,2025-08-24,Outpatient,FAC001,Metro General Hospital,Pulmonology,I10,Essential (primary) hypertension,Dr. James Wilson,Home,0,1184.29
@@ -721,11 +739,11 @@ E00361,P0076,2025-08-26,17:22,2025-08-26,ED,FAC002,Community Medical Center,Pulm
 E00040,P0009,2025-08-28,13:33,2025-08-28,Outpatient,FAC003,Riverside Health Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Richard Davis,Home,0,2296.95
 E00959,P0197,2025-08-28,15:55,2025-09-01,Inpatient,FAC002,Community Medical Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Catherine Lee,Home,4,70607.56
 E00889,P0183,2025-08-30,07:17,2025-08-30,Ambulatory,FAC002,Community Medical Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Karen Martinez,Home,0,1292.18
+E00996,P0083,2025-08-30,12:26,2025-09-04,Inpatient,FAC001,Metro General Hospital,ICU,R55,Syncope and collapse,Dr. Catherine Lee,Home,5,46184.94
 E00312,P0064,2025-08-31,14:20,2025-08-31,Ambulatory,FAC003,Riverside Health Center,Cardiology,I50.9,"Heart failure, unspecified",Dr. Sandra Lopez,Home,0,2915.36
 E00659,P0139,2025-08-31,03:14,2025-08-31,ED,FAC002,Community Medical Center,Neurology,I63.9,"Cerebral infarction, unspecified (Stroke)",Dr. Lisa Chang,Home,0,2973.99
 E00184,P0038,2025-09-01,10:07,2025-09-01,ED,FAC003,Riverside Health Center,ICU,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Steven Park,Home,0,12784.6
 E00610,P0125,2025-09-03,04:20,2025-09-03,Outpatient,FAC001,Metro General Hospital,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. Sandra Lopez,Home,0,2070.29
-E00980,P0054,2025-09-04,06:52,2025-09-10,Inpatient,FAC002,Community Medical Center,ICU,E11.9,Type 2 diabetes mellitus without complications,Dr. Steven Park,Home,6,10834.38
 E00380,P0079,2025-09-05,21:11,2025-09-05,ED,FAC002,Community Medical Center,Cardiology,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. Sarah Chen,Home,0,1527.64
 E00397,P0081,2025-09-05,03:21,2025-09-05,ED,FAC003,Riverside Health Center,Neurology,I63.9,"Cerebral infarction, unspecified (Stroke)",Dr. Sandra Lopez,Skilled Nursing Facility,0,12234.72
 E00826,P0171,2025-09-05,13:05,2025-09-05,ED,FAC002,Community Medical Center,Emergency,R07.9,"Chest pain, unspecified",Dr. Jennifer Brown,Home,0,8249.32
@@ -735,6 +753,7 @@ E00487,P0099,2025-09-07,20:41,2025-09-07,Outpatient,FAC001,Metro General Hospita
 E00878,P0179,2025-09-07,15:32,2025-09-07,Outpatient,FAC002,Community Medical Center,Pulmonology,E66.01,Morbid obesity due to excess calories,Dr. John Williams,Home,0,694.29
 E00075,P0014,2025-09-08,16:02,2025-09-08,Outpatient,FAC001,Metro General Hospital,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Jennifer Brown,Home,0,1270.96
 E00642,P0133,2025-09-08,18:57,2025-09-12,Inpatient,FAC001,Metro General Hospital,Cardiology,I21.9,"Acute myocardial infarction, unspecified",Dr. James Wilson,Transfer to Another Facility,4,88221.75
+E01002,P0126,2025-09-08,15:21,2025-09-17,Inpatient,FAC002,Community Medical Center,Cardiology,I10,Essential (primary) hypertension,Dr. Richard Davis,Home,9,18119.96
 E00199,P0041,2025-09-10,02:26,2025-09-10,Ambulatory,FAC001,Metro General Hospital,Pulmonology,I50.9,"Heart failure, unspecified",Dr. Lisa Chang,Home,0,2916.38
 E00324,P0066,2025-09-10,05:41,2025-09-10,ED,FAC002,Community Medical Center,Cardiology,I21.9,"Acute myocardial infarction, unspecified",Dr. Sarah Chen,Home,0,1741.86
 E00517,P0105,2025-09-10,11:58,2025-09-10,ED,FAC001,Metro General Hospital,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. James Wilson,Home,0,6991.55
@@ -748,6 +767,7 @@ E00368,P0077,2025-09-13,10:27,2025-09-13,Ambulatory,FAC002,Community Medical Cen
 E00940,P0194,2025-09-13,01:38,2025-09-13,Outpatient,FAC003,Riverside Health Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Steven Park,Home,0,1653.11
 E00801,P0168,2025-09-14,03:02,2025-09-14,Ambulatory,FAC003,Riverside Health Center,Cardiology,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Patricia Clark,Home,0,686.56
 E00883,P0182,2025-09-16,20:38,2025-09-16,Ambulatory,FAC003,Riverside Health Center,Cardiology,E11.9,Type 2 diabetes mellitus without complications,Dr. Karen Martinez,Home,0,2878.78
+E01004,P0133,2025-09-16,03:48,2025-09-25,Inpatient,FAC003,Riverside Health Center,Internal Medicine,I21.9,"Acute myocardial infarction, unspecified",Dr. David Kim,Home,9,40475.93
 E00112,P0023,2025-09-17,01:05,2025-09-17,Outpatient,FAC003,Riverside Health Center,Cardiology,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Catherine Lee,Home,0,2298.14
 E00396,P0081,2025-09-17,19:48,2025-09-17,ED,FAC003,Riverside Health Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Maria Rodriguez,Home,0,5481.38
 E00146,P0033,2025-09-18,11:57,2025-09-18,Outpatient,FAC003,Riverside Health Center,Internal Medicine,E66.01,Morbid obesity due to excess calories,Dr. Michael Patel,Home,0,2587.01
@@ -770,6 +790,7 @@ E00116,P0024,2025-09-30,23:40,2025-09-30,Outpatient,FAC002,Community Medical Cen
 E00271,P0054,2025-10-01,18:21,2025-10-01,Ambulatory,FAC003,Riverside Health Center,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. Maria Rodriguez,Home,0,2563.72
 E00600,P0123,2025-10-01,20:03,2025-10-03,Inpatient,FAC002,Community Medical Center,ICU,I10,Essential (primary) hypertension,Dr. Sandra Lopez,Skilled Nursing Facility,2,106060.08
 E00912,P0189,2025-10-02,10:01,2025-10-09,Inpatient,FAC002,Community Medical Center,Cardiology,I48.91,Unspecified atrial fibrillation,Dr. Sarah Chen,Home,7,77654.32
+E01008,P0145,2025-10-02,16:17,2025-10-07,Inpatient,FAC002,Community Medical Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. William Taylor,Home,5,82465.33
 E00354,P0075,2025-10-04,21:08,2025-10-04,Outpatient,FAC003,Riverside Health Center,Cardiology,I10,Essential (primary) hypertension,Dr. Richard Davis,Home,0,1037.76
 E00501,P0101,2025-10-04,12:31,2025-10-04,Ambulatory,FAC003,Riverside Health Center,Internal Medicine,E66.01,Morbid obesity due to excess calories,Dr. Lisa Chang,Home,0,295.18
 E00569,P0113,2025-10-04,17:18,2025-10-04,Outpatient,FAC003,Riverside Health Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Maria Rodriguez,Home,0,2509.79
@@ -786,14 +807,12 @@ E00046,P0010,2025-10-14,00:09,2025-10-17,Inpatient,FAC002,Community Medical Cent
 E00119,P0025,2025-10-14,10:49,2025-10-16,Inpatient,FAC001,Metro General Hospital,Pulmonology,I10,Essential (primary) hypertension,Dr. Patricia Clark,Home,2,15597.64
 E00405,P0083,2025-10-16,15:47,2025-10-16,Ambulatory,FAC001,Metro General Hospital,Cardiology,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Lisa Chang,Home,0,1946.98
 E00174,P0037,2025-10-17,18:00,2025-10-17,ED,FAC001,Metro General Hospital,Emergency,R07.9,"Chest pain, unspecified",Dr. Steven Park,Home,0,3546.7
-E00991,P0123,2025-10-18,12:08,2025-10-23,Inpatient,FAC002,Community Medical Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Patricia Clark,Home,5,42463.39
 E00532,P0108,2025-10-20,01:22,2025-10-20,Ambulatory,FAC003,Riverside Health Center,Cardiology,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Karen Martinez,Home,0,2698.98
 E00414,P0085,2025-10-22,10:45,2025-10-22,Outpatient,FAC003,Riverside Health Center,Cardiology,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Emily Johnson,Home,0,1652.9
 E00584,P0118,2025-10-22,16:10,2025-10-23,Inpatient,FAC003,Riverside Health Center,Cardiology,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Emily Johnson,Home with Home Health,1,79954.88
 E00639,P0133,2025-10-22,10:27,2025-10-22,Outpatient,FAC003,Riverside Health Center,Cardiology,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Emily Johnson,Home,0,283.83
 E00333,P0068,2025-10-23,09:46,2025-10-23,Outpatient,FAC002,Community Medical Center,Pulmonology,N18.9,"Chronic kidney disease, unspecified",Dr. Emily Johnson,Home,0,1421.44
 E00932,P0192,2025-10-23,02:14,2025-10-23,Outpatient,FAC002,Community Medical Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Catherine Lee,Home,0,741.44
-E00996,P0189,2025-10-24,12:30,2025-10-28,Inpatient,FAC001,Metro General Hospital,ICU,I48.91,Unspecified atrial fibrillation,Dr. Michael Patel,Home,4,71371.05
 E00204,P0043,2025-10-25,14:29,2025-10-30,Inpatient,FAC001,Metro General Hospital,Cardiology,E11.9,Type 2 diabetes mellitus without complications,Dr. Sarah Chen,Skilled Nursing Facility,5,104087.28
 E00456,P0093,2025-10-25,10:15,2025-10-25,Ambulatory,FAC002,Community Medical Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Ahmed Hassan,Home,0,2571.42
 E00516,P0105,2025-10-25,13:24,2025-10-25,Outpatient,FAC003,Riverside Health Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Ahmed Hassan,Home,0,2500.39
@@ -821,9 +840,9 @@ E00259,P0052,2025-11-07,15:32,2025-11-07,Outpatient,FAC003,Riverside Health Cent
 E00274,P0055,2025-11-07,19:54,2025-11-07,Outpatient,FAC003,Riverside Health Center,Cardiology,E66.01,Morbid obesity due to excess calories,Dr. Patricia Clark,Home,0,2824.06
 E00722,P0151,2025-11-07,19:48,2025-11-07,Outpatient,FAC002,Community Medical Center,Pulmonology,I50.9,"Heart failure, unspecified",Dr. Sarah Chen,Home,0,2336.39
 E00728,P0152,2025-11-07,01:22,2025-11-09,Inpatient,FAC002,Community Medical Center,Neurology,R56.9,Unspecified convulsions (Seizure),Dr. Thomas Wright,Home,2,59825.12
+E01001,P0113,2025-11-08,00:58,2025-11-10,Inpatient,FAC001,Metro General Hospital,Internal Medicine,R07.9,"Chest pain, unspecified",Dr. James Wilson,Home,2,17195.76
 E00804,P0169,2025-11-11,02:11,2025-11-11,ED,FAC002,Community Medical Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. William Taylor,Home,0,11777.46
 E00850,P0176,2025-11-11,17:25,2025-11-11,Outpatient,FAC003,Riverside Health Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Patricia Clark,Home,0,1089.77
-E00990,P0118,2025-11-13,08:56,2025-11-21,Inpatient,FAC003,Riverside Health Center,Cardiology,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Emily Johnson,Home,8,11674.97
 E00111,P0022,2025-11-14,03:26,2025-11-14,Ambulatory,FAC003,Riverside Health Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. Michael Patel,Home,0,2777.08
 E00363,P0077,2025-11-14,21:39,2025-11-14,Outpatient,FAC002,Community Medical Center,Pulmonology,I50.9,"Heart failure, unspecified",Dr. Sandra Lopez,Home,0,1110.61
 E00085,P0015,2025-11-15,01:16,2025-11-15,Outpatient,FAC001,Metro General Hospital,Pulmonology,I10,Essential (primary) hypertension,Dr. John Williams,Home,0,2736.91
@@ -843,6 +862,7 @@ E00710,P0149,2025-11-29,12:44,2025-11-29,Ambulatory,FAC003,Riverside Health Cent
 E00548,P0110,2025-11-30,23:49,2025-11-30,Outpatient,FAC003,Riverside Health Center,Cardiology,E11.9,Type 2 diabetes mellitus without complications,Dr. Catherine Lee,Home,0,1209.59
 E00238,P0049,2025-12-02,16:18,2025-12-05,Inpatient,FAC003,Riverside Health Center,Cardiology,I21.9,"Acute myocardial infarction, unspecified",Dr. David Kim,Home,3,47382.49
 E00427,P0089,2025-12-03,04:09,2025-12-06,Inpatient,FAC002,Community Medical Center,Emergency,R10.9,Unspecified abdominal pain,Dr. Michael Patel,Home,3,44520.91
+E00978,P0015,2025-12-03,17:03,2025-12-10,Inpatient,FAC002,Community Medical Center,ICU,K35.80,Unspecified acute appendicitis,Dr. Robert Singh,Skilled Nursing Facility,7,51918.76
 E00521,P0106,2025-12-04,23:40,2025-12-06,Inpatient,FAC003,Riverside Health Center,Emergency,R07.9,"Chest pain, unspecified",Dr. Michael Patel,Skilled Nursing Facility,2,50425.67
 E00512,P0104,2025-12-05,01:12,2025-12-05,Outpatient,FAC001,Metro General Hospital,Pulmonology,Z00.00,General adult medical examination,Dr. Lisa Chang,Home,0,2495.34
 E00176,P0037,2025-12-06,11:34,2025-12-06,ED,FAC002,Community Medical Center,Pulmonology,I10,Essential (primary) hypertension,Dr. James Wilson,Home,0,6908.3
@@ -875,15 +895,17 @@ E00013,P0002,2025-12-21,11:52,2025-12-21,ED,FAC001,Metro General Hospital,ICU,J9
 E00100,P0019,2025-12-22,16:34,2025-12-22,ED,FAC001,Metro General Hospital,Neurology,I63.9,"Cerebral infarction, unspecified (Stroke)",Dr. Lisa Chang,Skilled Nursing Facility,0,13349.85
 E00135,P0030,2025-12-22,10:52,2025-12-22,ED,FAC003,Riverside Health Center,Emergency,R07.9,"Chest pain, unspecified",Dr. Jennifer Brown,Home,0,10941.43
 E00250,P0051,2025-12-22,12:18,2025-12-22,Outpatient,FAC002,Community Medical Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Maria Rodriguez,Home,0,1118.72
+E00977,P0015,2025-12-22,05:41,2026-01-01,Inpatient,FAC002,Community Medical Center,Pulmonology,I63.9,"Cerebral infarction, unspecified (Stroke)",Dr. Richard Davis,Skilled Nursing Facility,10,52743.37
 E00365,P0077,2025-12-25,02:12,2025-12-25,Outpatient,FAC002,Community Medical Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Patricia Clark,Home,0,546.59
 E00522,P0106,2025-12-25,05:28,2025-12-25,Ambulatory,FAC001,Metro General Hospital,Pulmonology,E66.01,Morbid obesity due to excess calories,Dr. Thomas Wright,Home,0,1371.08
 E00832,P0172,2025-12-25,23:55,2025-12-25,Ambulatory,FAC003,Riverside Health Center,Internal Medicine,I50.9,"Heart failure, unspecified",Dr. Sandra Lopez,Home,0,1641.71
-E00984,P0089,2025-12-26,06:46,2025-12-31,Inpatient,FAC001,Metro General Hospital,Pulmonology,R10.9,Unspecified abdominal pain,Dr. John Williams,Home,5,11136.89
 E00843,P0175,2025-12-27,20:38,2025-12-27,ED,FAC002,Community Medical Center,Pulmonology,E66.01,Morbid obesity due to excess calories,Dr. Rachel Green,Home,0,9725.77
 E00034,P0007,2025-12-28,11:47,2025-12-28,Outpatient,FAC002,Community Medical Center,Pulmonology,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. Thomas Wright,Home,0,1307.27
 E00304,P0062,2025-12-28,23:23,2025-12-28,ED,FAC003,Riverside Health Center,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. William Taylor,Home,0,14709.97
 E00575,P0116,2025-12-29,10:09,2025-12-29,Ambulatory,FAC001,Metro General Hospital,Internal Medicine,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. David Kim,Home,0,2377.8
+E01000,P0106,2025-12-30,20:25,2026-01-03,Inpatient,FAC003,Riverside Health Center,Cardiology,R07.9,"Chest pain, unspecified",Dr. Richard Davis,Home,4,35319.26
 E00733,P0152,2026-01-01,19:15,2026-01-01,ED,FAC002,Community Medical Center,Pulmonology,J18.9,"Pneumonia, unspecified organism",Dr. Michael Patel,Home,0,13076.12
+E00986,P0049,2026-01-01,22:51,2026-01-04,Inpatient,FAC002,Community Medical Center,Internal Medicine,I21.9,"Acute myocardial infarction, unspecified",Dr. Emily Johnson,Home,3,59225.67
 E00044,P0009,2026-01-02,16:48,2026-01-02,ED,FAC003,Riverside Health Center,Neurology,R56.9,Unspecified convulsions (Seizure),Dr. Lisa Chang,Home,0,5050.23
 E00173,P0036,2026-01-02,23:16,2026-01-02,Ambulatory,FAC002,Community Medical Center,Internal Medicine,E11.9,Type 2 diabetes mellitus without complications,Dr. Richard Davis,Home,0,404.17
 E00415,P0086,2026-01-02,20:58,2026-01-02,Outpatient,FAC002,Community Medical Center,Cardiology,Z00.00,General adult medical examination,Dr. Steven Park,Home,0,951.34
@@ -900,7 +922,7 @@ E00323,P0066,2026-01-11,06:11,2026-01-15,Inpatient,FAC002,Community Medical Cent
 E00648,P0135,2026-01-11,01:07,2026-01-12,ED,FAC002,Community Medical Center,ICU,J96.01,Acute respiratory failure with hypoxia,Dr. William Taylor,Home with Home Health,0,14110.49
 E00861,P0177,2026-01-12,03:46,2026-01-17,Inpatient,FAC001,Metro General Hospital,ICU,F32.9,"Major depressive disorder, single episode, unspecified",Dr. Richard Davis,Rehabilitation Facility,5,19605.78
 E00565,P0113,2026-01-14,00:48,2026-01-14,Outpatient,FAC001,Metro General Hospital,Cardiology,E11.9,Type 2 diabetes mellitus without complications,Dr. Maria Rodriguez,Home,0,1275.17
-E00988,P0105,2026-01-14,12:00,2026-01-16,Inpatient,FAC001,Metro General Hospital,Internal Medicine,I21.9,"Acute myocardial infarction, unspecified",Dr. Lisa Chang,Rehabilitation Facility,2,71495.63
+E00976,P0015,2026-01-14,15:50,2026-01-20,Inpatient,FAC003,Riverside Health Center,Pulmonology,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. Steven Park,Skilled Nursing Facility,6,65912.13
 E00222,P0046,2026-01-16,01:08,2026-01-16,Outpatient,FAC002,Community Medical Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Karen Martinez,Home,0,514.48
 E00563,P0113,2026-01-16,12:43,2026-01-16,Outpatient,FAC001,Metro General Hospital,Internal Medicine,I10,Essential (primary) hypertension,Dr. Emily Johnson,Home,0,1068.45
 E00091,P0017,2026-01-17,18:09,2026-01-17,ED,FAC002,Community Medical Center,Emergency,R07.9,"Chest pain, unspecified",Dr. Lisa Chang,Home,0,9944.58
@@ -921,13 +943,13 @@ E00265,P0053,2026-01-29,11:03,2026-02-01,Inpatient,FAC003,Riverside Health Cente
 E00874,P0179,2026-01-30,06:14,2026-01-31,Inpatient,FAC001,Metro General Hospital,Cardiology,I48.91,Unspecified atrial fibrillation,Dr. Michael Patel,Home with Home Health,1,109150.96
 E00036,P0007,2026-01-31,03:06,2026-01-31,Outpatient,FAC003,Riverside Health Center,Internal Medicine,I25.10,Atherosclerotic heart disease of native coronary artery,Dr. Steven Park,Home,0,789.6
 E00904,P0186,2026-01-31,03:05,2026-02-03,Inpatient,FAC003,Riverside Health Center,ICU,E78.5,"Hyperlipidemia, unspecified",Dr. Richard Davis,Skilled Nursing Facility,3,30247.43
+E01015,P0162,2026-01-31,01:45,2026-02-03,Inpatient,FAC001,Metro General Hospital,Cardiology,A41.9,"Sepsis, unspecified organism",Dr. Sandra Lopez,Home,3,69685.13
 E00867,P0178,2026-02-02,11:41,2026-02-02,Outpatient,FAC003,Riverside Health Center,Cardiology,I10,Essential (primary) hypertension,Dr. Emily Johnson,Home,0,1931.69
 E00163,P0035,2026-02-03,14:24,2026-02-05,Inpatient,FAC003,Riverside Health Center,ICU,E78.5,"Hyperlipidemia, unspecified",Dr. Jennifer Brown,Home,2,67409.52
 E00871,P0179,2026-02-03,10:32,2026-02-03,ED,FAC003,Riverside Health Center,Emergency,R10.9,Unspecified abdominal pain,Dr. Maria Rodriguez,Home,0,10467.3
 E00336,P0069,2026-02-06,15:19,2026-02-08,Inpatient,FAC001,Metro General Hospital,General Surgery,K35.80,Unspecified acute appendicitis,Dr. Rachel Green,Home,2,25507.18
 E00838,P0173,2026-02-06,23:41,2026-02-06,Ambulatory,FAC002,Community Medical Center,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. William Taylor,Home,0,262.67
 E00906,P0186,2026-02-06,16:23,2026-02-06,Outpatient,FAC002,Community Medical Center,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. James Wilson,Home,0,788.92
-E00977,P0021,2026-02-06,17:03,2026-02-13,Inpatient,FAC002,Community Medical Center,ICU,I10,Essential (primary) hypertension,Dr. Robert Singh,Skilled Nursing Facility,7,51918.76
 E00898,P0184,2026-02-08,20:21,2026-02-08,Ambulatory,FAC001,Metro General Hospital,Cardiology,E78.5,"Hyperlipidemia, unspecified",Dr. David Kim,Home,0,1504.0
 E00206,P0044,2026-02-09,19:56,2026-02-12,Inpatient,FAC002,Community Medical Center,Emergency,R55,Syncope and collapse,Dr. James Wilson,Skilled Nursing Facility,3,96981.62
 E00561,P0113,2026-02-09,11:09,2026-02-09,Outpatient,FAC002,Community Medical Center,Cardiology,I50.9,"Heart failure, unspecified",Dr. Rachel Green,Home,0,848.82
@@ -941,8 +963,10 @@ E00001,P0001,2026-02-18,07:58,2026-02-18,Ambulatory,FAC003,Riverside Health Cent
 E00191,P0039,2026-02-18,08:03,2026-02-18,Outpatient,FAC003,Riverside Health Center,Internal Medicine,E66.01,Morbid obesity due to excess calories,Dr. Robert Singh,Home,0,1499.8
 E00424,P0088,2026-02-18,15:14,2026-02-18,Outpatient,FAC001,Metro General Hospital,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. Robert Singh,Home,0,835.39
 E00875,P0179,2026-02-18,14:05,2026-02-18,ED,FAC003,Riverside Health Center,Internal Medicine,I50.9,"Heart failure, unspecified",Dr. Maria Rodriguez,Home,0,10057.73
+E00987,P0053,2026-02-18,01:36,2026-02-25,Inpatient,FAC001,Metro General Hospital,Internal Medicine,E78.5,"Hyperlipidemia, unspecified",Dr. Robert Singh,Transfer to Another Facility,7,37307.8
 E00341,P0071,2026-02-19,20:23,2026-02-19,Outpatient,FAC003,Riverside Health Center,Pulmonology,F32.9,"Major depressive disorder, single episode, unspecified",Dr. David Kim,Home,0,2637.38
 E00381,P0080,2026-02-19,00:57,2026-02-19,Outpatient,FAC002,Community Medical Center,Pulmonology,E11.9,Type 2 diabetes mellitus without complications,Dr. Patricia Clark,Home,0,2023.55
+E00983,P0021,2026-02-19,12:17,2026-02-27,Inpatient,FAC001,Metro General Hospital,Cardiology,I10,Essential (primary) hypertension,Dr. Rachel Green,Rehabilitation Facility,8,49057.32
 E00306,P0063,2026-02-21,07:11,2026-02-21,Ambulatory,FAC001,Metro General Hospital,Internal Medicine,I50.9,"Heart failure, unspecified",Dr. Michael Patel,Home,0,728.98
 E00269,P0054,2026-02-22,13:12,2026-02-22,Outpatient,FAC003,Riverside Health Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Catherine Lee,Home,0,1921.52
 E00706,P0148,2026-02-22,22:53,2026-02-24,Inpatient,FAC001,Metro General Hospital,Internal Medicine,I10,Essential (primary) hypertension,Dr. Sandra Lopez,Transfer to Another Facility,2,16166.13
@@ -969,6 +993,7 @@ E00588,P0120,2026-03-08,06:35,2026-03-11,Inpatient,FAC002,Community Medical Cent
 E00012,P0002,2026-03-09,06:33,2026-03-09,Ambulatory,FAC002,Community Medical Center,Pulmonology,E78.5,"Hyperlipidemia, unspecified",Dr. Richard Davis,Home,0,1306.4
 E00289,P0059,2026-03-09,22:16,2026-03-09,ED,FAC002,Community Medical Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Emily Johnson,Home with Home Health,0,13336.28
 E00884,P0182,2026-03-09,09:23,2026-03-09,Outpatient,FAC003,Riverside Health Center,Internal Medicine,I10,Essential (primary) hypertension,Dr. Karen Martinez,Home,0,2811.96
+E00991,P0069,2026-03-09,12:00,2026-03-11,Inpatient,FAC001,Metro General Hospital,Internal Medicine,K35.80,Unspecified acute appendicitis,Dr. Lisa Chang,Rehabilitation Facility,2,71495.63
 E00709,P0149,2026-03-11,17:38,2026-03-11,Outpatient,FAC001,Metro General Hospital,Internal Medicine,J44.1,Chronic obstructive pulmonary disease with acute exacerbation,Dr. Robert Singh,Home,0,273.79
 E00925,P0192,2026-03-11,17:45,2026-03-12,Inpatient,FAC002,Community Medical Center,Cardiology,I10,Essential (primary) hypertension,Dr. Maria Rodriguez,Rehabilitation Facility,1,117209.84
 E00125,P0028,2026-03-12,08:26,2026-03-12,Outpatient,FAC002,Community Medical Center,Pulmonology,Z00.00,General adult medical examination,Dr. Michael Patel,Home,0,2601.89
@@ -977,6 +1002,7 @@ E00158,P0035,2026-03-13,05:58,2026-03-13,ED,FAC002,Community Medical Center,Pulm
 E00973,P0200,2026-03-13,07:23,2026-03-13,Ambulatory,FAC002,Community Medical Center,Pulmonology,I10,Essential (primary) hypertension,Dr. Ahmed Hassan,Home,0,1752.49
 E00957,P0197,2026-03-14,22:44,2026-03-14,ED,FAC003,Riverside Health Center,ICU,J96.01,Acute respiratory failure with hypoxia,Dr. Catherine Lee,Home,0,12397.92
 E00270,P0054,2026-03-17,18:25,2026-03-17,Outpatient,FAC001,Metro General Hospital,Cardiology,E11.9,Type 2 diabetes mellitus without complications,Dr. Jennifer Brown,Home,0,942.43
+E01022,P0192,2026-03-18,14:56,2026-03-26,Inpatient,FAC001,Metro General Hospital,ICU,I10,Essential (primary) hypertension,Dr. Catherine Lee,Home,8,73700.13
 E00086,P0016,2026-03-19,21:54,2026-03-22,Inpatient,FAC003,Riverside Health Center,Pulmonology,J18.9,"Pneumonia, unspecified organism",Dr. William Taylor,Home,3,113859.77
 E00205,P0044,2026-03-19,16:02,2026-03-23,Inpatient,FAC002,Community Medical Center,Emergency,R10.9,Unspecified abdominal pain,Dr. Ahmed Hassan,Home,4,104362.86
 E00870,P0179,2026-03-19,20:58,2026-03-19,Outpatient,FAC001,Metro General Hospital,Cardiology,I10,Essential (primary) hypertension,Dr. Richard Davis,Home,0,1596.61
@@ -996,4 +1022,5 @@ E00873,P0179,2026-03-27,08:35,2026-03-27,ED,FAC003,Riverside Health Center,Cardi
 E00523,P0106,2026-03-28,16:45,2026-03-28,Ambulatory,FAC002,Community Medical Center,Cardiology,E66.01,Morbid obesity due to excess calories,Dr. Rachel Green,Home,0,972.3
 E00160,P0035,2026-03-29,19:59,2026-03-29,Outpatient,FAC003,Riverside Health Center,Cardiology,E11.9,Type 2 diabetes mellitus without complications,Dr. David Kim,Home,0,2955.4
 E00726,P0152,2026-03-29,12:02,2026-03-30,ED,FAC003,Riverside Health Center,Cardiology,I21.9,"Acute myocardial infarction, unspecified",Dr. Richard Davis,Home,0,11913.08
+E00980,P0016,2026-03-29,01:59,2026-03-31,Inpatient,FAC002,Community Medical Center,ICU,J18.9,"Pneumonia, unspecified organism",Dr. Robert Singh,Home,2,65151.16
 E00457,P0094,2026-03-31,10:11,2026-03-31,Ambulatory,FAC003,Riverside Health Center,Pulmonology,I10,Essential (primary) hypertension,Dr. John Williams,Home,0,2643.58

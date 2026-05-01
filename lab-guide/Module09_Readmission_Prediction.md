@@ -569,9 +569,9 @@ This cell builds features across 6 categories:
 
 **Expected output:**
 ```
-Base: 302 index admissions
-  Readmitted: 48
-  Not readmitted: 254
+Base: XXX index admissions
+  Readmitted: XX
+  Not readmitted: XXX
 ✓ Demographics features added
 ✓ Comorbidity features added
 ✓ Prior utilization features added
@@ -580,10 +580,12 @@ Base: 302 index admissions
 ✓ Temporal features added
 ✓ Medication features added
 
-📊 Training dataset: 302 rows × 42 features
-   Label distribution: 48 readmitted (15.9%), 254 not readmitted (84.1%)
+📊 Training dataset: XXX rows × 42 features
+   Label distribution: XX readmitted (XX.X%), XXX not readmitted (XX.X%)
 ✓ Saved to gold_readmission_training
 ```
+
+> The readmission rate should be in the **15–25%** range. Higher-risk patients (older, more comorbidities, heart failure, COPD) will have higher readmission rates because the synthetic data embeds realistic clinical risk patterns.
 
 > ✅ **Checkpoint:** The `gold_readmission_training` table should appear in your Lakehouse Tables list. Each row is one inpatient index admission with 42 feature columns and a binary label.
 
