@@ -273,7 +273,7 @@ for feat in ai_features[:5]:
 
 ### Step 5: Build the Feature Training Dataset
 
-> ⚠️ **Before running this cell:** Make sure your **HealthcareLakehouse** is attached to the notebook. In the **Explorer** pane on the left, check that you see your tables listed under **HealthcareLakehouse → Tables**. If not, click **Add data items** → **From OneLake catalog** → search for `HealthcareLakehouse` → select the **Lakehouse** item (not the SQL Analytics Endpoint) → **Add**.
+> ⚠️ **Before running this cell:** Make sure your **HealthcareLakehouse** is attached to the notebook. In the **Explorer** pane on the left, check that you see your tables listed under **HealthcareLakehouse → Tables**. If not, click **Add data items** → **From OneLake catalog** → search for `HealthcareLakehouse`. You will see **two items** with the same name — one is the **Lakehouse** and the other is the **SQL Analytics Endpoint**. **Select both** — add them one at a time (add the Lakehouse first, then repeat and add the SQL Analytics Endpoint). Click **Add** for each.
 
 Now we implement the AI-suggested features using PySpark. Create a new code cell (Cell 4) and paste the following:
 
