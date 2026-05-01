@@ -751,15 +751,13 @@ The agent needs to understand **what it's monitoring and why**. In the **Busines
 
 ```
 Monitor real-time patient vital signs streaming into the PatientVitals table 
-to detect clinically dangerous patterns early. The primary goals are:
+to detect clinically dangerous patterns. The primary goals are:
 
-1. Detect SIRS (Systemic Inflammatory Response Syndrome) alerts — early 
-   warning signs of sepsis that require immediate clinical intervention
-2. Identify patients with critical vital sign combinations (high temperature 
-   + high heart rate + low SpO2) that indicate rapid deterioration
-3. Monitor facility-level alert volumes to detect potential outbreaks or 
-   systemic issues (e.g., multiple SIRS alerts from the same facility 
-   within a short time window)
+1. Detect when a patient's sirs_alert flag is true — this indicates the 
+   patient meets SIRS criteria and may be developing sepsis
+2. Detect when a patient has critically low SpO2 (below 88%) combined 
+   with elevated heart rate (above 120 bpm)
+3. Detect when a patient has a critically high temperature (above 104°F)
 ```
 
 ---
@@ -772,32 +770,36 @@ In the **Instructions** section, provide clinical context so the agent makes med
 You are monitoring a hospital network with 3 facilities: Metro General Hospital, 
 Community Medical Center, and Riverside Health System.
 
-Clinical thresholds for patient vitals:
-- Temperature: Normal 97.0–99.5°F. Fever > 100.4°F. Critical > 103.0°F.
-- Heart Rate: Normal 60–100 bpm. Tachycardia > 100 bpm. Critical > 130 bpm.
-- Respiratory Rate: Normal 12–20 breaths/min. Tachypnea > 20. Critical > 30.
-- SpO2: Normal 95–100%. Concerning < 92%. Critical < 88%.
-- Systolic BP: Normal 90–140 mmHg. Hypotension < 90. Hypertensive crisis > 180.
+The PatientVitals table has these columns:
+- patient_id (string): unique patient identifier
+- timestamp (datetime): when the reading was taken
+- heart_rate (int): beats per minute
+- temperature_f (real): temperature in Fahrenheit
+- respiratory_rate (int): breaths per minute
+- spo2_percent (real): oxygen saturation percentage
+- systolic_bp (int): systolic blood pressure in mmHg
+- diastolic_bp (int): diastolic blood pressure in mmHg
+- sirs_alert (bool): true when SIRS criteria are met
+- facility_name (string): hospital where patient is located
 
-SIRS criteria (2 or more = SIRS positive):
-- Temperature > 100.4°F or < 96.8°F
-- Heart rate > 90 bpm
-- Respiratory rate > 20
-- White blood cell count abnormal (not available in this dataset — use other 3)
-
-Rules for escalation:
-- Single patient with SIRS alert persisting for more than 10 minutes: NOTIFY
-- Patient with SpO2 < 88% AND heart rate > 120: URGENT — notify immediately
-- 3 or more SIRS alerts from the same facility within 15 minutes: ESCALATE 
-  to charge nurse — possible outbreak or environmental issue
-- Any patient with temperature > 104°F: CRITICAL — notify immediately
+Rules to monitor:
+- Rule 1 — SIRS Alert: When sirs_alert equals true, notify the clinical team. 
+  SIRS is an early warning sign of sepsis requiring urgent evaluation.
+- Rule 2 — Critical Desaturation: When spo2_percent is below 88 AND 
+  heart_rate is above 120, notify immediately. This combination suggests 
+  acute respiratory or cardiac distress.
+- Rule 3 — Critical Hyperthermia: When temperature_f is above 104, notify 
+  immediately. This is a medical emergency.
 
 When sending notifications:
-- Include the patient_id, facility_name, and the specific vital signs that 
-  triggered the alert
-- Include how long the condition has persisted
-- Recommend specific clinical actions (e.g., "Order blood cultures and lactate 
-  level" for suspected sepsis)
+- Include the patient_id, facility_name, and the specific vital sign values 
+  that triggered the alert
+- For SIRS alerts, recommend: "Evaluate for sepsis. Consider ordering blood 
+  cultures, serum lactate, and initiating sepsis bundle protocol."
+- For critical desaturation, recommend: "Assess airway and breathing. Consider 
+  supplemental oxygen or escalation to respiratory therapy."
+- For critical hyperthermia, recommend: "Initiate cooling measures. Order blood 
+  cultures and CBC. Assess for infection source."
 ```
 
 ---
@@ -818,33 +820,29 @@ Actions tell the agent **what it can do** when it detects a matching condition. 
 #### Action 1: SIRS Alert Notification
 
 1. Click **Add action**
-2. Name: `SIRS Alert Notification`
-3. Description: `Notify the clinical team when a patient triggers SIRS criteria for more than 10 minutes. Include patient ID, facility, vital signs, and recommended next steps.`
+2. Name: `SIRSAlertNotification`
+3. Description: `Notify the clinical team when a patient has sirs_alert equal to true. Include patient ID, facility, vital signs, and recommend sepsis evaluation.`
 4. Parameters (optional):
    - `patient_id` — The patient who triggered the alert
    - `facility_name` — The facility where the patient is located
-   - `duration_minutes` — How long the SIRS condition has persisted
 
 #### Action 2: Critical Vitals Escalation
 
 1. Click **Add action**
-2. Name: `Critical Vitals Escalation`
-3. Description: `Immediately escalate when a patient has SpO2 below 88% combined with heart rate above 120 bpm. This combination suggests acute respiratory or cardiac distress requiring emergency intervention.`
+2. Name: `CriticalVitalsEscalation`
+3. Description: `Immediately escalate when a patient has spo2_percent below 88 combined with heart_rate above 120. Recommend airway assessment and respiratory therapy.`
 4. Parameters (optional):
    - `patient_id` — The patient in distress
    - `facility_name` — The facility
-   - `spo2_value` — Current SpO2 reading
-   - `heart_rate_value` — Current heart rate
 
-#### Action 3: Facility Outbreak Alert
+#### Action 3: Critical Hyperthermia Alert
 
 1. Click **Add action**
-2. Name: `Facility Outbreak Alert`
-3. Description: `Alert the charge nurse when 3 or more patients at the same facility trigger SIRS alerts within a 15-minute window. This may indicate an environmental issue, contamination event, or emerging outbreak.`
+2. Name: `CriticalHyperthermiaAlert`
+3. Description: `Immediately notify when a patient has temperature_f above 104. This is a medical emergency requiring cooling measures and infection workup.`
 4. Parameters (optional):
-   - `facility_name` — The affected facility
-   - `alert_count` — Number of SIRS alerts in the window
-   - `patient_ids` — List of affected patients
+   - `patient_id` — The patient
+   - `facility_name` — The facility
 
 > **💡 Note on Custom Actions:** Each action can optionally be connected to a **Power Automate flow** via an Activator. This lets the agent do more than just notify — it could trigger a workflow like creating a ticket in your EHR system, paging an on-call physician, or logging the event in a compliance system. For this lab, we'll focus on the Teams notification path.
 
@@ -860,10 +858,10 @@ Actions tell the agent **what it can do** when it detects a matching condition. 
 > ⚠️ **Important:** You must click **Generate playbook** after saving. Without a generated playbook, the **Start** button will show an error: *"You must have a valid playbook saved in your configuration to activate the agent."*
 
 3. Review the generated rules — verify they match your clinical thresholds:
-   - SIRS detection rule using temperature, heart rate, and respiratory rate
-   - Critical vitals combination rule (SpO2 + heart rate)
-   - Facility-level aggregation rule (alert count within time window)
-4. If the rules don't match your intent, update the **Instructions** and save again
+   - SIRS detection rule using the `sirs_alert` boolean flag
+   - Critical desaturation rule using `spo2_percent` and `heart_rate`
+   - Critical hyperthermia rule using `temperature_f`
+4. If the rules don't match your intent, update the **Instructions** and save again — then click **Generate playbook** once more
 
 > **⚠️ Important:** Review the property-to-column mappings carefully. The agent may refer to properties by display names (e.g., "Heart Rate") rather than column names (e.g., `heart_rate`). Confirm the mappings match your `PatientVitals` table schema.
 
