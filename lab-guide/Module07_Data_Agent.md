@@ -76,9 +76,6 @@ After the Data Agent is created:
 **AI-enriched table (if created in Module 5):**
 - `gold_clinical_ai_insights`
 
-**Metadata table (from Module 6):**
-- `data_dictionary`
-
 5. Click **Confirm** to add all selected tables
 
 ---
@@ -121,8 +118,6 @@ Important tables:
 - gold_financial: Claims with payment ratios and denial information
 - gold_population_health: Patient-level chronic condition counts and risk info
 - gold_alos: Average length of stay broken down by diagnosis
-- data_dictionary: Describes all columns in all tables — query this first if 
-  you're unsure what a column means
 
 When answering:
 - Always specify which facility or facilities the data covers
@@ -438,7 +433,7 @@ Create a visual showing the top 5 diagnoses by total charges
 Confirm you have completed:
 
 - [ ] Data Agent `HealthFirst Clinical Analyst` is created
-- [ ] Lakehouse tables are connected as data sources (including gold_patient_360 and data_dictionary)
+- [ ] Lakehouse tables are connected as data sources (including gold_patient_360)
 - [ ] Custom instructions added with healthcare domain context
 - [ ] Successfully tested at least 4 natural language queries with the Data Agent
 - [ ] The agent returns accurate, well-formatted responses

@@ -18,7 +18,7 @@ The goal is to build **pattern recognition** for what Copilot handles well, wher
 ## Prerequisites
 
 - ✅ Completed **Module 3** (Semantic Model with DAX measures and Power BI report)
-- ✅ Completed **Module 6** (Data quality checks, Patient 360, data dictionary)
+- ✅ Completed **Module 6** (Data quality checks, Patient 360, summary views)
 - ✅ Power BI Copilot is **enabled** on your Fabric capacity (F64 or higher, or Fabric Trial)
 
 > **Can't see the Copilot button?** Check with your instructor. Copilot requires Fabric capacity and admin enablement. If unavailable, you can still review the prompts and expected outputs as a reference.

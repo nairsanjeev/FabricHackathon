@@ -82,7 +82,7 @@ By the end of this lab, you will have:
 4. **A Power BI Dashboard** with pages for Patient Volume & Flow, Quality & Readmissions, and Population Health (with Power BI Copilot alternate path)
 5. **A Real-Time Dashboard** monitoring simulated patient vitals with sepsis early-warning detection
 6. **A Gen AI Notebook** that summarizes clinical notes and suggests ICD-10 codes
-7. **AI-Ready Data** with quality checks, a data dictionary, and pre-built summary views (Patient 360°, Facility Summary)
+7. **AI-Ready Data** with quality checks and pre-built summary views (Patient 360°, Facility Summary)
 8. **A Data Agent** that lets you ask questions about your healthcare data in natural language
 9. **Power BI Copilot** tested for AI-assisted visual analytics and executive narrative generation
 10. **(Optional) VS Code Agent Mode** — experience building the entire lab through conversational AI with GitHub Copilot

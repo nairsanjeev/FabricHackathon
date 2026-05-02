@@ -23,10 +23,9 @@ This module ensures your Gold layer tables are **AI-ready** — clean, complete,
 
 1. Run **data quality checks** across all Gold tables
 2. Create **AI-friendly summary views** that simplify complex joins
-3. Build a **data dictionary table** that helps the Data Agent understand your data
-4. Validate **referential integrity** across tables
-5. Create **materialized features** for common AI/ML use cases
-6. **Audit your Semantic Model** for AI readiness using Semantic Link and Fabric's built-in LLM
+3. Validate **referential integrity** across tables
+4. Create **materialized features** for common AI/ML use cases
+5. **Audit your Semantic Model** for AI readiness using Semantic Link and Fabric's built-in LLM
 
 ---
 
@@ -187,97 +186,17 @@ print("\n✅ Referential integrity checks complete")
 
 ---
 
-## Part C: Create a Data Dictionary Table
+## Part C: Create AI-Friendly Summary Views
 
-### Step 4: Build a Data Dictionary for the Data Agent
+### Step 4: Build a Patient 360° View
 
-One of the most effective ways to improve Data Agent accuracy is to provide a structured reference of all available tables and their column definitions. 
+The Data Agent often needs to answer questions like "Tell me about patient X" which requires joining many tables. Creating a pre-joined view makes this instant.
 
 Paste in Cell 3:
 
 ```python
 # =============================================================
-# Cell 3: Create a Data Dictionary Table
-# =============================================================
-# The Data Agent can reference this table to understand what 
-# data is available and what each column means. This dramatically 
-# improves query accuracy.
-# =============================================================
-
-from pyspark.sql.types import StructType, StructField, StringType
-
-# Define the data dictionary
-data_dict = [
-    # Gold Readmissions
-    ("gold_readmissions", "index_encounter_id", "string", "Unique ID of the original (index) admission", "Primary key"),
-    ("gold_readmissions", "patient_id", "string", "Patient identifier", "Foreign key → silver_patients"),
-    ("gold_readmissions", "index_admission_date", "date", "Date of the original admission", "Use for time-based analysis"),
-    ("gold_readmissions", "index_discharge_date", "date", "Date of discharge from original admission", "Used in 30-day calculation"),
-    ("gold_readmissions", "index_diagnosis", "string", "Primary diagnosis of the index admission", "Group readmissions by diagnosis"),
-    ("gold_readmissions", "index_facility", "string", "Facility of the original admission", "Metro General, Community Medical, Riverside Health"),
-    ("gold_readmissions", "was_readmitted", "boolean", "TRUE if patient returned within 30 days", "Core readmission flag"),
-    ("gold_readmissions", "days_to_readmission", "integer", "Days between discharge and readmission", "NULL if not readmitted"),
-    
-    # Gold Encounter Summary
-    ("gold_encounter_summary", "encounter_id", "string", "Unique encounter identifier", "Primary key"),
-    ("gold_encounter_summary", "encounter_type", "string", "Type of encounter", "Values: Inpatient, ED, Outpatient, Observation"),
-    ("gold_encounter_summary", "facility_name", "string", "Hospital or facility name", "3 facilities in our network"),
-    ("gold_encounter_summary", "length_of_stay_days", "integer", "Duration of inpatient stay", "NULL for non-inpatient encounters"),
-    ("gold_encounter_summary", "total_charges", "decimal", "Total charges for the encounter", "Billed amount, not collected"),
-    ("gold_encounter_summary", "age_group", "string", "Patient age category", "Values: 0-17, 18-34, 35-49, 50-64, 65+"),
-    ("gold_encounter_summary", "insurance_type", "string", "Patient insurance type", "Values: Medicare, Medicaid, Commercial, Self-Pay"),
-    ("gold_encounter_summary", "risk_category", "string", "Patient risk stratification", "Values: Low, Moderate, High, Critical"),
-    
-    # Gold ED Utilization
-    ("gold_ed_utilization", "patient_id", "string", "Patient identifier", "Foreign key → silver_patients"),
-    ("gold_ed_utilization", "ed_visit_count", "integer", "Number of ED visits in the period", "Frequent flyer threshold: ≥4"),
-    ("gold_ed_utilization", "is_frequent_flyer", "boolean", "TRUE if 4+ ED visits", "Key metric for care management"),
-    ("gold_ed_utilization", "total_ed_charges", "decimal", "Total charges across all ED visits", "Financial impact of ED utilization"),
-    
-    # Gold Financial
-    ("gold_financial", "claim_status", "string", "Current status of the claim", "Values: Paid, Denied, Pending"),
-    ("gold_financial", "claim_amount", "decimal", "Billed amount on the claim", "Original charge"),
-    ("gold_financial", "paid_amount", "decimal", "Amount actually paid by payer", "May be less than claim_amount"),
-    ("gold_financial", "payer", "string", "Insurance company or payer", "Group financial metrics by payer"),
-    ("gold_financial", "payment_ratio", "decimal", "Ratio of paid to billed", "1.0 = full payment, 0.0 = denied"),
-    
-    # Gold Population Health
-    ("gold_population_health", "patient_id", "string", "Patient identifier", "Foreign key → silver_patients"),
-    ("gold_population_health", "chronic_condition_count", "integer", "Number of chronic conditions", "0 = healthy, 3+ = high multimorbidity"),
-    ("gold_population_health", "has_diabetes", "boolean", "Patient has diabetes", "Common chronic condition flag"),
-    ("gold_population_health", "has_heart_failure", "boolean", "Patient has heart failure", "High-cost condition flag"),
-    ("gold_population_health", "has_copd", "boolean", "Patient has COPD", "Readmission risk factor"),
-    ("gold_population_health", "multimorbidity", "string", "Multimorbidity tier", "Values: None, Moderate (1-2), High (3+)"),
-]
-
-schema = StructType([
-    StructField("table_name", StringType(), False),
-    StructField("column_name", StringType(), False),
-    StructField("data_type", StringType(), False),
-    StructField("description", StringType(), False),
-    StructField("notes", StringType(), True)
-])
-
-df_dict = spark.createDataFrame(data_dict, schema=schema)
-df_dict.write.mode("overwrite").format("delta").saveAsTable("data_dictionary")
-
-print(f"✅ Data dictionary created with {df_dict.count()} entries")
-df_dict.show(10, truncate=60)
-```
-
----
-
-## Part D: Create AI-Friendly Summary Views
-
-### Step 5: Build a Patient 360° View
-
-The Data Agent often needs to answer questions like "Tell me about patient X" which requires joining many tables. Creating a pre-joined view makes this instant.
-
-Paste in Cell 4:
-
-```python
-# =============================================================
-# Cell 4: Patient 360° View — AI-Ready Summary
+# Cell 3: Patient 360° View — AI-Ready Summary
 # =============================================================
 # This table pre-joins patient demographics, conditions, 
 # encounters, and financial data into a single AI-queryable 
@@ -345,13 +264,13 @@ patient_360.filter(col("is_high_utilizer") == True) \
     .show(10, truncate=False)
 ```
 
-### Step 6: Create a Facility Performance Summary
+### Step 5: Create a Facility Performance Summary
 
-Paste in Cell 5:
+Paste in Cell 4:
 
 ```python
 # =============================================================
-# Cell 5: Facility Performance Summary — AI-Ready
+# Cell 4: Facility Performance Summary — AI-Ready
 # =============================================================
 # Common Data Agent questions compare facilities. This table 
 # pre-computes all key metrics per facility for instant answers.
@@ -391,13 +310,13 @@ print("✅ gold_facility_summary created:")
 facility_summary.show(truncate=False)
 ```
 
-### Step 6B: Create a Chronic Conditions Summary (Copilot-Friendly)
+### Step 5B: Create a Chronic Conditions Summary (Copilot-Friendly)
 
 The `gold_population_health` table stores chronic conditions as **boolean flag columns** (`has_diabetes`, `has_heart_failure`, etc.). This is efficient for storage but hard for Copilot to query — when a user asks "What are the most common chronic conditions?", Copilot can't easily count across multiple boolean columns.
 
 This cell **unpivots** those flags into a simple table with one row per patient-condition, making it trivially queryable.
 
-Paste in Cell 5B:
+Paste in Cell 4B:
 
 ```python
 # =============================================================
@@ -455,15 +374,15 @@ else:
 
 ---
 
-## Part E: Validate AI Readiness
+## Part D: Validate AI Readiness
 
-### Step 7: Run the AI Readiness Scorecard
+### Step 6: Run the AI Readiness Scorecard
 
-Paste in Cell 6:
+Paste in Cell 5:
 
 ```python
 # =============================================================
-# Cell 6: AI Readiness Scorecard
+# Cell 5: AI Readiness Scorecard
 # =============================================================
 # Final check: are all tables ready for Data Agent consumption?
 # =============================================================
@@ -482,7 +401,6 @@ ai_tables = [
     ("gold_patient_360", "Patient-level comprehensive view"),
     ("gold_facility_summary", "Facility comparison metrics"),
     ("gold_chronic_conditions", "Unpivoted chronic conditions for Copilot"),
-    ("data_dictionary", "Self-describing metadata"),
 ]
 
 if spark.catalog.tableExists("gold_clinical_ai_insights"):
@@ -513,9 +431,9 @@ else:
 print(f"{'=' * 70}")
 ```
 
-### Step 7B: Update the Semantic Model with New Tables
+### Step 6B: Update the Semantic Model with New Tables
 
-The semantic model you built in Module 3 only includes the original Gold and Silver tables. You've now created several new AI-ready tables (`gold_patient_360`, `gold_facility_summary`, `gold_chronic_conditions`, `data_dictionary`) that Copilot and the Data Agent need access to.
+The semantic model you built in Module 3 only includes the original Gold and Silver tables. You've now created several new AI-ready tables (`gold_patient_360`, `gold_facility_summary`, `gold_chronic_conditions`) that Copilot and the Data Agent need access to.
 
 > **This step is done in the browser, not in the notebook.**
 
@@ -527,13 +445,12 @@ The semantic model you built in Module 3 only includes the original Gold and Sil
    - ✅ `gold_patient_360`
    - ✅ `gold_facility_summary`
    - ✅ `gold_chronic_conditions`
-   - ✅ `data_dictionary`
    - ✅ `gold_clinical_ai_insights` *(if created in Module 5)*
 6. Click **Confirm** to update the semantic model
 
 > ⚠️ **Why this matters:** If these tables aren't in the semantic model, Power BI Copilot and the standalone Copilot **cannot see them**. This is the most common reason Copilot says "I can't answer that" — the data exists in the Lakehouse but isn't exposed through the semantic model.
 
-### Step 7C: Add Relationships for the New Tables
+### Step 6C: Add Relationships for the New Tables
 
 After the new tables appear in the semantic model, you need to create relationships so Copilot can join them correctly.
 
@@ -549,7 +466,6 @@ After the new tables appear in the semantic model, you need to create relationsh
 
 > **Notes on tables without relationships:**
 > - **`gold_facility_summary`** — This is a pre-aggregated summary with one row per facility. It does not have a foreign key to join to other tables (it already contains all the metrics). Copilot queries it as a standalone table for facility comparison questions.
-> - **`data_dictionary`** — This is a metadata reference table. It describes other tables but doesn't join to them. Copilot and the Data Agent use it for context, not for data queries.
 
 4. After creating all relationships, verify them by clicking **Manage relationships** in the toolbar — you should see the new relationships listed alongside the original ones from Module 3.
 
@@ -563,19 +479,19 @@ After the new tables appear in the semantic model, you need to create relationsh
 
 ---
 
-## Part F: Semantic Model AI-Readiness Audit (Notebook)
+## Part E: Semantic Model AI-Readiness Audit (Notebook)
 
-Parts A–E validated the **data layer** (Delta tables). But AI tools like Power BI Copilot and Data Agent operate on the **Semantic Model** — the layer that defines how tables relate, what measures are available, and what each field means. A semantic model with missing descriptions, unnamed measures, or unclear column names forces Copilot to guess — and it often guesses wrong.
+Parts A–D validated the **data layer** (Delta tables). But AI tools like Power BI Copilot and Data Agent operate on the **Semantic Model** — the layer that defines how tables relate, what measures are available, and what each field means. A semantic model with missing descriptions, unnamed measures, or unclear column names forces Copilot to guess — and it often guesses wrong.
 
 In this section you'll use **Semantic Link** (`sempy`) to programmatically extract the model metadata and **Fabric's built-in LLM** to audit it against five AI-readiness dimensions.
 
 ### Step 7: Install Semantic Link and OpenAI
 
-Paste in Cell 7:
+Paste in Cell 6:
 
 ```python
 # =============================================================
-# Cell 7: Install Semantic Link and OpenAI
+# Cell 6: Install Semantic Link and OpenAI
 # =============================================================
 %pip install -U semantic-link openai -q
 ```
@@ -584,11 +500,11 @@ Paste in Cell 7:
 
 Semantic Link connects directly to the semantic model you built in Module 3 and pulls out tables, columns, measures, and relationships as pandas DataFrames.
 
-Paste in Cell 8:
+Paste in Cell 7:
 
 ```python
 # =============================================================
-# Cell 8: Connect to the Semantic Model and Extract Metadata
+# Cell 7: Connect to the Semantic Model and Extract Metadata
 # =============================================================
 # Semantic Link (sempy) reads the Tabular Object Model (TOM)
 # directly — no need for REST APIs or manual inspection.
@@ -640,11 +556,11 @@ display(relationships_df)
 
 This cell sends the metadata to Fabric's built-in LLM and gets a structured AI-readiness evaluation across five dimensions: star schema design, descriptions, naming, measures, and relationships.
 
-Paste in Cell 9:
+Paste in Cell 8:
 
 ```python
 # =============================================================
-# Cell 9: LLM-Powered Semantic Model AI-Readiness Audit
+# Cell 8: LLM-Powered Semantic Model AI-Readiness Audit
 # =============================================================
 # Sends the metadata extracted in Cell 8 to gpt-4.1 for a
 # structured evaluation against 5 AI-readiness dimensions.
@@ -728,11 +644,11 @@ If the audit found missing descriptions, this cell uses the LLM to generate them
 
 > ⚠️ **Prerequisite:** This step requires **XMLA read/write** to be enabled on your Fabric capacity (enabled by default on Fabric Trial capacities). If you get an access error, skip this cell and add descriptions manually in Power BI Desktop (right-click a table/column → **Properties** → **Description**).
 
-Paste in Cell 10:
+Paste in Cell 9:
 
 ```python
 # =============================================================
-# Cell 10: Auto-Generate and Apply Descriptions via LLM + TOM
+# Cell 9: Auto-Generate and Apply Descriptions via LLM + TOM
 # =============================================================
 # Uses the LLM to generate concise descriptions, then applies
 # them directly to the semantic model using the TOM API.
@@ -966,14 +882,12 @@ This removes friction treatments (disclaimers) from Copilot answers for your mod
 - Data Agents generate SQL/queries from natural language. If table/column names are cryptic, the AI struggles
 - Pre-joined views reduce the chance of incorrect joins
 - Unpivoted tables (like `gold_chronic_conditions`) make boolean flags queryable by Copilot
-- A data dictionary gives the AI explicit context about the data
 - AI Data Schema, Instructions, and Verified Answers provide **semantic model–level** context that Copilot uses for Power BI Q&A
 - Programmatic audits (Part F) let you **continuously validate** the semantic model as it evolves — catching new tables without descriptions, missing measures, or broken relationships
 
 **Production considerations:**
 - Schedule data quality notebooks to run daily
 - Set up alerts for data quality SLA violations (e.g., null rate > 5%)
-- Version your data dictionary alongside schema changes
 - Consider implementing Great Expectations or similar frameworks for enterprise-grade data quality
 - Keep AI Instructions updated as business rules change (e.g., new facilities, changed readmission window)
 - Review and refresh Verified Answers quarterly as dashboards evolve
@@ -986,7 +900,6 @@ Before moving to Module 7, confirm:
 
 - [ ] Data quality checks ran successfully across all Gold tables
 - [ ] Referential integrity validated (no orphan IDs)
-- [ ] `data_dictionary` table created with column descriptions
 - [ ] `gold_patient_360` table created (patient-level summary)
 - [ ] `gold_facility_summary` table created (facility comparison metrics)
 - [ ] `gold_chronic_conditions` table created (unpivoted conditions for Copilot)
