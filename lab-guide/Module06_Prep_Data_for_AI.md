@@ -735,13 +735,255 @@ except Exception as e:
 
 ---
 
+## Part F: Data Agent Optimization Checks (Notebook)
+
+Microsoft provides a [Semantic Model Data Agent Checklist](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Semantic%20Model%20Data%20Agent%20Checklist.md) with companion [Data Agent Utilities notebook](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Data%20Agent%20Utilities.ipynb) that outline best practices for preparing semantic models for the Data Agent. This section implements the key automated checks from those references.
+
+> **Why this matters for the Data Agent:**
+> - The Data Agent generates DAX queries from natural language. A model with missing descriptions, poor naming, or incorrect summarization forces the AI to guess — and it often guesses wrong.
+> - The **Best Practice Analyzer** catches 60+ rules across performance, DAX patterns, error prevention, and formatting.
+> - The **Memory Analyzer** reveals oversized columns and tables that slow DAX performance and Agent response time.
+
+### Step 11: Install Semantic Link Labs
+
+The `semantic-link-labs` package extends Semantic Link with enterprise-grade analysis tools including BPA and Memory Analyzer.
+
+Paste in Cell 11:
+
+```python
+# =============================================================
+# Cell 11: Install Semantic Link Labs
+# =============================================================
+%pip install -U semantic-link-labs -q
+```
+
+### Step 12: Run the Best Practice Analyzer (BPA)
+
+The BPA checks 60+ rules against your semantic model and categorizes findings by severity. For Data Agent accuracy, prioritize **Performance**, **DAX Expressions**, and **Error Prevention** findings.
+
+Paste in Cell 12:
+
+```python
+# =============================================================
+# Cell 12: Best Practice Analyzer
+# =============================================================
+# Checks the semantic model against 60+ rules from Microsoft
+# experts and the Fabric community. Focus on Performance, DAX
+# Expressions, and Error Prevention for Data Agent accuracy.
+# =============================================================
+
+import sempy.fabric as fabric
+
+DATASET = "HealthcareLakehouse-SemanticModel"  # Your semantic model name from Module 3
+
+# Run BPA - results are displayed as an interactive HTML report
+bpa_results = fabric.run_model_bpa(dataset=DATASET)
+
+print("✅ Review the BPA output above.")
+print("   Priority fixes for Data Agent:")
+print("   • ⚠️ 'Do not summarize numeric columns' → Set SummarizeBy = None")
+print("   • ⚠️ 'Provide format string for measures' → Add format strings")
+print("   • ⚠️ 'Visible objects with no description' → Add descriptions (Cell 9)")
+print("   • ⚠️ 'Relationship columns should be integer' → Verify key types")
+```
+
+> **Key BPA rules for Data Agent accuracy:**
+> | Rule | Why it matters |
+> |------|---------------|
+> | Do not summarize numeric columns | Prevents accidental SUM in Copilot — create explicit measures instead |
+> | Visible objects with no description | AI uses descriptions for context; missing ones cause guessing |
+> | First letter of objects must be capitalized | Consistent naming improves NLQ → DAX mapping |
+> | Mark primary keys | Helps the Agent understand table structure and joins |
+> | Provide format string for measures | Currency, percentage, and integer formatting prevents ambiguous results |
+
+### Step 13: Run the Memory Analyzer
+
+The Memory Analyzer shows memory and storage statistics for your semantic model objects. Large or cold columns that aren't used by the Data Agent should be removed from the AI Data Schema to improve performance.
+
+Paste in Cell 13:
+
+```python
+# =============================================================
+# Cell 13: Semantic Model Memory Analyzer
+# =============================================================
+# Reveals memory consumption by table, column, and partition.
+# Use this to identify oversized objects that slow DAX queries
+# (and therefore slow Data Agent response time).
+# =============================================================
+
+memory_results = fabric.model_memory_analyzer(dataset=DATASET)
+
+print("\n✅ Review the memory analysis above.")
+print("   Optimization tips for Data Agent performance:")
+print("   • Tables using >50% of model memory may need column pruning")
+print("   • Columns with 0 Temperature are never queried — consider hiding from AI Schema")
+print("   • High-cardinality string columns consume disproportionate memory")
+print("   • For Direct Lake models, ensure V-Order is applied to Parquet files")
+```
+
+### Step 14: Check Description Coverage for AI
+
+Tables, columns, and measures without descriptions are the #1 cause of poor Data Agent accuracy. This cell identifies all undescribed objects so you can fix them (either manually or with the LLM auto-generation in Cell 9).
+
+Paste in Cell 14:
+
+```python
+# =============================================================
+# Cell 14: Description Coverage Report
+# =============================================================
+# Checks which tables, columns, and measures lack descriptions.
+# The Data Agent uses descriptions to understand what each field
+# means — missing descriptions force it to guess from names alone.
+# =============================================================
+
+import sempy_labs as labs
+
+# Get full model metadata
+df_tables = labs.list_tables(dataset=DATASET, extended=True)
+df_columns = labs.list_columns(dataset=DATASET, extended=True)
+df_measures = labs.list_measures(dataset=DATASET, extended=True)
+
+# Tables without descriptions
+tables_no_desc = df_tables[df_tables['Description'].isna() | (df_tables['Description'] == '')]
+print("=" * 70)
+print("📋 DESCRIPTION COVERAGE REPORT")
+print("=" * 70)
+
+print(f"\n🏷️ Tables WITHOUT description: {len(tables_no_desc)} / {len(df_tables)}")
+if len(tables_no_desc) > 0:
+    for _, row in tables_no_desc.iterrows():
+        print(f"   ❌ {row['Name']}")
+
+# Columns without descriptions
+cols_no_desc = df_columns[df_columns['Description'].isna() | (df_columns['Description'] == '')]
+print(f"\n📊 Columns WITHOUT description: {len(cols_no_desc)} / {len(df_columns)}")
+if len(cols_no_desc) > 0:
+    for _, row in cols_no_desc.head(20).iterrows():
+        print(f"   ❌ {row['Table Name']}.{row['Column Name']}")
+    if len(cols_no_desc) > 20:
+        print(f"   ... and {len(cols_no_desc) - 20} more")
+
+# Measures without descriptions
+measures_no_desc = df_measures[df_measures['Description'].isna() | (df_measures['Description'] == '')]
+print(f"\n📐 Measures WITHOUT description: {len(measures_no_desc)} / {len(df_measures)}")
+if len(measures_no_desc) > 0:
+    for _, row in measures_no_desc.iterrows():
+        print(f"   ❌ {row['Name']}")
+
+# Duplicate column names (confuse the Data Agent)
+print(f"\n🔄 Duplicate column names (appear in multiple tables):")
+counts = df_columns['Column Name'].value_counts()
+duplicates = counts[counts > 1]
+if len(duplicates) > 0:
+    for col_name, count in duplicates.items():
+        tables = df_columns[df_columns['Column Name'] == col_name]['Table Name'].tolist()
+        print(f"   ⚠️ '{col_name}' appears in {count} tables: {', '.join(tables)}")
+    print("\n   💡 Tip: Add descriptions to distinguish these columns, or rename them")
+    print("      to be table-specific (e.g., 'patient_id' vs 'encounter_patient_id')")
+else:
+    print("   ✅ No duplicate column names found")
+
+# Summary
+total_objects = len(df_tables) + len(df_columns) + len(df_measures)
+described = total_objects - len(tables_no_desc) - len(cols_no_desc) - len(measures_no_desc)
+coverage_pct = (described / total_objects * 100) if total_objects > 0 else 0
+print(f"\n{'=' * 70}")
+print(f"📈 Overall description coverage: {coverage_pct:.0f}% ({described}/{total_objects} objects)")
+if coverage_pct < 80:
+    print("   ⚠️ Below 80% — run Cell 9 to auto-generate descriptions with LLM")
+elif coverage_pct < 100:
+    print("   ✅ Good coverage — consider filling remaining gaps for best accuracy")
+else:
+    print("   🎯 Perfect coverage — your model is fully documented for AI")
+```
+
+> **Target:** 100% description coverage for all objects visible in the AI Data Schema. At minimum, aim for 80% across the entire model.
+
+### Step 15 (Optional): Data Agent SDK Evaluation
+
+The Fabric Data Agent Python SDK enables **programmatic evaluation** — you can send test questions and compare responses against expected answers. This is essential for regression testing as your model evolves.
+
+> ⚠️ **Prerequisite:** You must have a Data Agent created (from Module 7) before running this cell. If you haven't created one yet, return to this step after completing Module 7.
+
+Paste in Cell 15:
+
+```python
+# =============================================================
+# Cell 15: Data Agent SDK — Programmatic Evaluation
+# =============================================================
+# Uses the Fabric Data Agent SDK to send test questions and
+# evaluate response accuracy. Run this AFTER Module 7 to test
+# your configured Data Agent programmatically.
+# =============================================================
+
+# Uncomment and run after completing Module 7:
+"""
+%pip install fabric-data-agent-sdk -q
+
+from fabric.dataagent.client import FabricDataAgentManagement, FabricOpenAI
+import pandas as pd
+
+# Connect to your Data Agent (update the name to match your agent)
+DATA_AGENT_NAME = "HealthFirst Clinical Analyst"
+data_agent = FabricDataAgentManagement(agent_name=DATA_AGENT_NAME)
+
+# View current configuration
+config = data_agent.get_configuration()
+print(f"Agent Instructions: {config.instructions[:200]}...")
+
+# View data sources
+datasources = data_agent.get_datasources()
+for ds in datasources:
+    print(f"  📁 {ds.get('name', 'Unknown')} ({ds.get('type', 'Unknown')})")
+
+# Define test questions with expected patterns
+test_questions = [
+    "What is the overall 30-day readmission rate?",
+    "Which facility has the highest readmission rate?",
+    "How many patients are classified as high-risk?",
+    "What is the average length of stay by diagnosis?",
+    "Show me the claim denial rate by insurance type",
+]
+
+# Send questions and collect responses
+print("\\n" + "=" * 70)
+print("🧪 DATA AGENT EVALUATION")
+print("=" * 70)
+
+client = FabricOpenAI(agent_name=DATA_AGENT_NAME)
+for q in test_questions:
+    print(f"\\n❓ {q}")
+    try:
+        response = client.chat.completions.create(
+            messages=[{"role": "user", "content": q}]
+        )
+        answer = response.choices[0].message.content[:200]
+        print(f"   ✅ {answer}...")
+    except Exception as e:
+        print(f"   ❌ Error: {e}")
+
+print("\\n💡 Review each response for accuracy. If incorrect:")
+print("   1. Check AI Data Schema — are the right fields visible?")
+print("   2. Check AI Instructions — is the terminology defined?")
+print("   3. Check Verified Answers — should this be a pinned response?")
+print("   4. Download diagnostics logs for detailed debugging")
+"""
+print("ℹ️ Cell 14 is commented out — uncomment after completing Module 7")
+print("   It will programmatically test your Data Agent responses")
+```
+
+> **📖 Reference:** See the full [Data Agent Utilities notebook](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Data%20Agent%20Utilities.ipynb) and [Data Agent SDK documentation](https://learn.microsoft.com/en-us/fabric/data-science/fabric-data-agent-sdk) for advanced evaluation patterns including ground truth comparison and automated scoring.
+
+---
+
 ## Part G: Prep Data for AI in Power BI (Semantic Model Layer)
 
 In Parts A–F you validated and enriched data **at the Lakehouse and Semantic Model levels**. Power BI offers a complementary feature called **"Prep data for AI"** that works **at the Semantic Model level** — it tells Copilot in Power BI *how* to interpret your model, what business terms mean, and which visuals to return for common questions.
 
 > **Think of it this way:**
-> - Parts A–E = "Make the data itself AI-ready" (clean, joined, documented)
-> - Part F = "Audit the semantic model programmatically" (LLM-powered gap analysis + auto-fix descriptions)
+> - Parts A–D = "Make the data itself AI-ready" (clean, joined, documented)
+> - Part E = "Audit the semantic model programmatically" (LLM-powered gap analysis + auto-fix descriptions)
+> - Part F = "Optimize for the Data Agent" (BPA, memory, descriptions, SDK evaluation)
 > - Part G = "Make the *semantic model* AI-ready in Power BI" (schema focus, business rules, curated answers)
 
 The **Prep data for AI** button (preview) is available on the **Home ribbon** in Power BI Desktop and on the **Semantic Model page ribbon** in the Power BI service. It provides three features:
@@ -766,6 +1008,13 @@ Not every column in your semantic model is relevant for natural language Q&A. Th
 6. Click **Apply**
 
 > **Healthcare example:** A clinician asking "Which patients have the highest ED utilization?" doesn't need to see `encounter_id` or `payer_code`. By hiding those fields, Copilot focuses on the right columns and produces cleaner answers.
+
+> ⚠️ **Critical from the [Data Agent Checklist](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Semantic%20Model%20Data%20Agent%20Checklist.md):**
+> - **Include all dependent objects** for selected measures — if a measure references columns from other tables, those must also be visible
+> - **Ensure selected tables here match what you select in the Data Agent** — mismatches cause the Agent to fail silently
+> - Exclude helper measures and intermediate calculation objects not relevant to end users
+> - Verify no fields needed for Verified Answers (below) are hidden
+> - Use `get_measure_dependencies` from [Semantic Link Labs](https://semantic-link-labs.readthedocs.io/en/stable/sempy_labs.html#sempy_labs.get_measure_dependencies) if you have complex measure dependencies
 
 ---
 
@@ -811,6 +1060,13 @@ Metro General Hospital, Community Medical Center, and Riverside Health System.
 
 > **Why this matters:** Without instructions, Copilot might not know that "readmission" means a 30-day return, or that "frequent flyer" is a clinical term with a specific threshold. These instructions ground Copilot in your organization's definitions.
 
+> 💡 **Best Practices from the [Data Agent Checklist](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Semantic%20Model%20Data%20Agent%20Checklist.md):**
+> - Add **example DAX queries** for complex scenarios to guide AI query patterns
+> - Keep instructions **clear and specific** — avoid conflicts and don't be too verbose
+> - Ensure instructions don't contradict Verified Answer configurations
+> - If you have Calculation Groups, [DAX UDFs](https://learn.microsoft.com/en-us/dax/best-practices/dax-user-defined-functions), or Field Parameters, describe how they should be used
+> - These AI Instructions are for the **semantic model layer** — do NOT duplicate them in the Data Agent instructions (Module 7)
+
 ---
 
 ### Feature 3: Verified Answers — Pin Curated Visuals to Common Questions
@@ -843,6 +1099,13 @@ Verified Answers let you **pre-approve specific visuals** as the "correct" respo
 
 > **Verified answers show a ✅ checkmark** in Copilot, signaling to users that the response was human-reviewed and approved — building trust in the AI output.
 
+> ⚠️ **Verified Answers Checklist** (from [Microsoft Data Agent Checklist](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Semantic%20Model%20Data%20Agent%20Checklist.md)):
+> - Use **5–7 complete, robust trigger questions** per verified answer — not partial phrases
+> - Include both **formal and conversational phrasings** (e.g., "What is the readmission rate?" AND "show me readmissions")
+> - Test trigger questions for both **exact and semantic matching** — Copilot uses fuzzy matching
+> - Ensure **all fields used in verified answer visuals are visible** (not hidden) in the AI Data Schema
+> - If a Verified Answer uses a measure, that measure and its dependencies must be in the AI Data Schema
+
 ---
 
 ### Testing Your Prep Data for AI Configuration
@@ -863,6 +1126,13 @@ After configuring all three features, test them in Power BI Desktop:
 
 > **Tip:** After each change to the Prep data for AI settings, close and reopen the Copilot pane to refresh.
 
+> 💡 **Testing & Validation Best Practices** (from [Microsoft Data Agent Checklist](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Semantic%20Model%20Data%20Agent%20Checklist.md)):
+> - **Review the DAX** in Copilot responses — expand the "How this was calculated" section to validate the generated query logic
+> - **Download diagnostic logs** from Copilot to inspect full DAX queries, answer confidence, and model selection details
+> - Use the **Data Agent Python SDK** (see Part F, Cell 15) for automated batch evaluation after Module 7
+> - **Iterate based on findings** — if Copilot generates incorrect joins or uses wrong measures, update AI Instructions or add Verified Answers
+> - Use **Git integration or Deployment Pipelines** to version-control your Prep Data for AI configuration changes
+
 ### Mark Your Model as Approved for Copilot
 
 Once you're satisfied with the configuration:
@@ -873,6 +1143,22 @@ Once you're satisfied with the configuration:
 4. Check the **Approved for Copilot** box → click **Apply**
 
 This removes friction treatments (disclaimers) from Copilot answers for your model, signaling that the data is curated and trusted.
+
+---
+
+### 🔑 Data Agent Configuration — Key Principles (Preview for Module 7)
+
+When you configure the Data Agent in Module 7, keep these principles in mind:
+
+| Principle | Details |
+|-----------|---------|
+| **DO NOT duplicate semantic model instructions** | AI Instructions you set in Prep Data for AI are already read by the Data Agent — don't repeat them at the Data Agent level |
+| **Data Agent instructions = formatting & routing** | Limit Data Agent–level instructions to response formatting, abbreviation definitions, tone, and cross-source routing |
+| **Select the same tables** | Tables selected in the Data Agent should match those visible in your AI Data Schema |
+| **Test before adding instructions** | A well-configured semantic model (descriptions + AI Instructions + Verified Answers) may need zero Data Agent instructions |
+| **Multi-source routing** | If your Data Agent spans multiple semantic models or lakehouses, add routing instructions to help it pick the right source |
+
+> 📌 **Rule of thumb:** The semantic model's Prep Data for AI handles *what* and *how* to calculate. The Data Agent handles *how to respond* and *where to route*.
 
 ---
 
@@ -891,6 +1177,8 @@ This removes friction treatments (disclaimers) from Copilot answers for your mod
 - Consider implementing Great Expectations or similar frameworks for enterprise-grade data quality
 - Keep AI Instructions updated as business rules change (e.g., new facilities, changed readmission window)
 - Review and refresh Verified Answers quarterly as dashboards evolve
+- **Re-run Part F (BPA + Description Coverage) after every model change** — new tables/columns may lack descriptions
+- Use the [Microsoft Data Agent Checklist](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Semantic%20Model%20Data%20Agent%20Checklist.md) as a periodic audit guide
 
 ---
 
@@ -909,10 +1197,14 @@ Before moving to Module 7, confirm:
 - [ ] Semantic model metadata extracted via Semantic Link (tables, columns, measures, relationships)
 - [ ] LLM-powered audit completed — reviewed findings for all 5 dimensions
 - [ ] *(Optional)* Descriptions auto-generated and applied via TOM API
+- [ ] Best Practice Analyzer (BPA) run — prioritized Performance and DAX rules reviewed
+- [ ] Memory Analyzer run — large tables/columns identified for potential AI Schema exclusion
+- [ ] Description coverage ≥ 80% across all tables, columns, and measures
 - [ ] *(Optional)* AI Data Schema configured — irrelevant fields hidden from Copilot
 - [ ] *(Optional)* AI Instructions added with healthcare terminology and analysis rules
 - [ ] *(Optional)* Verified Answers set up for common healthcare questions
 - [ ] *(Optional)* Semantic model marked as **Approved for Copilot**
+- [ ] *(Post-Module 7)* Data Agent SDK evaluation run to validate end-to-end accuracy
 
 ---
 
