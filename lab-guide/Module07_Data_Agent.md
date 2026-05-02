@@ -466,4 +466,4 @@ This represents the full spectrum of what Microsoft Fabric enables for healthcar
 
 ---
 
-**[← Module 6B: Testing Copilot](Module06B_Testing_Copilot.md)** | **[Module 7B: Data Agent Evaluation →](Module07B_Data_Agent_Evaluation.md)** | **[Back to Overview](../README.md)**
+**[← Module 6B: Testing Copilot](Module06B_Testing_Copilot.md)** | **[Module 7B (Optional): Data Agent Evaluation →](Module07B_Data_Agent_Evaluation.md)** | **[Back to Overview](../README.md)**

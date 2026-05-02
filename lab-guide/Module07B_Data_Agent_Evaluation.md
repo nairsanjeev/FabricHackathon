@@ -1,4 +1,4 @@
-# Module 7B: Data Agent Evaluation — LLM-as-Judge
+# Module 7B (Optional): Data Agent Evaluation — LLM-as-Judge
 
 | Duration | 30 minutes |
 |----------|------------|

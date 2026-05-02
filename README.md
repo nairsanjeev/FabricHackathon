@@ -24,7 +24,7 @@ Healthcare providers — hospital administrators, clinical informaticists, data 
 | 4:00 – 4:25 | [Module 6 — Prep Data for AI](lab-guide/Module06_Prep_Data_for_AI.md) | Data Quality, Feature Engineering |
 | 4:25 – 5:00 | [Module 6B — Testing Power BI Copilot](lab-guide/Module06B_Testing_Copilot.md) | Power BI Copilot, Standalone Copilot |
 | 5:00 – 5:30 | [Module 7 — Data Agent & Power BI Copilot](lab-guide/Module07_Data_Agent.md) | Fabric Data Agent, Power BI Copilot |
-| 5:30 – 6:00 | [Module 7B — Data Agent Evaluation (LLM-as-Judge)](lab-guide/Module07B_Data_Agent_Evaluation.md) | Data Agent SDK, LLM-as-Judge, Semantic Link |
+| *(Optional)* | [Module 7B — Data Agent Evaluation (LLM-as-Judge)](lab-guide/Module07B_Data_Agent_Evaluation.md) | Data Agent SDK, LLM-as-Judge, Semantic Link |
 | *(Optional)* | [Module 8 — Building with VS Code Agent Mode](lab-guide/Module08_VSCode_Agent_Mode.md) | GitHub Copilot Agent Mode, VS Code |
 | *(Optional)* | [Module 9 — Predicting Readmissions with Gen AI](lab-guide/Module09_Readmission_Prediction.md) | Azure OpenAI, XGBoost, PySpark ML |
 
