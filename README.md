@@ -26,7 +26,7 @@ Healthcare providers — hospital administrators, clinical informaticists, data 
 | 5:00 – 5:30 | [Module 7 — Data Agent & Power BI Copilot](lab-guide/Module07_Data_Agent.md) | Fabric Data Agent, Power BI Copilot |
 | *(Optional)* | [Module 7B — Data Agent Evaluation (LLM-as-Judge)](lab-guide/Module07B_Data_Agent_Evaluation.md) | Data Agent SDK, LLM-as-Judge, Semantic Link |
 | *(Optional)* | [Module 8 — Building with VS Code Agent Mode](lab-guide/Module08_VSCode_Agent_Mode.md) | GitHub Copilot Agent Mode, VS Code |
-| *(Optional)* | [Module 9 — Predicting Readmissions with Gen AI](lab-guide/Module09_Readmission_Prediction.md) | Azure OpenAI, XGBoost, PySpark ML |
+| *(Optional)* | [Module 9 — Predicting Readmissions with AutoML](lab-guide/Module09_Readmission_Prediction.md) | Azure OpenAI, FLAML AutoML, MLflow |
 
 ## 📂 Repository Structure
 
