@@ -552,186 +552,130 @@ display(relationships_df)
 
 > **What to look for:** Scan the output for tables and columns with empty Description fields — those are gaps that Copilot can't interpret. Also check whether the DAX measures from Module 3 appear in the Measures list.
 
-### Step 9: LLM-Powered Semantic Model Audit
+### Step 9: Semantic Model Audit via GitHub Copilot + MCP Servers
 
-This cell sends the metadata to Fabric's built-in LLM and gets a structured AI-readiness evaluation across five dimensions: star schema design, descriptions, naming, measures, and relationships.
+Instead of writing custom LLM audit code, we leverage **GitHub Copilot Agent Mode** in VS Code with three MCP servers that give Copilot direct, authenticated access to your semantic model, Microsoft documentation, and Fabric best practices:
 
-Paste in Cell 8:
+| MCP Server | Purpose |
+|---|---|
+| [Power BI Modeling MCP](https://github.com/microsoft/powerbi-modeling-mcp) | Reads/writes semantic model objects (tables, columns, measures, relationships, descriptions) |
+| [MS Learn MCP](https://github.com/microsoft/skills-for-fabric/blob/main/mcp-setup/README.md) | Searches official Microsoft documentation for best-practice guidance |
+| [Skills for Fabric](https://github.com/microsoft/skills-for-fabric) | Provides Fabric-aware agent skills for governance, authoring, and consumption |
 
-```python
-# =============================================================
-# Cell 8: LLM-Powered Semantic Model AI-Readiness Audit
-# =============================================================
-# Sends the metadata extracted in Cell 8 to gpt-4.1 for a
-# structured evaluation against 5 AI-readiness dimensions.
-# =============================================================
+#### 9A — Install the MCP Servers in VS Code
 
-from synapse.ml.fabric.credentials import get_openai_httpx_sync_client
-import openai
+1. **Power BI Modeling MCP** — Install the [Power BI Modeling MCP VS Code extension](https://aka.ms/powerbi-modeling-mcp-vscode). After install, confirm it appears in Copilot's tool list (click the 🔧 icon in Copilot Chat).
 
-httpx_client = get_openai_httpx_sync_client()
-client = openai.AzureOpenAI(
-    http_client=httpx_client,
-    api_version="2025-04-01-preview"
-)
-MODEL_NAME = "gpt-4.1"
+2. **Skills for Fabric** — Clone and register:
+   ```powershell
+   git clone https://github.com/microsoft/skills-for-fabric.git
+   cd skills-for-fabric
+   .\install.ps1
+   .\mcp-setup\register-fabric-mcp.ps1
+   ```
 
-# Build a concise metadata summary for the LLM
-metadata_text = f"""## TABLES
-{tables_df.to_string(index=False)}
+3. **MS Learn MCP** — Already bundled with Skills for Fabric. Verify by checking your `.vscode/mcp.json` or global MCP settings for a `microsoft-learn` entry.
 
-## COLUMNS
-{columns_df.to_string(index=False)}
+> **Tip:** You can also add the Power BI Modeling MCP server manually to any MCP client using NPX:
+> ```json
+> {
+>   "powerbi-modeling-mcp": {
+>     "type": "stdio",
+>     "command": "npx",
+>     "args": ["-y", "@microsoft/powerbi-modeling-mcp@latest", "--start"]
+>   }
+> }
+> ```
 
-## MEASURES
-{measures_df.to_string(index=False) if len(measures_df) > 0 else "NO MEASURES DEFINED"}
+#### 9B — Connect Copilot to Your Semantic Model
 
-## RELATIONSHIPS
-{relationships_df.to_string(index=False)}
-"""
+Open **GitHub Copilot Chat** in VS Code (Agent Mode) and type:
 
-prompt = f"""You are a Microsoft Fabric semantic model architect specializing in healthcare analytics.
+```
+Connect to semantic model 'HealthcareLakehouse-SemanticModel' in Fabric Workspace '<your-workspace-name>'
+```
 
-Audit this semantic model for AI readiness across five dimensions.
-For each, give a score (✅ Good, ⚠️ Needs Improvement, or ❌ Critical Gap),
-specific findings, and concrete fixes.
+Copilot will use the Power BI Modeling MCP to authenticate and connect. You'll see a confirmation prompt — approve it.
 
-### Dimensions:
+#### 9C — Run the AI-Readiness Audit
+
+With the connection established, paste this prompt into Copilot Chat:
+
+```
+Using the powerbi-modeling-mcp tools, audit my connected semantic model for AI readiness.
+Evaluate these five dimensions and score each (✅ Good, ⚠️ Needs Improvement, ❌ Critical Gap):
 
 1. **Star Schema Design** — Are fact and dimension tables clearly separated?
-   Is the schema appropriate for analytics? Identify which tables are facts
-   vs. dimensions.
+2. **Descriptions** — How many tables/columns/measures are missing descriptions?
+3. **Human-Readable Naming** — Flag cryptic abbreviations or inconsistent prefixes.
+4. **Explicit Measures** — Are key healthcare KPIs (Readmission Rate, Avg LOS, Denial Rate) defined as DAX measures? Suggest missing ones with DAX expressions.
+5. **Relationship Completeness** — Are all expected joins defined? Any orphan tables?
 
-2. **Descriptions** — Do tables, columns, and measures have meaningful
-   descriptions? Count how many are missing. Missing descriptions hurt
-   Copilot and Data Agent accuracy.
-
-3. **Human-Readable Naming** — Are table/column names intuitive for business
-   users and AI agents? Flag cryptic abbreviations, inconsistent prefixes,
-   or technical names that should be aliased.
-
-4. **Explicit Measures** — Are key healthcare KPIs defined as DAX measures
-   (Readmission Rate, Average LOS, Denial Rate, etc.)? List recommended
-   measures that are missing, with the DAX expression for each.
-
-5. **Relationship Completeness** — Are all expected joins defined? Are there
-   orphan tables? Are cardinalities correct (many-to-one for fact→dimension)?
-
-End with a **prioritized action list** (top 5 fixes that would most improve
-AI accuracy).
-
---- SEMANTIC MODEL METADATA ---
-{metadata_text}"""
-
-response = client.chat.completions.create(
-    model=MODEL_NAME,
-    messages=[{"role": "user", "content": prompt}],
-    max_tokens=4000,
-    temperature=0.3
-)
-
-print("=" * 70)
-print("🤖 SEMANTIC MODEL AI-READINESS AUDIT")
-print("=" * 70)
-print(response.choices[0].message.content)
+Use the microsoft-learn MCP to reference official best practices for each dimension.
+End with a prioritized top-5 action list.
 ```
 
-> **📖 Read the output carefully.** The LLM identifies specific gaps — missing descriptions, unnamed columns, missing measures — and recommends exactly what to fix. Use Cell 10 to apply the most impactful fix (descriptions) automatically.
+Copilot will:
+- Call `model_operations` to get the model overview
+- Call `table_operations`, `column_operations`, `measure_operations`, `relationship_operations` to enumerate all objects
+- Cross-reference findings against Microsoft Learn documentation
+- Produce a structured audit report directly in the chat
 
-### Step 10 (Optional): Auto-Generate and Apply Descriptions
+> **Why this is better than the notebook approach:**
+> - Copilot sees the *live* semantic model — no stale DataFrame snapshots
+> - The audit uses official Fabric best-practice docs as grounding (via MS Learn MCP)
+> - You can immediately ask Copilot to *fix* issues it found (see Step 10)
 
-If the audit found missing descriptions, this cell uses the LLM to generate them and applies them to the semantic model via the **TOM (Tabular Object Model)** API.
+#### 9D — (Optional) Export Audit as Markdown
 
-> ⚠️ **Prerequisite:** This step requires **XMLA read/write** to be enabled on your Fabric capacity (enabled by default on Fabric Trial capacities). If you get an access error, skip this cell and add descriptions manually in Power BI Desktop (right-click a table/column → **Properties** → **Description**).
+Ask Copilot to save the report:
 
-Paste in Cell 9:
-
-```python
-# =============================================================
-# Cell 9: Auto-Generate and Apply Descriptions via LLM + TOM
-# =============================================================
-# Uses the LLM to generate concise descriptions, then applies
-# them directly to the semantic model using the TOM API.
-# =============================================================
-
-import json
-
-# Ask the LLM to generate descriptions for items missing them
-desc_prompt = f"""Based on this healthcare semantic model metadata, generate a
-concise one-sentence description for every table and column that currently has
-no description (shown as None, NaN, or empty).
-
-Return ONLY a valid JSON object in this exact format (no markdown, no explanation):
-{{
-  "tables": {{
-    "table_name": "description"
-  }},
-  "columns": {{
-    "table_name.column_name": "description"
-  }}
-}}
-
-Only include items that are currently MISSING descriptions.
-Make descriptions specific to healthcare analytics.
-Keep each description to one sentence.
-
-{metadata_text}"""
-
-response = client.chat.completions.create(
-    model=MODEL_NAME,
-    messages=[{"role": "user", "content": desc_prompt}],
-    max_tokens=4000,
-    temperature=0.2
-)
-
-# Parse the JSON response (strip code fences if present)
-raw = response.choices[0].message.content.strip()
-if raw.startswith("```"):
-    raw = raw.split("\n", 1)[1]
-    raw = raw.rsplit("```", 1)[0]
-
-descriptions = json.loads(raw)
-
-# Preview generated descriptions
-print("=" * 70)
-print("📝 GENERATED DESCRIPTIONS")
-print("=" * 70)
-
-print("\n📋 Tables:")
-for name, desc in descriptions.get("tables", {}).items():
-    print(f"  • {name}: {desc}")
-
-col_descs = descriptions.get("columns", {})
-print(f"\n📋 Columns ({len(col_descs)} descriptions):")
-for name, desc in list(col_descs.items())[:20]:
-    print(f"  • {name}: {desc}")
-if len(col_descs) > 20:
-    print(f"  ... and {len(col_descs) - 20} more")
-
-# Apply descriptions via the TOM API
-try:
-    with fabric.connect_semantic_model(DATASET, readonly=False) as tom:
-        applied = 0
-        for table in tom.model.Tables:
-            if table.Name in descriptions.get("tables", {}):
-                table.Description = descriptions["tables"][table.Name]
-                applied += 1
-            for column in table.Columns:
-                key = f"{table.Name}.{column.Name}"
-                if key in descriptions.get("columns", {}):
-                    column.Description = descriptions["columns"][key]
-                    applied += 1
-
-    print(f"\n✅ Applied {applied} descriptions to the semantic model")
-    print("   Open the semantic model in Power BI to verify the descriptions")
-except Exception as e:
-    print(f"\n⚠️  Could not apply descriptions automatically: {e}")
-    print("   This usually means XMLA read/write is not enabled.")
-    print("   Copy the descriptions above and add them manually in Power BI Desktop")
-    print("   (Right-click a table/column → Properties → Description)")
+```
+Save the audit report you just generated as a markdown file at ./reports/semantic_model_audit.md
 ```
 
-> **🔄 Re-run Cell 9 after applying descriptions** to see your updated AI-readiness score. The Descriptions dimension should improve from ❌/⚠️ to ✅.
+### Step 10: Auto-Fix Issues via Copilot + Power BI Modeling MCP
+
+Instead of writing TOM API code, ask Copilot to apply fixes directly using the Power BI Modeling MCP's write capabilities:
+
+#### 10A — Add Missing Descriptions
+
+```
+Using powerbi-modeling-mcp, add descriptions to all tables and columns that are
+currently missing them. Make descriptions specific to healthcare analytics.
+Use one concise sentence per item.
+```
+
+Copilot will call `table_operations` and `column_operations` with update actions to write descriptions directly to the semantic model.
+
+#### 10B — Add Missing Measures
+
+If the audit found missing DAX measures, ask:
+
+```
+Using powerbi-modeling-mcp, create the following DAX measures that were
+identified as missing in the audit: Readmission Rate, Average LOS, Denial Rate.
+Place them in the most appropriate fact table.
+```
+
+#### 10C — Fix Relationship Gaps
+
+```
+Using powerbi-modeling-mcp, create any missing relationships identified in the audit.
+Use many-to-one cardinality from fact tables to dimension tables.
+```
+
+#### 10D — Bulk Rename for Consistency
+
+```
+Using powerbi-modeling-mcp, analyze the naming conventions across all tables
+and columns. Rename any items that use cryptic abbreviations to human-readable
+names following a consistent pattern (e.g., snake_case → Title Case for display).
+```
+
+> **⚠️ Safety:** The Power BI Modeling MCP will prompt for confirmation before applying any write operation. Review the proposed changes before approving. You can also run in `--readonly` mode first to preview actions without risk.
+
+> **🔄 Re-run the audit prompt (Step 9C)** after applying fixes to verify improvements. Dimensions should move from ❌/⚠️ to ✅.
 
 ---
 
@@ -783,7 +727,7 @@ print("✅ Review the BPA output above.")
 print("   Priority fixes for Data Agent:")
 print("   • ⚠️ 'Do not summarize numeric columns' → Set SummarizeBy = None")
 print("   • ⚠️ 'Provide format string for measures' → Add format strings")
-print("   • ⚠️ 'Visible objects with no description' → Add descriptions (Cell 9)")
+print("   • ⚠️ 'Visible objects with no description' → Add descriptions (Step 10A via Copilot MCP)")
 print("   • ⚠️ 'Relationship columns should be integer' → Verify key types")
 ```
 
@@ -823,7 +767,7 @@ print("   • For Direct Lake models, ensure V-Order is applied to Parquet files
 
 ### Step 14: Check Description Coverage for AI
 
-Tables, columns, and measures without descriptions are the #1 cause of poor Data Agent accuracy. This cell identifies all undescribed objects so you can fix them (either manually or with the LLM auto-generation in Cell 9).
+Tables, columns, and measures without descriptions are the #1 cause of poor Data Agent accuracy. This cell identifies all undescribed objects so you can fix them (either manually or via the Copilot + Power BI Modeling MCP approach in Step 10A).
 
 Paste in Cell 14:
 
@@ -890,7 +834,7 @@ coverage_pct = (described / total_objects * 100) if total_objects > 0 else 0
 print(f"\n{'=' * 70}")
 print(f"📈 Overall description coverage: {coverage_pct:.0f}% ({described}/{total_objects} objects)")
 if coverage_pct < 80:
-    print("   ⚠️ Below 80% — run Cell 9 to auto-generate descriptions with LLM")
+    print("   ⚠️ Below 80% — use Step 10A (Copilot + powerbi-modeling-mcp) to add descriptions")
 elif coverage_pct < 100:
     print("   ✅ Good coverage — consider filling remaining gaps for best accuracy")
 else:
