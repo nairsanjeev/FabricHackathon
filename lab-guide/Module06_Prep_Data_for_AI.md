@@ -903,7 +903,7 @@ else:
 
 The Fabric Data Agent Python SDK enables **programmatic evaluation** — you can send test questions and compare responses against expected answers. This is essential for regression testing as your model evolves.
 
-> ⚠️ **Prerequisite:** You must have a Data Agent created (from Module 7) before running this cell. If you haven't created one yet, return to this step after completing Module 7.
+> ⚠️ **Prerequisite:** You must have a Data Agent created (from Module 7) before running this cell. If you haven't created one yet, return to this step after completing Module 7. For a more comprehensive evaluation approach, see [Module 7B: Data Agent Evaluation](Module07B_Data_Agent_Evaluation.md).
 
 Paste in Cell 15:
 
