@@ -479,11 +479,22 @@ After the new tables appear in the semantic model, you need to create relationsh
 
 ---
 
-## Part E: Semantic Model AI-Readiness Audit (Notebook)
+## Part E: Audit & Fix the Semantic Model
 
 Parts A–D validated the **data layer** (Delta tables). But AI tools like Power BI Copilot and Data Agent operate on the **Semantic Model** — the layer that defines how tables relate, what measures are available, and what each field means. A semantic model with missing descriptions, unnamed measures, or unclear column names forces Copilot to guess — and it often guesses wrong.
 
-In this section you'll use **Semantic Link** (`sempy`) to programmatically extract the model metadata and **Fabric's built-in LLM** to audit it against five AI-readiness dimensions.
+This part audits your semantic model and fixes any gaps. **Choose one of two paths** based on whether you have access to GitHub Copilot:
+
+| | Path 1: Copilot CLI (Steps 9–10) | Path 2: Notebook (Steps 11–14) |
+|---|---|---|
+| **Requires** | GitHub account with Copilot access + Node.js | Just the Fabric notebook you already have |
+| **Can fix issues?** | ✅ Yes — Copilot writes directly to the live semantic model | ❌ Read-only — reports issues, you fix manually |
+| **Best for** | Interactive audit + one-click fixes | Detailed diagnostics (BPA rules, memory stats) |
+| **Time** | ~10 min setup, ~5 min audit | ~10 min to run all cells |
+
+> **Recommendation:** If you have a GitHub account with Copilot access (free tier works), take **Path 1** — it's faster and can fix issues for you. If not, take **Path 2** — it gives deeper diagnostics. You can also do both if time allows, but they cover the same core checks (descriptions, naming, measures, relationships).
+
+Both paths start with Step 7–8 below (extracting metadata via Semantic Link), then diverge.
 
 ### Step 7: Install Semantic Link and OpenAI
 
@@ -552,9 +563,11 @@ display(relationships_df)
 
 > **What to look for:** Scan the output for tables and columns with empty Description fields — those are gaps that Copilot can't interpret. Also check whether the DAX measures from Module 3 appear in the Measures list.
 
-### Step 9 (Optional): Semantic Model Audit via GitHub Copilot CLI + Power BI Modeling MCP
+### 🅰️ Path 1: Audit & Fix via GitHub Copilot CLI (Steps 9–10)
 
-> **This entire step is optional.** It requires a GitHub account with Copilot access and some software installs. If you prefer, skip to Step 11 to continue with the notebook-based checks instead.
+> **Take this path if you have a GitHub account with Copilot access.** If you don't have Copilot access, skip to [Path 2: Steps 11–14](#-path-2-audit-via-notebook-steps-1114) below.
+
+### Step 9: Semantic Model Audit via GitHub Copilot CLI + Power BI Modeling MCP
 
 In this step you use **GitHub Copilot CLI** — a terminal-based AI agent — to audit your semantic model by typing plain-English prompts directly in your terminal (PowerShell, Command Prompt, or any shell). No IDE needed.
 
@@ -814,7 +827,7 @@ Then it produces a structured report like:
 
 ---
 
-### Step 10 (Optional): Fix Issues Using Copilot CLI Prompts
+### Step 10: Fix Issues Using Copilot CLI Prompts
 
 Still in Copilot CLI with your model connected, fix the issues the audit found. Just type what you want — Copilot applies changes directly to the live semantic model via the MCP server.
 
@@ -875,11 +888,16 @@ Run the same AI-readiness audit again. Which scores improved?
 Dimensions that were ❌ or ⚠️ should now show ✅.
 
 When you're done, type `/exit` to close Copilot CLI.
+
+> ✅ **Path 1 complete.** You can skip ahead to [Part F: Prep Data for AI in Power BI](#part-f-prep-data-for-ai-in-power-bi-semantic-model-layer) or continue with Path 2 below for additional diagnostics (BPA, memory analysis).
+
 ---
 
-## Part F: Data Agent Optimization Checks (Notebook)
+### 🅱️ Path 2: Audit via Notebook (Steps 11–14)
 
-Microsoft provides a [Semantic Model Data Agent Checklist](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Semantic%20Model%20Data%20Agent%20Checklist.md) with companion [Data Agent Utilities notebook](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Data%20Agent%20Utilities.ipynb) that outline best practices for preparing semantic models for the Data Agent. This section implements the key automated checks from those references.
+> **Take this path if you don't have GitHub Copilot access**, or if you want deeper diagnostics (Best Practice Analyzer, Memory Analyzer) in addition to Path 1.
+
+These steps use **Semantic Link Labs** in your Fabric notebook to run Microsoft's Best Practice Analyzer, Memory Analyzer, and Description Coverage checks. Unlike Path 1, these are **read-only** — they report issues but you'll need to fix them manually (in the Power BI service or via the notebook). See the [Semantic Model Data Agent Checklist](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Semantic%20Model%20Data%20Agent%20Checklist.md) and companion [Data Agent Utilities notebook](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Data%20Agent%20Utilities.ipynb) for additional reference.
 
 > **Why this matters for the Data Agent:**
 > - The Data Agent generates DAX queries from natural language. A model with missing descriptions, poor naming, or incorrect summarization forces the AI to guess — and it often guesses wrong.
@@ -1118,15 +1136,15 @@ print("   It will programmatically test your Data Agent responses")
 
 ---
 
-## Part G: Prep Data for AI in Power BI (Semantic Model Layer)
+## Part F: Prep Data for AI in Power BI (Semantic Model Layer)
 
-In Parts A–F you validated and enriched data **at the Lakehouse and Semantic Model levels**. Power BI offers a complementary feature called **"Prep data for AI"** that works **at the Semantic Model level** — it tells Copilot in Power BI *how* to interpret your model, what business terms mean, and which visuals to return for common questions.
+In Parts A–E you validated and enriched data **at the Lakehouse and Semantic Model levels**. Power BI offers a complementary feature called **"Prep data for AI"** that works **at the Semantic Model level** — it tells Copilot in Power BI *how* to interpret your model, what business terms mean, and which visuals to return for common questions.
 
 > **Think of it this way:**
 > - Parts A–D = "Make the data itself AI-ready" (clean, joined, documented)
-> - Part E = "Audit the semantic model programmatically" (LLM-powered gap analysis + auto-fix descriptions)
-> - Part F = "Optimize for the Data Agent" (BPA, memory, descriptions, SDK evaluation)
-> - Part G = "Make the *semantic model* AI-ready in Power BI" (schema focus, business rules, curated answers)
+> - Part E, Path 1 = "Audit & fix the semantic model interactively" (Copilot CLI + MCP)
+> - Part E, Path 2 = "Audit the semantic model via notebook" (BPA, memory, descriptions)
+> - Part F = "Make the *semantic model* AI-ready in Power BI" (schema focus, business rules, curated answers)
 
 The **Prep data for AI** button (preview) is available on the **Home ribbon** in Power BI Desktop and on the **Semantic Model page ribbon** in the Power BI service. It provides three features:
 
