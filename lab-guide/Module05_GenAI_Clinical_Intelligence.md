@@ -1,6 +1,6 @@
 # Module 5: Gen AI — Clinical Intelligence
 
-| Duration | 45 minutes |
+| Duration | 30 minutes |
 |----------|------------|
 | Objective | Use Azure OpenAI through Fabric's built-in AI endpoint to summarize clinical notes, extract medical entities, and suggest ICD-10 codes — automating documentation tasks that consume hours of clinician time |
 | Fabric Features | Fabric Notebook, Fabric AI Services (built-in Azure OpenAI), PySpark UDFs |

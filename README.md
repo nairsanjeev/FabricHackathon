@@ -12,21 +12,25 @@ Healthcare providers — hospital administrators, clinical informaticists, data 
 
 ## ⏱️ Agenda
 
-| Time | Module | Fabric Capability |
-|------|--------|--------------------|
-| 9:00 – 9:30 | [Module 0 — Introduction & Healthcare Context](lab-guide/Module00_Introduction.md) | Overview |
-| 9:30 – 10:30 | [Module 1 — Lakehouse & Data Ingestion](lab-guide/Module01_Setup_and_Data_Ingestion.md) | Lakehouse, Upload, Data Pipeline |
-| 10:30 – 12:00 | [Module 2 — Data Engineering](lab-guide/Module02_Data_Engineering.md) | Spark Notebooks, Pipelines |
-| 12:00 – 12:45 | *Lunch Break* | |
-| 12:45 – 2:15 | [Module 3 — Semantic Model & Power BI Dashboard](lab-guide/Module03_Semantic_Model_and_Dashboard.md) | Semantic Model, Power BI, Copilot |
-| 2:15 – 3:15 | [Module 4 — Real-Time Analytics](lab-guide/Module04_RealTime_Analytics.md) | Eventhouse, KQL |
-| 3:15 – 4:00 | [Module 5 — Gen AI: Clinical Intelligence](lab-guide/Module05_GenAI_Clinical_Intelligence.md) | Notebooks, Azure OpenAI |
-| 4:00 – 4:25 | [Module 6 — Prep Data for AI](lab-guide/Module06_Prep_Data_for_AI.md) | Data Quality, Feature Engineering |
-| 4:25 – 5:00 | [Module 6B — Testing Power BI Copilot](lab-guide/Module06B_Testing_Copilot.md) | Power BI Copilot, Standalone Copilot |
-| 5:00 – 5:30 | [Module 7 — Data Agent & Power BI Copilot](lab-guide/Module07_Data_Agent.md) | Fabric Data Agent, Power BI Copilot |
-| *(Optional)* | [Module 7B — Data Agent Evaluation (LLM-as-Judge)](lab-guide/Module07B_Data_Agent_Evaluation.md) | Data Agent SDK, LLM-as-Judge, Semantic Link |
-| *(Optional)* | [Module 8 — Building with VS Code Agent Mode](lab-guide/Module08_VSCode_Agent_Mode.md) | GitHub Copilot Agent Mode, VS Code |
-| *(Optional)* | [Module 9 — Predicting Readmissions with AutoML](lab-guide/Module09_Readmission_Prediction.md) | Azure OpenAI, FLAML AutoML, MLflow |
+| Time | Module | Duration | Fabric Capability |
+|------|--------|----------|--------------------|
+| 9:00 – 9:20 | [Module 0 — Introduction & Healthcare Context](lab-guide/Module00_Introduction.md) | 20 min | Overview |
+| 9:20 – 9:50 | [Module 1 — Lakehouse & Data Ingestion](lab-guide/Module01_Setup_and_Data_Ingestion.md) | 30 min | Lakehouse, Upload, Spark Notebook |
+| 9:50 – 10:35 | [Module 2 — Data Engineering](lab-guide/Module02_Data_Engineering.md) | 45 min | Spark Notebooks, Delta Tables |
+| 10:35 – 10:45 | *Break* | 10 min | |
+| 10:45 – 11:30 | [Module 3 — Semantic Model & Power BI Dashboard](lab-guide/Module03_Semantic_Model_and_Dashboard.md) | 45 min | Semantic Model, Power BI, Copilot |
+| 11:30 – 12:30 | [Module 4 — Real-Time Analytics](lab-guide/Module04_RealTime_Analytics.md) | 60 min | Eventhouse, KQL, Real-Time Dashboard |
+| 12:30 – 1:15 | *Lunch Break* | 45 min | |
+| 1:15 – 1:45 | [Module 5 — Gen AI: Clinical Intelligence](lab-guide/Module05_GenAI_Clinical_Intelligence.md) | 30 min | Notebooks, Fabric AI Services |
+| 1:45 – 2:25 | [Module 6 — Prep Data for AI](lab-guide/Module06_Prep_Data_for_AI.md) | 40 min | Data Quality, Semantic Link, MCP |
+| 2:25 – 2:45 | [Module 6B — Testing Power BI Copilot](lab-guide/Module06B_Testing_Copilot.md) | 20 min | Power BI Copilot, Standalone Copilot |
+| 2:45 – 3:15 | [Module 7 — Data Agent & Power BI Copilot](lab-guide/Module07_Data_Agent.md) | 30 min | Fabric Data Agent, Power BI Copilot |
+| 3:15 – 3:30 | *Wrap-Up & Q&A* | 15 min | |
+| *(Optional)* | [Module 7B — Data Agent Evaluation (LLM-as-Judge)](lab-guide/Module07B_Data_Agent_Evaluation.md) | 30 min | Data Agent SDK, LLM-as-Judge, Semantic Link |
+| *(Optional)* | [Module 8 — Building with VS Code Agent Mode](lab-guide/Module08_VSCode_Agent_Mode.md) | 60–90 min | GitHub Copilot Agent Mode, VS Code |
+| *(Optional)* | [Module 9 — Predicting Readmissions with AutoML](lab-guide/Module09_Readmission_Prediction.md) | 45–60 min | Azure OpenAI, FLAML AutoML, MLflow |
+
+> **Total core day: 5.5 hours** (9:00 AM – 3:30 PM including breaks and lunch). Optional modules can be done independently after the lab.
 
 ## 📂 Repository Structure
 

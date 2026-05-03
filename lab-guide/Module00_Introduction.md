@@ -1,6 +1,6 @@
 # Module 0: Introduction — Why This Lab Matters for Healthcare Providers
 
-| Duration | 30 minutes |
+| Duration | 20 minutes |
 |----------|------------|
 | Format | Presentation + Discussion |
 

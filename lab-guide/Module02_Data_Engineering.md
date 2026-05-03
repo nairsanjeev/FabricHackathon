@@ -1,6 +1,6 @@
 # Module 2: Data Engineering — Silver & Gold Layers
 
-| Duration | 90 minutes |
+| Duration | 45 minutes |
 |----------|------------|
 | Objective | Transform Bronze data into cleansed Silver tables and compute Gold-layer healthcare analytics |
 | Fabric Features | Spark Notebooks, Delta Tables, SQL Analytics |

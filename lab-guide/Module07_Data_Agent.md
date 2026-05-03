@@ -1,6 +1,6 @@
 # Module 7: Data Agent & Power BI Copilot
 
-| Duration | 45 minutes |
+| Duration | 30 minutes |
 |----------|------------|
 | Objective | Create a Fabric Data Agent that allows clinical and administrative staff to query healthcare data using plain English, then test Power BI Copilot to compare AI-assisted analytics approaches |
 | Fabric Features | Data Agent (AI Skill), Lakehouse integration, Power BI Copilot |

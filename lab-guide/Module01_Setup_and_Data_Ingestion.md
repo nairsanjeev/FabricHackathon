@@ -1,6 +1,6 @@
 # Module 1: Lakehouse Setup & Data Ingestion
 
-| Duration | 60 minutes |
+| Duration | 30 minutes |
 |----------|------------|
 | Objective | Create a Fabric Lakehouse and load raw healthcare CSV data into the Bronze layer |
 | Fabric Features | Lakehouse, File Upload, Spark Notebook |

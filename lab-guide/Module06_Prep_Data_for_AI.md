@@ -1,6 +1,6 @@
 # Module 6: Prep Data for AI
 
-| Duration | 30 minutes |
+| Duration | 40 minutes |
 |----------|------------|
 | Objective | Prepare healthcare data for AI consumption by validating quality, creating feature-ready views, and building AI-optimized tables that the Data Agent and future ML models can use effectively |
 | Fabric Features | Spark Notebooks, Delta Lake, Data Quality Checks, Semantic Link, Fabric AI Services |

@@ -1,6 +1,6 @@
 # Module 6B: Testing Power BI Copilot & Standalone Copilot
 
-| Duration | 30–45 minutes |
+| Duration | 20 minutes |
 |----------|------------|
 | Objective | Thoroughly test Power BI Copilot (in-report) and the standalone Fabric Copilot with a wide variety of healthcare prompts — building fluency with what AI-assisted analytics can (and cannot) do |
 | Fabric Features | Power BI Copilot, Standalone Fabric Copilot, Semantic Model |

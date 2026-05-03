@@ -1,6 +1,6 @@
 # Module 3: Semantic Model & Power BI Dashboard
 
-| Duration | 90 minutes |
+| Duration | 45 minutes |
 |----------|------------|
 | Objective | Build a star-schema Semantic Model on Gold tables and create an interactive Power BI dashboard for healthcare operations |
 | Fabric Features | Semantic Model, Power BI Report, DAX Measures |
