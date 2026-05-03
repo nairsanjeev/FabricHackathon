@@ -374,7 +374,7 @@ else:
 
 ---
 
-## Part D: Validate AI Readiness
+## Part D: Update the Semantic Model
 
 ### Step 6: Update the Semantic Model with New Tables
 
@@ -426,11 +426,11 @@ After the new tables appear in the semantic model, you need to create relationsh
 
 ## Part E: Audit & Fix the Semantic Model
 
-Parts A–D validated the **data layer** (Delta tables). But AI tools like Power BI Copilot and Data Agent operate on the **Semantic Model** — the layer that defines how tables relate, what measures are available, and what each field means. A semantic model with missing descriptions, unnamed measures, or unclear column names forces Copilot to guess — and it often guesses wrong.
+Part D updated the **semantic model structure** (which tables and relationships exist). But AI tools like Power BI Copilot and Data Agent also depend on **metadata quality** — descriptions, naming, measures, and formatting. A semantic model with missing descriptions, unnamed measures, or unclear column names forces Copilot to guess — and it often guesses wrong.
 
 This part audits your semantic model and fixes any gaps. **Choose one of two paths** based on whether you have access to GitHub Copilot:
 
-| | Path 1: Copilot CLI (Steps 10–11) | Path 2: Notebook (Steps 12–15) |
+| | Path 1: Copilot CLI (Steps 8–9) | Path 2: Notebook (Steps 10–15) |
 |---|---|---|
 | **Requires** | GitHub account with Copilot access + Node.js | Just the Fabric notebook you already have |
 | **Can fix issues?** | ✅ Yes — Copilot writes directly to the live semantic model | ❌ Read-only — reports issues, you fix manually |
@@ -439,80 +439,11 @@ This part audits your semantic model and fixes any gaps. **Choose one of two pat
 
 > **Recommendation:** If you have a GitHub account with Copilot access (free tier works), take **Path 1** — it's faster and can fix issues for you. If not, take **Path 2** — it gives deeper diagnostics. You can also do both if time allows, but they cover the same core checks (descriptions, naming, measures, relationships).
 
-Both paths start with Step 8–9 below (extracting metadata via Semantic Link), then diverge.
+### 🅰️ Path 1: Audit & Fix via GitHub Copilot CLI (Steps 8–9)
 
-### Step 8: Install Semantic Link and OpenAI
+> **Take this path if you have a GitHub account with Copilot access.** If you don't have Copilot access, skip to [Path 2: Steps 10–15](#-path-2-audit-via-notebook-steps-1015) below.
 
-Paste in Cell 5:
-
-```python
-# =============================================================
-# Cell 5: Install Semantic Link and OpenAI
-# =============================================================
-%pip install -U semantic-link openai -q
-```
-
-### Step 9: Extract Semantic Model Metadata
-
-Semantic Link connects directly to the semantic model you built in Module 3 and pulls out tables, columns, measures, and relationships as pandas DataFrames.
-
-Paste in Cell 6:
-
-```python
-# =============================================================
-# Cell 6: Connect to the Semantic Model and Extract Metadata
-# =============================================================
-# Semantic Link (sempy) reads the Tabular Object Model (TOM)
-# directly — no need for REST APIs or manual inspection.
-# =============================================================
-
-import sempy.fabric as fabric
-import pandas as pd
-
-# ⚠️ Update this name if you chose a different name in Module 3
-DATASET = "HealthcareLakehouse-SemanticModel"
-
-# Pull metadata from the semantic model
-tables_df = fabric.list_tables(DATASET)
-columns_df = fabric.list_columns(DATASET)
-measures_df = fabric.list_measures(DATASET)
-relationships_df = fabric.list_relationships(DATASET)
-
-print(f"📊 Semantic Model: {DATASET}")
-print(f"   Tables: {len(tables_df)}")
-print(f"   Columns: {len(columns_df)}")
-print(f"   Measures: {len(measures_df)}")
-print(f"   Relationships: {len(relationships_df)}")
-
-# Show tables
-print(f"\n{'='*60}")
-print("📋 TABLES")
-print(f"{'='*60}")
-display(tables_df)
-
-# Show measures
-print(f"\n{'='*60}")
-print("📋 MEASURES")
-print(f"{'='*60}")
-if len(measures_df) > 0:
-    display(measures_df)
-else:
-    print("⚠️  No DAX measures defined! Go back to Module 3 to add them.")
-
-# Show relationships
-print(f"\n{'='*60}")
-print("📋 RELATIONSHIPS")
-print(f"{'='*60}")
-display(relationships_df)
-```
-
-> **What to look for:** Scan the output for tables and columns with empty Description fields — those are gaps that Copilot can't interpret. Also check whether the DAX measures from Module 3 appear in the Measures list.
-
-### 🅰️ Path 1: Audit & Fix via GitHub Copilot CLI (Steps 10–11)
-
-> **Take this path if you have a GitHub account with Copilot access.** If you don't have Copilot access, skip to [Path 2: Steps 12–15](#-path-2-audit-via-notebook-steps-1215) below.
-
-### Step 10: Semantic Model Audit via GitHub Copilot CLI + Power BI Modeling MCP
+### Step 8: Semantic Model Audit via GitHub Copilot CLI + Power BI Modeling MCP
 
 In this step you use **GitHub Copilot CLI** — a terminal-based AI agent — to audit your semantic model by typing plain-English prompts directly in your terminal (PowerShell, Command Prompt, or any shell). No IDE needed.
 
@@ -529,7 +460,7 @@ Behind the scenes, Copilot connects to your live semantic model through a local 
 
 ---
 
-#### Step 10A: Create a GitHub Account (if you don't have one)
+#### Step 8A: Create a GitHub Account (if you don't have one)
 
 1. Go to [https://github.com/signup](https://github.com/signup)
 2. Create a free account with your email address
@@ -537,7 +468,7 @@ Behind the scenes, Copilot connects to your live semantic model through a local 
 
 ---
 
-#### Step 10B: Install Required Software
+#### Step 8B: Install Required Software
 
 You need two things installed. Skip any you already have.
 
@@ -575,7 +506,7 @@ npm install -g @github/copilot
 
 ---
 
-#### Step 10C: Sign In to GitHub from Copilot CLI
+#### Step 8C: Sign In to GitHub from Copilot CLI
 
 1. Open **PowerShell** (or any terminal)
 2. Type:
@@ -598,7 +529,7 @@ npm install -g @github/copilot
 
 ---
 
-#### Step 10D: Add the Power BI Modeling MCP Server
+#### Step 8D: Add the Power BI Modeling MCP Server
 
 Still inside Copilot CLI, add the MCP server that connects to your semantic model:
 
@@ -672,7 +603,7 @@ You should see `powerbi-modeling-mcp` listed with its tools (like `connection_op
 
 ---
 
-#### Step 10E: Connect to Your Semantic Model
+#### Step 8E: Connect to Your Semantic Model
 
 The MCP server authenticates using your Azure account. You need to be signed in to Azure first.
 
@@ -704,7 +635,7 @@ The MCP server authenticates using your Azure account. You need to be signed in 
 
 ---
 
-#### Step 10F: Run the AI-Readiness Audit
+#### Step 8F: Run the AI-Readiness Audit
 
 With the connection established, paste this prompt into Copilot CLI:
 
@@ -772,7 +703,7 @@ Then it produces a structured report like:
 
 ---
 
-### Step 11: Fix Issues Using Copilot CLI Prompts
+### Step 9: Fix Issues Using Copilot CLI Prompts
 
 Still in Copilot CLI with your model connected, fix the issues the audit found. Just type what you want — Copilot applies changes directly to the live semantic model via the MCP server.
 
@@ -780,7 +711,7 @@ Still in Copilot CLI with your model connected, fix the issues the audit found. 
 
 ---
 
-#### Step 11A: Add Missing Descriptions
+#### Step 9A: Add Missing Descriptions
 
 ```
 Add a one-sentence description to every table and column that is currently
@@ -791,7 +722,7 @@ Copilot shows you a preview and asks for confirmation. Choose **Yes** to apply.
 
 ---
 
-#### Step 11B: Add Missing DAX Measures
+#### Step 9B: Add Missing DAX Measures
 
 ```
 Create these missing DAX measures in the most appropriate table:
@@ -804,7 +735,7 @@ Review the DAX expressions Copilot generates, then approve.
 
 ---
 
-#### Step 11C: Fix Missing Relationships
+#### Step 9C: Fix Missing Relationships
 
 ```
 Show me if there are any tables with no relationships, and create the
@@ -813,7 +744,7 @@ missing joins. Use many-to-one from fact to dimension tables.
 
 ---
 
-#### Step 11D: Improve Naming
+#### Step 9D: Improve Naming
 
 ```
 Rename any tables or columns that use cryptic abbreviations to clear,
@@ -822,7 +753,7 @@ human-readable names. Show me all proposed renames before applying.
 
 ---
 
-#### Step 11E: Verify Fixes
+#### Step 9E: Verify Fixes
 
 Re-run the audit to see improvements:
 
@@ -838,16 +769,83 @@ When you're done, type `/exit` to close Copilot CLI.
 
 ---
 
-### 🅱️ Path 2: Audit via Notebook (Steps 12–15)
+### 🅱️ Path 2: Audit via Notebook (Steps 10–15)
 
 > **Take this path if you don't have GitHub Copilot access**, or if you want deeper diagnostics (Best Practice Analyzer, Memory Analyzer) in addition to Path 1.
 
-These steps use **Semantic Link Labs** in your Fabric notebook to run Microsoft's Best Practice Analyzer, Memory Analyzer, and Description Coverage checks. Unlike Path 1, these are **read-only** — they report issues but you'll need to fix them manually (in the Power BI service or via the notebook). See the [Semantic Model Data Agent Checklist](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Semantic%20Model%20Data%20Agent%20Checklist.md) and companion [Data Agent Utilities notebook](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Data%20Agent%20Utilities.ipynb) for additional reference.
+These steps use **Semantic Link** and **Semantic Link Labs** in your Fabric notebook to connect to your semantic model, then run Microsoft's Best Practice Analyzer, Memory Analyzer, and Description Coverage checks. Unlike Path 1, these are **read-only** — they report issues but you'll need to fix them manually (in the Power BI service or via the notebook). See the [Semantic Model Data Agent Checklist](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Semantic%20Model%20Data%20Agent%20Checklist.md) and companion [Data Agent Utilities notebook](https://github.com/microsoft/fabric-toolbox/blob/main/samples/data_agent_checklist_notebooks/Data%20Agent%20Utilities.ipynb) for additional reference.
 
 > **Why this matters for the Data Agent:**
 > - The Data Agent generates DAX queries from natural language. A model with missing descriptions, poor naming, or incorrect summarization forces the AI to guess — and it often guesses wrong.
 > - The **Best Practice Analyzer** catches 60+ rules across performance, DAX patterns, error prevention, and formatting.
 > - The **Memory Analyzer** reveals oversized columns and tables that slow DAX performance and Agent response time.
+
+### Step 10: Install Semantic Link and OpenAI
+
+Paste in Cell 5:
+
+```python
+# =============================================================
+# Cell 5: Install Semantic Link and OpenAI
+# =============================================================
+%pip install -U semantic-link openai -q
+```
+
+### Step 11: Extract Semantic Model Metadata
+
+Semantic Link connects directly to the semantic model you built in Module 3 and pulls out tables, columns, measures, and relationships as pandas DataFrames.
+
+Paste in Cell 6:
+
+```python
+# =============================================================
+# Cell 6: Connect to the Semantic Model and Extract Metadata
+# =============================================================
+# Semantic Link (sempy) reads the Tabular Object Model (TOM)
+# directly — no need for REST APIs or manual inspection.
+# =============================================================
+
+import sempy.fabric as fabric
+import pandas as pd
+
+# ⚠️ Update this name if you chose a different name in Module 3
+DATASET = "HealthcareLakehouse-SemanticModel"
+
+# Pull metadata from the semantic model
+tables_df = fabric.list_tables(DATASET)
+columns_df = fabric.list_columns(DATASET)
+measures_df = fabric.list_measures(DATASET)
+relationships_df = fabric.list_relationships(DATASET)
+
+print(f"📊 Semantic Model: {DATASET}")
+print(f"   Tables: {len(tables_df)}")
+print(f"   Columns: {len(columns_df)}")
+print(f"   Measures: {len(measures_df)}")
+print(f"   Relationships: {len(relationships_df)}")
+
+# Show tables
+print(f"\n{'='*60}")
+print("📋 TABLES")
+print(f"{'='*60}")
+display(tables_df)
+
+# Show measures
+print(f"\n{'='*60}")
+print("📋 MEASURES")
+print(f"{'='*60}")
+if len(measures_df) > 0:
+    display(measures_df)
+else:
+    print("⚠️  No DAX measures defined! Go back to Module 3 to add them.")
+
+# Show relationships
+print(f"\n{'='*60}")
+print("📋 RELATIONSHIPS")
+print(f"{'='*60}")
+display(relationships_df)
+```
+
+> **What to look for:** Scan the output for tables and columns with empty Description fields — those are gaps that Copilot can't interpret. Also check whether the DAX measures from Module 3 appear in the Measures list.
 
 ### Step 12: Install Semantic Link Labs
 
@@ -888,7 +886,7 @@ print("✅ Review the BPA output above.")
 print("   Priority fixes for Data Agent:")
 print("   • ⚠️ 'Do not summarize numeric columns' → Set SummarizeBy = None")
 print("   • ⚠️ 'Provide format string for measures' → Add format strings")
-print("   • ⚠️ 'Visible objects with no description' → Add descriptions (Step 11A via Copilot MCP)")
+print("   • ⚠️ 'Visible objects with no description' → Add descriptions (Step 9A via Copilot MCP)")
 print("   • ⚠️ 'Relationship columns should be integer' → Verify key types")
 ```
 
@@ -928,7 +926,7 @@ print("   • For Direct Lake models, ensure V-Order is applied to Parquet files
 
 ### Step 15: Check Description Coverage for AI
 
-Tables, columns, and measures without descriptions are the #1 cause of poor Data Agent accuracy. This cell identifies all undescribed objects so you can fix them (either manually or via the Copilot + Power BI Modeling MCP approach in Step 11A).
+Tables, columns, and measures without descriptions are the #1 cause of poor Data Agent accuracy. This cell identifies all undescribed objects so you can fix them (either manually or via the Copilot + Power BI Modeling MCP approach in Step 9A).
 
 Paste in Cell 10:
 
@@ -995,7 +993,7 @@ coverage_pct = (described / total_objects * 100) if total_objects > 0 else 0
 print(f"\n{'=' * 70}")
 print(f"📈 Overall description coverage: {coverage_pct:.0f}% ({described}/{total_objects} objects)")
 if coverage_pct < 80:
-    print("   ⚠️ Below 80% — use Step 11A (Copilot + powerbi-modeling-mcp) to add descriptions")
+    print("   ⚠️ Below 80% — use Step 9A (Copilot + powerbi-modeling-mcp) to add descriptions")
 elif coverage_pct < 100:
     print("   ✅ Good coverage — consider filling remaining gaps for best accuracy")
 else:
@@ -1011,7 +1009,8 @@ else:
 In Parts A–E you validated and enriched data **at the Lakehouse and Semantic Model levels**. Power BI offers a complementary feature called **"Prep data for AI"** that works **at the Semantic Model level** — it tells Copilot in Power BI *how* to interpret your model, what business terms mean, and which visuals to return for common questions.
 
 > **Think of it this way:**
-> - Parts A–D = "Make the data itself AI-ready" (clean, joined, documented)
+> - Parts A–C = "Make the data itself AI-ready" (clean, joined, documented)
+> - Part D = "Update the semantic model" (add new tables, create relationships)
 > - Part E, Path 1 = "Audit & fix the semantic model interactively" (Copilot CLI + MCP)
 > - Part E, Path 2 = "Audit the semantic model via notebook" (BPA, memory, descriptions)
 > - Part F = "Make the *semantic model* AI-ready in Power BI" (schema focus, business rules, curated answers)
