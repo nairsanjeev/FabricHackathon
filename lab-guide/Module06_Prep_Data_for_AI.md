@@ -552,278 +552,264 @@ display(relationships_df)
 
 > **What to look for:** Scan the output for tables and columns with empty Description fields — those are gaps that Copilot can't interpret. Also check whether the DAX measures from Module 3 appear in the Measures list.
 
-### Step 9: Semantic Model Audit via GitHub Copilot + MCP Servers
+### Step 9 (Optional): Semantic Model Audit via GitHub Copilot + Power BI Modeling MCP
 
-Instead of writing custom notebook code, we use **GitHub Copilot** with MCP (Model Context Protocol) servers. These servers give Copilot direct, authenticated access to your semantic model so it can audit and fix issues using simple chat prompts.
+> **This entire step is optional.** It requires a GitHub account with Copilot access and additional software installs. If you prefer, skip to Step 11 to continue with the notebook-based checks instead.
 
-| Tool | What it does |
+In this step, you use **GitHub Copilot Chat** to audit your semantic model by typing plain-English prompts. Behind the scenes, Copilot connects to your live semantic model through a local **MCP server** (Model Context Protocol) — a small program that acts as a bridge between Copilot and Power BI.
+
+#### What are we installing and why?
+
+You need **one** MCP server for this step:
+
+| What | Why you need it |
 |---|---|
-| [Power BI Modeling MCP](https://github.com/microsoft/powerbi-modeling-mcp) | Lets Copilot read/write your semantic model (tables, columns, measures, relationships, descriptions) |
-| [MS Learn MCP](https://github.com/microsoft/skills-for-fabric/blob/main/mcp-setup/README.md) | Lets Copilot search official Microsoft docs for best practices |
-| [Skills for Fabric](https://github.com/microsoft/skills-for-fabric) | Adds Fabric-specific agent skills (governance, authoring, querying) |
+| **[Power BI Modeling MCP Server](https://github.com/microsoft/powerbi-modeling-mcp)** | This is the bridge. It runs on your machine and lets Copilot read your semantic model's tables, columns, measures, relationships, and descriptions. It can also *write* changes (add descriptions, create measures, etc.) when you ask it to. |
+
+> **What about Skills for Fabric and MS Learn MCP?**
+> - **[Skills for Fabric](https://github.com/microsoft/skills-for-fabric)** is a *separate* project that provides Fabric agent skills for Spark, SQL, KQL, and more. You do **not** need it for this audit step — the Power BI Modeling MCP covers everything we need for semantic model work.
+> - **MS Learn MCP** (bundled with Skills for Fabric) lets Copilot search Microsoft documentation. It's nice to have but not required — Copilot already has general knowledge of Power BI best practices.
+>
+> If you want to explore these later, see the [Skills for Fabric README](https://github.com/microsoft/skills-for-fabric) for installation instructions.
 
 ---
 
-#### Step 9A: Prerequisites
+#### Step 9A: Create a GitHub Account (if you don't have one)
 
-Before you start, make sure you have:
-
-- [ ] **GitHub Copilot** subscription (individual or enterprise)
-- [ ] **Node.js** installed (v18 or later) — [download here](https://nodejs.org/)
-- [ ] **Git** installed — [download here](https://git-scm.com/)
-- [ ] Your Fabric workspace name (from Module 3)
-- [ ] Your semantic model name: `HealthcareLakehouse-SemanticModel`
-
----
-
-#### Step 9B: Set Up the Power BI Modeling MCP Server
-
-The Power BI Modeling MCP server runs locally and connects Copilot to your semantic model.
-
-**Step 1:** Open a terminal (PowerShell, Command Prompt, or any terminal).
-
-**Step 2:** Test that NPX works by running:
-
-```
-npx --version
-```
-
-You should see a version number (e.g., `10.x.x`). If not, install Node.js first.
-
-**Step 3:** Add the Power BI Modeling MCP server to your GitHub Copilot configuration. Create or edit the file `~/.github/copilot/mcp.json` (create the folders if they don't exist):
-
-```json
-{
-  "mcpServers": {
-    "powerbi-modeling-mcp": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@microsoft/powerbi-modeling-mcp@latest", "--start"]
-    }
-  }
-}
-```
-
-> **What this does:** When Copilot starts a session, it automatically launches the Power BI Modeling MCP server in the background. The server handles authentication to your Fabric workspace using your Azure credentials.
+1. Go to [https://github.com/signup](https://github.com/signup)
+2. Create a free account with your email address
+3. After account creation, you need **GitHub Copilot** access:
+   - **Free tier:** GitHub Copilot Free gives you limited monthly completions — this is enough for this lab. It activates automatically on new accounts.
+   - **Paid tier:** If your organization provides GitHub Copilot Business/Enterprise, sign in with your org account.
+   - To verify: Go to [https://github.com/settings/copilot](https://github.com/settings/copilot) — you should see Copilot enabled.
 
 ---
 
-#### Step 9C: Set Up Skills for Fabric + MS Learn MCP
+#### Step 9B: Install Required Software
 
-**Step 1:** Open a terminal and clone the Skills for Fabric repository:
+You need three things installed on your machine. Skip any you already have.
 
-```powershell
-git clone https://github.com/microsoft/skills-for-fabric.git
-```
+**1. Install Visual Studio Code**
 
-**Step 2:** Run the install script:
+> We said "no VS Code" earlier, but VS Code is the simplest way to use GitHub Copilot with MCP servers. The GitHub Copilot CLI (`gh copilot`) does not yet support MCP servers, so VS Code is required for this step.
 
-```powershell
-cd skills-for-fabric
-.\install.ps1
-```
+- Download from [https://code.visualstudio.com/download](https://code.visualstudio.com/download)
+- Run the installer with default settings
 
-**Step 3:** Register the MCP servers (this adds Skills for Fabric + MS Learn MCP to your config):
+**2. Install Node.js (v18 or later)**
 
-```powershell
-.\mcp-setup\register-fabric-mcp.ps1
-```
+The MCP server needs Node.js to run.
 
-**Step 4:** Verify your MCP configuration now has all three servers. Open `~/.github/copilot/mcp.json` — it should look similar to:
+- Download from [https://nodejs.org/](https://nodejs.org/) — pick the **LTS** version
+- Run the installer with default settings
+- Verify: Open a terminal and run `node --version` — you should see `v18.x.x` or higher
 
-```json
-{
-  "mcpServers": {
-    "powerbi-modeling-mcp": {
-      "type": "stdio",
-      "command": "npx",
-      "args": ["-y", "@microsoft/powerbi-modeling-mcp@latest", "--start"]
-    },
-    "skills-for-fabric": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["<path-to-skills-for-fabric>/server.js"]
-    },
-    "microsoft-learn": {
-      "type": "stdio",
-      "command": "node",
-      "args": ["<path-to-skills-for-fabric>/mcp-setup/learn-server.js"]
-    }
-  }
-}
-```
+**3. Install the Azure CLI**
 
-> **Note:** The exact paths will depend on where you cloned the repo. The `register-fabric-mcp.ps1` script fills these in automatically.
+You need this to sign in to Azure (which gives the MCP server access to your Fabric workspace).
+
+- Download from [https://learn.microsoft.com/cli/azure/install-azure-cli](https://learn.microsoft.com/cli/azure/install-azure-cli)
+- Run the installer with default settings
+- Verify: Open a terminal and run `az --version`
 
 ---
 
-#### Step 9D: Authenticate to Azure
+#### Step 9C: Install GitHub Copilot in VS Code
 
-The MCP server needs your Azure credentials to access the Fabric workspace.
-
-**Step 1:** Open a terminal and sign in to Azure:
-
-```
-az login
-```
-
-**Step 2:** Confirm you're on the correct subscription (the one with your Fabric workspace):
-
-```
-az account show --query "{name:name, id:id}" -o table
-```
-
-If needed, switch subscriptions with `az account set --subscription "<name>"`.
-
-> **That's it for setup!** You only need to do Steps 9B–9D once. The MCP servers will be available in every future Copilot session.
+1. Open **VS Code**
+2. Click the **Extensions** icon in the left sidebar (or press `Ctrl+Shift+X`)
+3. Search for **GitHub Copilot** and click **Install**
+4. Search for **GitHub Copilot Chat** and click **Install**
+5. VS Code will ask you to **sign in to GitHub** — click the prompt and sign in with your GitHub account from Step 9A
+6. After signing in, you should see a **Copilot chat icon** (💬) in the left sidebar or at the top of the VS Code window
 
 ---
 
-#### Step 9E: Connect Copilot to Your Semantic Model
+#### Step 9D: Install the Power BI Modeling MCP Server
 
-**Step 1:** Open **GitHub Copilot Chat** (in your terminal with `gh copilot` or in any supported editor).
+1. In VS Code, click the **Extensions** icon (`Ctrl+Shift+X`)
+2. Search for **Power BI Modeling MCP**
+3. Click **Install** on the extension by Microsoft (or go directly to [this link](https://aka.ms/powerbi-modeling-mcp-vscode))
+4. **Verify it's working:**
+   - Open Copilot Chat in VS Code (click the 💬 icon or press `Ctrl+Shift+I`)
+   - Click the **Agent Mode** toggle at the top of the chat panel (if you see "Ask" or "Edit" mode, switch it to "Agent")
+   - Click the **🔧 tools icon** — you should see `powerbi-modeling-mcp` listed with tools like `connection_operations`, `table_operations`, `measure_operations`, etc.
 
-**Step 2:** Type this prompt to connect:
-
-```
-Connect to semantic model 'HealthcareLakehouse-SemanticModel' in Fabric Workspace '<your-workspace-name>'
-```
-
-> **Replace** `<your-workspace-name>` with your actual Fabric workspace name from Module 3.
-
-**Step 3:** Copilot will ask for confirmation to connect. Type **Yes** or click **Allow**.
-
-**What you should see:** Copilot responds with something like:
-> "Connected to semantic model 'HealthcareLakehouse-SemanticModel'. The model contains X tables, Y measures, and Z relationships."
-
-If you get an authentication error, re-run `az login` and try again.
+> **If you don't see the tools:** Go to [https://github.com/settings/copilot](https://github.com/settings/copilot), scroll to **"MCP servers in Copilot"**, and make sure it's **enabled**. For enterprise accounts, your admin may need to enable this.
 
 ---
 
-#### Step 9F: Run the AI-Readiness Audit
+#### Step 9E: Sign in to Azure
 
-Now that Copilot is connected to your model, paste this prompt:
+The MCP server needs to authenticate to your Fabric workspace using your Azure account.
+
+1. Open a terminal in VS Code (`` Ctrl+` ``)
+2. Run:
+   ```
+   az login
+   ```
+3. A browser window opens — sign in with the **same account** you use for Microsoft Fabric
+4. Verify you're on the right subscription:
+   ```
+   az account show --query "{name:name, id:id}" -o table
+   ```
+
+> **Setup is done!** Steps 9A–9E are one-time only. From now on, just open VS Code and start chatting.
+
+---
+
+#### Step 9F: Connect Copilot to Your Semantic Model
+
+1. In VS Code, open **Copilot Chat** (💬 icon or `Ctrl+Shift+I`)
+2. Make sure you're in **Agent Mode** (not "Ask" or "Edit")
+3. Type this prompt — replace `<your-workspace-name>` with your actual Fabric workspace name from Module 3:
 
 ```
-Audit my connected semantic model for AI readiness. Evaluate these five
-dimensions and give each a score (✅ Good, ⚠️ Needs Improvement, ❌ Critical Gap):
-
-1. Star Schema Design — Are fact and dimension tables clearly separated?
-2. Descriptions — How many tables, columns, and measures are missing descriptions?
-3. Human-Readable Naming — Flag any cryptic abbreviations or inconsistent prefixes.
-4. Explicit Measures — Are key healthcare KPIs defined as DAX measures
-   (Readmission Rate, Average LOS, Denial Rate)? Suggest missing ones with DAX.
-5. Relationship Completeness — Are all expected joins defined? Any orphan tables?
-
-Search Microsoft Learn documentation for best practices on each dimension.
-End with a prioritized top-5 action list of what to fix first.
+Connect to semantic model 'HealthcareLakehouse-SemanticModel'
+in Fabric Workspace '<your-workspace-name>'
 ```
 
-**What happens behind the scenes:**
-1. Copilot calls the Power BI Modeling MCP to list all tables, columns, measures, and relationships
-2. It analyzes the metadata for gaps (missing descriptions, orphan tables, etc.)
-3. It searches MS Learn for official best-practice guidance
-4. It produces a structured report with scores and recommendations
+4. Copilot will show a **confirmation dialog** — click **Allow** or **Continue**
+5. Wait a few seconds. You should see a response like:
 
-**Expected output:** A formatted report like:
+> ✅ "Connected to semantic model 'HealthcareLakehouse-SemanticModel'. Found 9 tables, 5 measures, 8 relationships."
+
+**If you get an error:**
+- `Authentication failed` → Re-run `az login` in the terminal
+- `Workspace not found` → Double-check your workspace name in the Fabric portal ([https://app.fabric.microsoft.com](https://app.fabric.microsoft.com))
+- `MCP server not available` → Make sure the Power BI Modeling MCP extension is installed (Step 9D)
+
+---
+
+#### Step 9G: Run the AI-Readiness Audit
+
+With the connection established, paste this prompt into Copilot Chat:
+
+```
+Audit my connected semantic model for AI readiness.
+
+Check these five areas and score each one
+(✅ Good, ⚠️ Needs Improvement, or ❌ Critical Gap):
+
+1. Star Schema Design — Are fact tables and dimension tables clearly separated?
+2. Descriptions — How many tables, columns, and measures have no description?
+3. Naming — Are names clear and consistent, or are there cryptic abbreviations?
+4. DAX Measures — Are healthcare KPIs like Readmission Rate, Average LOS,
+   and Denial Rate defined? Suggest missing ones with DAX expressions.
+5. Relationships — Are all table joins defined? Are there orphan tables
+   with no relationships?
+
+End with a prioritized list of the top 5 things to fix first.
+```
+
+**What Copilot does (you can watch it work):**
+
+Copilot will make several tool calls — you'll see them in the chat:
+1. `connection_operations` — confirms the connection
+2. `table_operations` → `list` — gets all tables
+3. `column_operations` → `list` — gets all columns and checks for missing descriptions
+4. `measure_operations` → `list` — gets all DAX measures
+5. `relationship_operations` → `list` — gets all relationships
+
+Then it analyzes everything and produces a report like:
 
 ```
 📊 SEMANTIC MODEL AI-READINESS AUDIT
-=====================================
+======================================
 
 1. Star Schema Design: ✅ Good
-   - 3 fact tables identified (encounters, claims, vitals)
-   - 4 dimension tables (patients, conditions, medications, ...)
+   - Fact tables: gold_encounters, gold_claims, gold_vitals
+   - Dimension tables: gold_patients, gold_conditions, gold_medications
 
 2. Descriptions: ❌ Critical Gap
-   - 12/15 tables missing descriptions
-   - 87/102 columns missing descriptions
-   ...
+   - 9/9 tables have no description
+   - 85/92 columns have no description
+   - 3/5 measures have no description
 
-🎯 TOP 5 ACTIONS:
-1. Add descriptions to all tables and columns (biggest impact on AI accuracy)
-2. ...
+3. Naming: ⚠️ Needs Improvement
+   - Tables use "gold_" prefix — consider removing for readability
+   - Column "los_days" → "Length of Stay (Days)"
+
+4. DAX Measures: ⚠️ Needs Improvement
+   - ✅ Found: Total Encounters, Total Claims
+   - ❌ Missing: Readmission Rate, Average LOS, Denial Rate
+
+5. Relationships: ✅ Good
+   - 8 relationships defined, all many-to-one
+   - No orphan tables
+
+🎯 TOP 5 FIXES:
+1. Add descriptions to all 9 tables and 85 columns
+2. Create Readmission Rate DAX measure
+3. Create Average LOS DAX measure
+4. Create Denial Rate DAX measure
+5. Remove "gold_" prefix from table display names
 ```
+
+> Your actual output will vary depending on your model's current state.
 
 ---
 
-#### Step 9G: (Optional) Save the Audit Report
+### Step 10 (Optional): Fix Issues Using Copilot Prompts
 
-To save the output as a file for reference:
+Still in Copilot Chat with your model connected, you can fix the issues found in the audit. Just type what you want — Copilot applies changes directly to the live semantic model.
 
-```
-Save the audit report you just generated as a markdown file at ./reports/semantic_model_audit.md
-```
-
----
-
-### Step 10: Fix Issues Using Copilot Prompts
-
-With Copilot still connected to your model, you can fix the issues it found by typing simple prompts. No code needed — Copilot applies changes directly to the live semantic model.
-
-> **⚠️ Safety:** Copilot will ask for confirmation before making any changes. Always review the proposed changes before approving.
+> **⚠️ Important:** Copilot always asks for confirmation before making changes. Read the proposed changes carefully before clicking **Allow**.
 
 ---
 
 #### Step 10A: Add Missing Descriptions
 
-Type this prompt:
-
 ```
-Add descriptions to all tables and columns that are currently missing them.
-Make each description one concise sentence specific to healthcare analytics.
+Add a one-sentence description to every table and column that is currently
+missing one. Make each description specific to healthcare analytics.
 ```
 
-**What Copilot does:** It generates appropriate descriptions and writes them directly to your semantic model. You'll see a confirmation like:
-> "I'll add descriptions to 12 tables and 87 columns. Here's a preview... Apply these changes? (Yes/No)"
-
-Type **Yes** to apply.
+Copilot will show you a preview of all the descriptions it plans to add, then ask for confirmation. Review and click **Allow**.
 
 ---
 
 #### Step 10B: Add Missing DAX Measures
 
-If the audit found missing KPIs, type:
-
 ```
-Create these missing DAX measures in the most appropriate fact table:
-- Readmission Rate (% of patients readmitted within 30 days)
-- Average Length of Stay (average days per encounter)
-- Claim Denial Rate (% of claims denied)
+Create these missing DAX measures and place them in the most appropriate table:
+- Readmission Rate: percentage of patients readmitted within 30 days
+- Average Length of Stay: average number of days per encounter
+- Claim Denial Rate: percentage of claims with a denied status
 ```
 
-**What Copilot does:** It creates the DAX expressions and adds them to your model. Review the DAX before approving.
+Copilot will show the DAX expressions. Review them before approving.
 
 ---
 
 #### Step 10C: Fix Missing Relationships
 
 ```
-Create any missing relationships between tables. Use many-to-one cardinality
-from fact tables to dimension tables. Show me what you plan to create before applying.
+Show me if there are any tables with no relationships, and create the
+missing joins. Use many-to-one from fact to dimension tables.
 ```
 
 ---
 
-#### Step 10D: Improve Naming Consistency
+#### Step 10D: Improve Naming
 
 ```
-Review all table and column names. Rename any that use cryptic abbreviations
-to clear, human-readable names. Show me the proposed renames before applying.
+Rename any tables or columns that use cryptic abbreviations.
+Make names clear for business users. Show me all proposed renames first.
 ```
 
 ---
 
-#### Step 10E: Verify Your Fixes
+#### Step 10E: Verify Fixes
 
-Re-run the audit to confirm improvements:
+Re-run the audit to see improvements:
 
 ```
-Run the AI-readiness audit again and show me which dimensions improved since
-the last audit.
+Run the same AI-readiness audit again and compare with the previous results.
+Which scores improved?
 ```
 
-> **Expected result:** Dimensions that were ❌ or ⚠️ should now show ✅ after applying the fixes above.
+Dimensions that were ❌ or ⚠️ should now show ✅.
 
 ---
 
