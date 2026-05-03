@@ -57,13 +57,81 @@ Paste in **Cell 1**:
 %pip install -U fabric-data-agent-sdk openai -q
 ```
 
-### Step 3: Configure Variables
+### Step 3: Quick Smoke Test — Query the Data Agent via SDK
+
+Before building the full evaluation pipeline, verify that the SDK can reach your Data Agent by sending a few test questions and reviewing the responses.
 
 Paste in **Cell 2**:
 
 ```python
 # =============================================================
-# Cell 2: Imports & Configuration
+# Cell 2: Quick Smoke Test — Data Agent SDK
+# =============================================================
+# Sends 5 healthcare questions to your Data Agent and prints
+# the first 200 characters of each response. Use this to verify
+# connectivity and spot obvious issues before the full eval.
+# =============================================================
+
+from fabric.dataagent.client import FabricDataAgentManagement, FabricOpenAI
+import pandas as pd
+
+# ⚠️ Update this name to match your Data Agent from Module 7
+DATA_AGENT_NAME = "HealthFirst Clinical Analyst"
+
+# View current agent configuration
+data_agent = FabricDataAgentManagement(agent_name=DATA_AGENT_NAME)
+config = data_agent.get_configuration()
+print(f"Agent Instructions: {config.instructions[:200]}...")
+
+# View data sources
+datasources = data_agent.get_datasources()
+for ds in datasources:
+    print(f"  📁 {ds.get('name', 'Unknown')} ({ds.get('type', 'Unknown')})")
+
+# Define quick test questions
+test_questions = [
+    "What is the overall 30-day readmission rate?",
+    "Which facility has the highest readmission rate?",
+    "How many patients are classified as high-risk?",
+    "What is the average length of stay by diagnosis?",
+    "Show me the claim denial rate by insurance type",
+]
+
+# Send questions and collect responses
+print("\n" + "=" * 70)
+print("🧪 DATA AGENT SMOKE TEST")
+print("=" * 70)
+
+client = FabricOpenAI(agent_name=DATA_AGENT_NAME)
+for q in test_questions:
+    print(f"\n❓ {q}")
+    try:
+        response = client.chat.completions.create(
+            messages=[{"role": "user", "content": q}]
+        )
+        answer = response.choices[0].message.content[:200]
+        print(f"   ✅ {answer}...")
+    except Exception as e:
+        print(f"   ❌ Error: {e}")
+
+print("\n💡 Review each response for accuracy. If incorrect:")
+print("   1. Check AI Data Schema — are the right fields visible?")
+print("   2. Check AI Instructions — is the terminology defined?")
+print("   3. Check Verified Answers — should this be a pinned response?")
+print("   4. Download diagnostics logs for detailed debugging")
+```
+
+> **📖 Reference:** See the [Data Agent SDK documentation](https://learn.microsoft.com/en-us/fabric/data-science/fabric-data-agent-sdk) for additional API details.
+
+---
+
+### Step 4: Configure Variables
+
+Paste in **Cell 3**:
+
+```python
+# =============================================================
+# Cell 3: Imports & Configuration
 # =============================================================
 import sempy.fabric as fabric
 import pandas as pd
@@ -85,13 +153,13 @@ print(f"Data Agent: {DATA_AGENT_NAME}")
 
 The evaluation's reliability depends entirely on having **correct, deterministic ground truth**. We write DAX queries that answer the same questions we'll ask the Data Agent, then execute them against the semantic model.
 
-### Step 4: Write DAX Queries for Healthcare Questions
+### Step 5: Write DAX Queries for Healthcare Questions
 
-Paste in **Cell 3**:
+Paste in **Cell 4**:
 
 ```python
 # =============================================================
-# Cell 3: Define DAX Queries (Ground Truth)
+# Cell 4: Define DAX Queries (Ground Truth)
 # =============================================================
 # Each entry has a natural-language question and the DAX query
 # that produces the definitive correct answer.
@@ -181,13 +249,13 @@ display(df_questions[["question"]])
 
 > **💡 Tip:** Customize these DAX queries to match your actual data. If a query returns no results, the ground truth will be "No results" and the evaluation will penalize the agent for returning data that doesn't exist.
 
-### Step 5: Execute DAX to Generate Ground Truth
+### Step 6: Execute DAX to Generate Ground Truth
 
-Paste in **Cell 4**:
+Paste in **Cell 5**:
 
 ```python
 # =============================================================
-# Cell 4: Execute DAX Queries for Ground Truth
+# Cell 5: Execute DAX Queries for Ground Truth
 # =============================================================
 
 def format_dax_result(df_result):
@@ -248,13 +316,13 @@ display(eval_df)
 
 The critic prompt defines the **evaluation rules** the LLM uses to compare agent answers against ground truth. These rules handle real-world challenges like number formatting, entity matching, and ranked lists.
 
-### Step 6: Define the Critic Prompt
+### Step 7: Define the Critic Prompt
 
-Paste in **Cell 5**:
+Paste in **Cell 6**:
 
 ```python
 # =============================================================
-# Cell 5: Define LLM-as-Judge Critic Prompt
+# Cell 6: Define LLM-as-Judge Critic Prompt
 # =============================================================
 # Two prompts that must stay aligned:
 # - critic_prompt: passed to evaluate_data_agent() (SDK injects actual answer)
@@ -314,13 +382,13 @@ Before trusting the LLM judge, we test it against **known-correct and known-inco
 
 > **Why calibrate?** An LLM judge might be too lenient (marking wrong answers as correct = false positives) or too strict (marking correct answers as wrong = false negatives). Calibration quantifies these error rates.
 
-### Step 7: Run Judge Calibration
+### Step 8: Run Judge Calibration
 
-Paste in **Cell 6**:
+Paste in **Cell 7**:
 
 ```python
 # =============================================================
-# Cell 6: Judge Calibration — Meta-Evaluation
+# Cell 7: Judge Calibration — Meta-Evaluation
 # =============================================================
 # Tests the critic prompt against known-good and known-bad pairs
 # adapted to our healthcare domain.
@@ -553,15 +621,15 @@ else:
 
 ## Part E: Run the Official Evaluation
 
-### Step 8: Evaluate the Data Agent
+### Step 9: Evaluate the Data Agent
 
 The Fabric Data Agent SDK's `evaluate_data_agent()` function handles the end-to-end flow: it sends each question to the agent, captures responses, runs the critic prompt, and stores results in a Lakehouse Delta table.
 
-Paste in **Cell 7**:
+Paste in **Cell 8**:
 
 ```python
 # =============================================================
-# Cell 7: Run Data Agent Evaluation via SDK
+# Cell 8: Run Data Agent Evaluation via SDK
 # =============================================================
 from fabric.dataagent.evaluation import evaluate_data_agent
 
@@ -589,13 +657,13 @@ print(f"   Evaluation ID: {evaluation_id}")
 print(f"   Results stored in: {TABLE_NAME}")
 ```
 
-### Step 9: View Evaluation Summary
+### Step 10: View Evaluation Summary
 
-Paste in **Cell 8**:
+Paste in **Cell 9**:
 
 ```python
 # =============================================================
-# Cell 8: Evaluation Summary
+# Cell 9: Evaluation Summary
 # =============================================================
 from fabric.dataagent.evaluation import get_evaluation_summary
 
@@ -606,13 +674,13 @@ display(eval_summary)
 
 > The summary shows: **T** (True/passed), **F** (False/failed), **?** (uncertain), and **%** (pass rate).
 
-### Step 10: View Detailed Results
+### Step 11: View Detailed Results
 
-Paste in **Cell 9**:
+Paste in **Cell 10**:
 
 ```python
 # =============================================================
-# Cell 9: Detailed Evaluation Results
+# Cell 10: Detailed Evaluation Results
 # =============================================================
 from fabric.dataagent.evaluation import get_evaluation_details
 
@@ -631,17 +699,17 @@ display(eval_details)
 
 ## Part F: Calibration-Adjusted Final Score
 
-The raw evaluation score assumes the judge is perfect. Since we measured the judge's error rates in Step 7, we can compute a **debiased estimate** of the true agent accuracy:
+The raw evaluation score assumes the judge is perfect. Since we measured the judge's error rates in Step 8, we can compute a **debiased estimate** of the true agent accuracy:
 
 $$\text{adjusted\_accuracy} = \frac{\text{observed\_pass\_rate} - \text{FPR}}{\text{TPR} - \text{FPR}}$$
 
-### Step 11: Compute Final Score
+### Step 12: Compute Final Score
 
-Paste in **Cell 10**:
+Paste in **Cell 11**:
 
 ```python
 # =============================================================
-# Cell 10: Calibration-Adjusted Final Score
+# Cell 11: Calibration-Adjusted Final Score
 # =============================================================
 
 # Determine the result column from SDK output
