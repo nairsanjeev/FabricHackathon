@@ -583,9 +583,9 @@ Behind the scenes, Copilot connects to your live semantic model through a local 
 
 You need two things installed. Skip any you already have.
 
-**1. Install Node.js (v18 or later)**
+**1. Install Node.js (v22 or later)**
 
-The MCP server needs Node.js to run.
+Both the Copilot CLI and the MCP server need Node.js to run.
 
 - Download from [https://nodejs.org/](https://nodejs.org/) — pick the **LTS** version
 - Run the installer with default settings
@@ -593,20 +593,21 @@ The MCP server needs Node.js to run.
   ```
   node --version
   ```
-  You should see `v18.x.x` or higher.
+  You should see `v22.x.x` or higher.
 
 **2. Install GitHub Copilot CLI**
 
-On **Windows**, open PowerShell and run:
+Open PowerShell and run:
 
 ```
-winget install GitHub.Copilot
+npm install -g @github/copilot
 ```
 
-> **Alternative (any OS):** If `winget` is not available, install via npm:
+> **Alternative (Windows only):** If you have `winget` available, you can also install with:
 > ```
-> npm install -g @github/copilot
+> winget install GitHub.Copilot
 > ```
+> You can also download the executable directly from [the copilot-cli releases page](https://github.com/github/copilot-cli/releases/).
 
 - **Verify:** Close and reopen PowerShell, then run:
   ```
