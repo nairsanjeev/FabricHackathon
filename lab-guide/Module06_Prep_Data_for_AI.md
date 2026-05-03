@@ -659,12 +659,25 @@ Still inside Copilot CLI, add the MCP server that connects to your semantic mode
 
 **Option B — Edit the config file directly:**
 
-1. Exit Copilot CLI (type `/exit` or press `Ctrl+C`)
-2. Open (or create) the file `~/.copilot/mcp-config.json` in any text editor:
+The Copilot CLI stores its MCP configuration in a file called `mcp-config.json` inside your home directory's `.copilot` folder. On Windows, the full path is:
+
+```
+C:\Users\<your-username>\.copilot\mcp-config.json
+```
+
+Follow these steps:
+
+1. Exit Copilot CLI if it's running (type `/exit` or press `Ctrl+C`)
+2. Open **File Explorer** and navigate to `C:\Users\<your-username>\` (replace `<your-username>` with your actual Windows username, e.g., `C:\Users\JohnDoe\`)
+3. Look for a folder named `.copilot`. If it doesn't exist yet, create it:
+   ```powershell
+   mkdir "$env:USERPROFILE\.copilot"
    ```
-   notepad $env:USERPROFILE\.copilot\mcp-config.json
+4. Create or open the file `mcp-config.json` inside that folder:
+   ```powershell
+   notepad "$env:USERPROFILE\.copilot\mcp-config.json"
    ```
-3. Paste this content and save:
+5. Paste this exact content into the file and save (`Ctrl+S`):
    ```json
    {
      "mcpServers": {
@@ -676,10 +689,19 @@ Still inside Copilot CLI, add the MCP server that connects to your semantic mode
      }
    }
    ```
-4. Start Copilot CLI again:
+6. Close Notepad. Your file should now be at:
+   ```
+   C:\Users\<your-username>\.copilot\mcp-config.json
+   ```
+7. Start Copilot CLI again:
    ```
    copilot
    ```
+
+> **Tip:** You can verify the file exists by running:
+> ```powershell
+> Get-Content "$env:USERPROFILE\.copilot\mcp-config.json"
+> ```
 
 **Verify the MCP server is connected:**
 
