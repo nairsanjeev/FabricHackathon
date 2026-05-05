@@ -29,6 +29,7 @@ Healthcare providers — hospital administrators, clinical informaticists, data 
 | *(Optional)* | [Module 7B — Data Agent Evaluation (LLM-as-Judge)](lab-guide/Module07B_Data_Agent_Evaluation.md) | 30 min | Data Agent SDK, LLM-as-Judge, Semantic Link |
 | *(Optional)* | [Module 8 — Building with VS Code Agent Mode](lab-guide/Module08_VSCode_Agent_Mode.md) | 60–90 min | GitHub Copilot Agent Mode, VS Code |
 | *(Optional)* | [Module 9 — Predicting Readmissions with AutoML](lab-guide/Module09_Readmission_Prediction.md) | 45–60 min | Azure OpenAI, FLAML AutoML, MLflow |
+| *(Optional)* | [Module 10 — Fabric IQ: Ontology & Plan](lab-guide/Module10_Fabric_IQ.md) | 45–60 min | Fabric IQ, Ontology, Plan, Data Agent |
 
 > **Total core day: 5.5 hours** (9:00 AM – 3:30 PM including breaks and lunch). Optional modules can be done independently after the lab.
 
@@ -49,7 +50,8 @@ FabricHackathon/
 │   ├── Module07_Data_Agent.md         ← Data Agent + Power BI Copilot testing
 │   ├── Module07B_Data_Agent_Evaluation.md ← LLM-as-Judge evaluation pipeline
 │   ├── Module08_VSCode_Agent_Mode.md  ← (Optional) Build entire lab with AI agent
-│   └── Module09_Readmission_Prediction.md ← (Optional) GenAI-powered readmission prediction
+│   ├── Module09_Readmission_Prediction.md ← (Optional) GenAI-powered readmission prediction
+│   └── Module10_Fabric_IQ.md          ← (Optional) Ontology + Plan with LLM-assisted design
 ├── data/
 │   ├── generate_healthcare_data.py    ← Python script to regenerate data
 │   ├── patients.csv                   ← 200 synthetic patients
