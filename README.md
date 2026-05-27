@@ -56,6 +56,7 @@ FabricHackathon/
 │   └── Module11_AI_Search_and_Data_Agent_Integration.md ← (Optional) Combine unstructured + structured responses
 ├── data/
 │   ├── generate_healthcare_data.py    ← Python script to regenerate data
+│   ├── ai_search_sample_docs/          ← Sample unstructured docs for Azure AI Search (Module 11)
 │   ├── patients.csv                   ← 200 synthetic patients
 │   ├── encounters.csv                 ← ~1,000 hospital encounters
 │   ├── conditions.csv                 ← 428 diagnoses (ICD-10 coded)

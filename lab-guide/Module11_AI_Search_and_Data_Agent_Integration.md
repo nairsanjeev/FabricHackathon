@@ -55,69 +55,143 @@ Primary reference used for this lab:
 
 ## Part A: Set Up Azure AI Search (Unstructured Source)
 
-### Step 1: Create an Azure AI Search Index
+### Step 1: Prepare the Sample Documents in This Repo
 
-Use the Azure AI Search quickstart if you do not already have an index:
+This repo now includes ready-to-index sample files at:
 
-- [Azure AI Search quickstart (Portal)](https://learn.microsoft.com/en-us/azure/search/search-get-started-portal?pivots=import-data-new)
+- `data/ai_search_sample_docs/`
 
-For this healthcare scenario, index documents such as:
+Recommended ingestion file for the portal wizard:
 
-- CHF discharge instructions
-- Sepsis early warning workflow
-- ED triage protocol
-- Claims denial prevention checklist
-- Care coordination SOPs
+- `data/ai_search_sample_docs/healthcare_policies_sample.json`
 
-### Step 2: Include Citation-Friendly Fields in the Index Schema
+This JSON file already includes fields needed for Fabric Data Agent grounding and citations.
 
-To ensure Data Agent can show citations, include at least one case-sensitive field name:
+### Step 2: Check Prerequisites (Portal + Access)
 
-- `url`
-- `sourceUrl`
-- `filePath`
-- `path`
-- `folderPath`
+Use the official quickstart flow:
 
-Suggested minimum fields for your index:
+- [Quickstart: Full-text search in the Azure portal](https://learn.microsoft.com/en-us/azure/search/search-get-started-portal?pivots=import-data-new)
 
-- `id` (key)
-- `title`
-- `content`
-- `sourceUrl` (or one citation-friendly field above)
-- `documentType`
-- `facility`
-- `effectiveDate`
+Before running the wizard, verify:
 
-### Step 3: Enable RBAC and Assign Roles
+1. Azure AI Search service exists (Basic tier or higher recommended for managed identity scenarios).
+2. Azure Storage account exists (Blob Storage in same region is preferred).
+3. Public network access is enabled temporarily for wizard setup.
+4. Search service has room for new objects (`Index`, `Indexer`, `Data Source`) if using Free tier limits.
 
-On the Azure AI Search resource:
+### Step 3: Configure RBAC (Detailed)
 
-1. Enable role-based access (Microsoft Entra ID / RBAC)
-2. Assign required roles to the identity used for setup/testing:
+On your Azure AI Search service:
+
+1. Enable role-based access control for data plane.
+2. Ensure your user has:
+   - `Search Service Contributor`
    - `Search Index Data Contributor`
    - `Search Index Data Reader`
+3. If you use managed identity between Search and Storage, enable system-assigned identity on the Search service.
 
-### Step 4: Copy the Resource URL
+On your Storage account:
 
-Copy the Azure AI Search resource URL. You will use this in the Data Agent when adding the index connection.
+1. Assign `Storage Blob Data Reader` to the Search service managed identity.
+2. Confirm role assignments are at account or container scope that includes your upload container.
+
+### Step 4: Upload Sample JSON to Blob Storage
+
+1. Open your Storage account in Azure portal.
+2. Go to **Data storage** -> **Containers**.
+3. Create a container, for example: `healthcare-search-data`.
+4. Upload `data/ai_search_sample_docs/healthcare_policies_sample.json` from this repo.
+
+### Step 5: Start Import Wizard (Import Data)
+
+1. Open your Azure AI Search service.
+2. Select **Import data**.
+3. Choose data source: **Azure Blob Storage**.
+4. Choose the mode aligned to the quickstart pivot `import-data-new`.
+
+### Step 6: Connect to Data Source in Wizard
+
+1. Select your subscription and storage account.
+2. Select container `healthcare-search-data`.
+3. Parsing mode: **JSON array**.
+4. Authentication: **Authenticate using managed identity** (or key-based auth if RBAC is not available).
+5. Continue to next step.
+
+### Step 7: AI Enrichment Step
+
+For a fast MVP index, skip enrichment initially and continue.
+
+You can add enrichment later for:
+
+- Entity extraction
+- Key phrase extraction
+- Chunking/embedding workflows
+
+### Step 8: Configure the Index Schema
+
+Use these field mappings and attributes as a baseline:
+
+| Field | Type | Attributes |
+|---|---|---|
+| `id` | `Edm.String` | Key, Retrievable, Filterable |
+| `title` | `Edm.String` | Searchable, Retrievable, Sortable |
+| `content` | `Edm.String` | Searchable, Retrievable |
+| `sourceUrl` | `Edm.String` | Retrievable, Filterable |
+| `documentType` | `Edm.String` | Searchable, Retrievable, Filterable, Facetable |
+| `facility` | `Edm.String` | Searchable, Retrievable, Filterable, Facetable |
+| `effectiveDate` | `Edm.DateTimeOffset` (or `Edm.String`) | Retrievable, Filterable, Sortable |
+| `tags` | `Edm.String` | Searchable, Retrievable, Filterable |
+
+Important for Fabric Data Agent citations:
+
+- Keep one case-sensitive citation field name exactly as one of:
+  - `url`
+  - `sourceUrl`
+  - `filePath`
+  - `path`
+  - `folderPath`
+
+This lab uses `sourceUrl`.
+
+### Step 9: Advanced Settings and Object Names
+
+1. If asked for semantic settings/schedules, you can keep defaults for first run.
+2. Set object prefix clearly, for example: `healthcare-policies`.
+3. Create objects (Data Source, Index, Indexer) and run indexer.
+
+### Step 10: Validate Index Build
+
+1. Open **Search management** -> **Indexers** and wait for status `Success`.
+2. Open **Search management** -> **Indexes** -> your index.
+3. Confirm document count > 0.
+4. In **Search explorer**, run a query like:
+   - `chf discharge follow-up`
+   - `sepsis escalation`
+5. Confirm results return fields such as `title`, `content`, `sourceUrl`, `documentType`.
+
+### Step 11: Copy the Search Resource URL
+
+From your Azure AI Search service overview, copy the resource URL (for example `https://<service-name>.search.windows.net`).
+
+You will use this URL in Fabric Data Agent when adding **AI Search Index**.
 
 ---
 
 ## Part B: Connect AI Search Index to Fabric Data Agent
 
-### Step 5: Open Your Existing Data Agent
+### Step 12: Open Your Existing Data Agent
 
 1. In your Fabric workspace, open the Data Agent from Module 7 (or create a new one)
 2. Go to the **Data** tab
 
-### Step 6: Add AI Search Index
+### Step 13: Add AI Search Index
 
 1. Select **Add AI Search Index**
 2. Paste the Azure AI Search resource URL
 3. Confirm connection
 
-### Step 7: Keep/Add Structured Sources
+### Step 14: Keep/Add Structured Sources
 
 In the same Data Agent, also include your structured sources:
 
@@ -134,7 +208,7 @@ The key outcome is one agent with both source types configured.
 
 ## Part C: Configure for Combined Responses
 
-### Step 8: Add Data Source Context for AI Search
+### Step 15: Add Data Source Context for AI Search
 
 In the AI Search index data source context/description, add guidance similar to:
 
@@ -146,7 +220,7 @@ Use this source when users ask "what should we do" or request policy/process con
 Prefer structured Fabric sources for numeric KPIs and trend calculations.
 ```
 
-### Step 9: Configure Index Retrieval Settings
+### Step 16: Configure Index Retrieval Settings
 
 Recommended starting values:
 
@@ -156,7 +230,7 @@ Recommended starting values:
 
 Tune this later for precision vs recall.
 
-### Step 10: Update Agent Instructions for Source Blending
+### Step 17: Update Agent Instructions for Source Blending
 
 Use instructions like this in your Data Agent:
 
@@ -179,7 +253,7 @@ When a user asks a question:
 
 ## Part D: Validate with Healthcare Use Cases
 
-### Step 11: Test Combined Prompts
+### Step 18: Test Combined Prompts
 
 Run these prompts in the Data Agent:
 
@@ -188,7 +262,7 @@ Run these prompts in the Data Agent:
 3. `What is our claim denial rate for Medicare, and what documentation checklist can reduce denials?`
 4. `Summarize sepsis-related inpatient trends and include recommended escalation steps from policy documents.`
 
-### Step 12: Confirm the Response Structure
+### Step 19: Confirm the Response Structure
 
 For each answer, verify:
 
