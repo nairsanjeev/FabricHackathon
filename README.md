@@ -30,6 +30,7 @@ Healthcare providers — hospital administrators, clinical informaticists, data 
 | *(Optional)* | [Module 8 — Building with VS Code Agent Mode](lab-guide/Module08_VSCode_Agent_Mode.md) | 60–90 min | GitHub Copilot Agent Mode, VS Code |
 | *(Optional)* | [Module 9 — Predicting Readmissions with AutoML](lab-guide/Module09_Readmission_Prediction.md) | 45–60 min | Azure OpenAI, FLAML AutoML, MLflow |
 | *(Optional)* | [Module 10 — Fabric IQ: Ontology & Plan](lab-guide/Module10_Fabric_IQ.md) | 45–60 min | Fabric IQ, Ontology, Plan, Data Agent |
+| *(Optional)* | [Module 11 — AI Search + Data Agent (Structured + Unstructured)](lab-guide/Module11_AI_Search_and_Data_Agent_Integration.md) | 45–60 min | Azure AI Search, Fabric Data Agent |
 
 > **Total core day: 5.5 hours** (9:00 AM – 3:30 PM including breaks and lunch). Optional modules can be done independently after the lab.
 
@@ -51,7 +52,8 @@ FabricHackathon/
 │   ├── Module07B_Data_Agent_Evaluation.md ← LLM-as-Judge evaluation pipeline
 │   ├── Module08_VSCode_Agent_Mode.md  ← (Optional) Build entire lab with AI agent
 │   ├── Module09_Readmission_Prediction.md ← (Optional) GenAI-powered readmission prediction
-│   └── Module10_Fabric_IQ.md          ← (Optional) Ontology + Plan with LLM-assisted design
+│   ├── Module10_Fabric_IQ.md          ← (Optional) Ontology + Plan with LLM-assisted design
+│   └── Module11_AI_Search_and_Data_Agent_Integration.md ← (Optional) Combine unstructured + structured responses
 ├── data/
 │   ├── generate_healthcare_data.py    ← Python script to regenerate data
 │   ├── patients.csv                   ← 200 synthetic patients
@@ -96,6 +98,7 @@ By the end of this lab, you will have:
 9. **Power BI Copilot** tested for AI-assisted visual analytics and executive narrative generation
 10. **(Optional) VS Code Agent Mode** — experience building the entire lab through conversational AI with GitHub Copilot
 11. **(Optional) Readmission Prediction Model** — Gen AI-assisted feature engineering with XGBoost to predict 30-day hospital readmissions and generate patient risk scores
+12. **(Optional) AI Search + Data Agent Integration** — combine Azure AI Search document context with Fabric metrics in one grounded response
 
 ## ⚠️ Important Notes
 
