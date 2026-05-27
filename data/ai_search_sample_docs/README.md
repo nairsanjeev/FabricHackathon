@@ -10,14 +10,13 @@ This folder contains sample unstructured healthcare content for Azure AI Search.
 - `denial_prevention_checklist.md`
 - `care_coordination_sop.md`
 - `medication_reconciliation_policy.md`
-- `healthcare_policies_sample.json` (JSON array for import wizard)
 
 ## Fastest path for Azure AI Search
 
-If you use the Azure portal quickstart wizard (`Import data`):
+Use the Azure portal quickstart wizard (`Import data`) with the Markdown files:
 
-1. Upload `healthcare_policies_sample.json` to a blob container.
-2. In wizard parsing mode, select `JSON array`.
-3. Map fields as described in Module 11.
+1. Upload all `.md` files in this folder to a blob container.
+2. In wizard parsing mode, use default document parsing.
+3. Map citation-friendly fields as described in Module 11.
 
-This path keeps metadata fields such as `sourceUrl`, `documentType`, and `facility` so Fabric Data Agent can provide grounded answers with citations.
+This path lets Azure AI Search index document text directly from Blob Storage and return document paths for citations in Fabric Data Agent.

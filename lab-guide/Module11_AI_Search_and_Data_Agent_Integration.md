@@ -61,11 +61,17 @@ This repo now includes ready-to-index sample files at:
 
 - `data/ai_search_sample_docs/`
 
-Recommended ingestion file for the portal wizard:
+For this lab, index the Markdown documents directly from Blob Storage:
 
-- `data/ai_search_sample_docs/healthcare_policies_sample.json`
+- `chf_discharge_protocol.md`
+- `sepsis_escalation_workflow.md`
+- `ed_triage_policy.md`
+- `denial_prevention_checklist.md`
+- `care_coordination_sop.md`
+- `medication_reconciliation_policy.md`
 
-This JSON file already includes fields needed for Fabric Data Agent grounding and citations.
+Optional advanced path:
+
 
 ### Step 2: Check Prerequisites (Portal + Access)
 
@@ -93,15 +99,16 @@ On your Azure AI Search service:
 
 On your Storage account:
 
-1. Assign `Storage Blob Data Reader` to the Search service managed identity.
-2. Confirm role assignments are at account or container scope that includes your upload container.
+1. Assign `Storage Blob Data Owner` to the user performing upload/setup in the portal.
+2. Assign `Storage Blob Data Reader` to the Search service managed identity.
+3. Confirm role assignments are at account or container scope that includes your upload container.
 
-### Step 4: Upload Sample JSON to Blob Storage
+### Step 4: Upload Sample Markdown Files to Blob Storage
 
 1. Open your Storage account in Azure portal.
 2. Go to **Data storage** -> **Containers**.
 3. Create a container, for example: `healthcare-search-data`.
-4. Upload `data/ai_search_sample_docs/healthcare_policies_sample.json` from this repo.
+4. Upload the six `.md` files from `data/ai_search_sample_docs/`.
 
 ### Step 5: Start Import Wizard (Import Data)
 
@@ -114,7 +121,7 @@ On your Storage account:
 
 1. Select your subscription and storage account.
 2. Select container `healthcare-search-data`.
-3. Parsing mode: **JSON array**.
+3. Parsing mode: **Default document parsing** for Markdown/blob files.
 4. Authentication: **Authenticate using managed identity** (or key-based auth if RBAC is not available).
 5. Continue to next step.
 
@@ -130,18 +137,23 @@ You can add enrichment later for:
 
 ### Step 8: Configure the Index Schema
 
-Use these field mappings and attributes as a baseline:
+When indexing Markdown files from Blob, keep these fields available in the index:
 
 | Field | Type | Attributes |
 |---|---|---|
-| `id` | `Edm.String` | Key, Retrievable, Filterable |
-| `title` | `Edm.String` | Searchable, Retrievable, Sortable |
+| `metadata_storage_path` | `Edm.String` | Retrievable, Filterable |
+| `metadata_storage_name` | `Edm.String` | Searchable, Retrievable, Filterable |
 | `content` | `Edm.String` | Searchable, Retrievable |
 | `sourceUrl` | `Edm.String` | Retrievable, Filterable |
-| `documentType` | `Edm.String` | Searchable, Retrievable, Filterable, Facetable |
-| `facility` | `Edm.String` | Searchable, Retrievable, Filterable, Facetable |
-| `effectiveDate` | `Edm.DateTimeOffset` (or `Edm.String`) | Retrievable, Filterable, Sortable |
-| `tags` | `Edm.String` | Searchable, Retrievable, Filterable |
+| `filePath` | `Edm.String` | Retrievable, Filterable |
+
+Recommended mapping for citations:
+
+1. Map `sourceUrl` to the blob URL or another valid document link.
+2. Map `filePath` to `metadata_storage_path` (or a custom path field).
+3. Keep `content` searchable.
+
+If your wizard-generated schema doesn't include `sourceUrl` and `filePath`, you can still proceed for retrieval, but Data Agent citations might not appear until at least one required citation field name is present.
 
 Important for Fabric Data Agent citations:
 
@@ -152,7 +164,7 @@ Important for Fabric Data Agent citations:
   - `path`
   - `folderPath`
 
-This lab uses `sourceUrl`.
+For Data Agent citations, include at least one required field name such as `sourceUrl` or `filePath`.
 
 ### Step 9: Advanced Settings and Object Names
 
@@ -168,7 +180,7 @@ This lab uses `sourceUrl`.
 4. In **Search explorer**, run a query like:
    - `chf discharge follow-up`
    - `sepsis escalation`
-5. Confirm results return fields such as `title`, `content`, `sourceUrl`, `documentType`.
+5. Confirm results return fields such as `content`, `metadata_storage_path`, and file name/path metadata.
 
 ### Step 11: Copy the Search Resource URL
 
