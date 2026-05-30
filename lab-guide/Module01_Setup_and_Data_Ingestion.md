@@ -7,6 +7,41 @@
 
 ---
 
+## Pre-Requisite: Download the Lab Data Files from GitHub
+
+Before starting this module, you need to download the data files from the lab's GitHub repository to your local machine.
+
+### Option A: Clone the Repository (Recommended)
+
+If you have **Git** installed, open a terminal or command prompt and run:
+
+```bash
+git clone https://github.com/nairsanjeev/FabricHackathon.git
+```
+
+The CSV data files will be in the `FabricHackathon/data/` folder.
+
+### Option B: Download as ZIP
+
+If you don't have Git installed:
+
+1. Open your browser and go to [https://github.com/nairsanjeev/FabricHackathon](https://github.com/nairsanjeev/FabricHackathon)
+2. Click the green **<> Code** button
+3. Select **Download ZIP**
+4. Extract the ZIP file to a location on your machine (e.g., `C:\FabricHackathon`)
+5. Verify that the `data/` folder contains the following 7 CSV files:
+   - `patients.csv`
+   - `encounters.csv`
+   - `conditions.csv`
+   - `medications.csv`
+   - `vitals.csv`
+   - `clinical_notes.csv`
+   - `claims.csv`
+
+> **Note:** If you have already downloaded or received the lab materials from your instructor, you can skip this step.
+
+---
+
 ## What You Will Do
 
 In this module, you will:
