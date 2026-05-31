@@ -69,6 +69,9 @@ In this module, you will:
 1. In your workspace, click **+ New item**
 2. In the search box, type **Lakehouse**
 3. Click **Lakehouse**
+
+![New item dialog showing Lakehouse option](images/new_item_lakehouse.png)
+
 4. In the **Name** field, enter: `HealthcareLakehouse`
 5. **Important:** If you see a checkbox for **Enable Schemas (Public Preview)**, leave it **unchecked**. This lab uses simple table names and enabling schemas will cause errors.
 6. Click **Create**
