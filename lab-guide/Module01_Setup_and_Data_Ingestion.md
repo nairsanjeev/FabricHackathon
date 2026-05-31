@@ -289,89 +289,94 @@ Wait for all files to finish uploading. You should see all 7 files listed in the
 
 You will be taken to the pipeline canvas where you can build your data flow.
 
-### Alt Step 3: Use the Copy Data Assistant
+### Alt Step 3: Use a ForEach Activity to Copy All Files at Once
 
-The **Copy Data assistant** provides a guided, wizard-based experience to configure your copy activity.
+Instead of creating a separate Copy activity for each CSV file, we'll use a **ForEach** activity that loops over all 7 files with a single parameterized Copy activity inside. This is the fastest and most maintainable approach.
 
-#### 3.1 Launch the Copy Data Assistant
+#### 3.1 Add a ForEach Activity
 
-1. In the pipeline canvas, click **Copy data assistant** (the button appears at the top of the canvas or via **Add activity** → **Copy data assistant**)
+1. In the pipeline canvas, click **Add activity** → **ForEach**
+2. Rename the activity to: `ForEach CSV File`
+3. In the **Settings** tab of the ForEach activity:
+   - Check **Sequential** (uncheck if you want parallel execution — parallel is faster)
+   - In the **Items** field, click **Add dynamic content** (or click in the field and select the pipeline expression builder)
+   - Enter the following expression:
 
-#### 3.2 Configure the Source
+```json
+@createArray('patients','encounters','conditions','medications','vitals','clinical_notes','claims')
+```
 
-1. On the **Choose data source** page, select **Workspace** as the data store type
-2. Select **Lakehouse** as the workspace data store type
-3. Select your `HealthcareLakehouse`
-4. Set **Root folder** to **Files**
-5. Browse to the `raw` folder and select **`patients.csv`**
-6. Ensure **File format** is set to **DelimitedText**
-7. Check **First row as header**
-8. Click **Next** — you'll see a preview of the data
+This creates an array of the 7 file names that the loop will iterate over.
 
-#### 3.3 Configure the Destination
+#### 3.2 Add a Copy Activity Inside the ForEach
 
-1. Select **Lakehouse** as the destination
-2. Select your `HealthcareLakehouse`
-3. Set **Root folder** to **Tables**
-4. For **Load settings**, select **Load to new table**
-5. Enter the **Table name**: `bronze_patients`
-6. Click **Next**
+1. Click the **pencil icon** (✏️) on the ForEach activity to open its inner canvas
+2. Click **Add activity** → **Copy data**
+3. Rename the activity to: `Copy CSV to Bronze`
 
-#### 3.4 Review and Save
+#### 3.3 Configure the Source (Parameterized)
 
-1. On the **Review + create** page, verify your source and destination settings
-2. Clear the **Start data transfer immediately** checkbox (we'll run the full pipeline after adding all activities)
-3. Click **Save**
+1. Select the Copy activity and go to the **Source** tab:
+   - **Data store type**: Select **Workspace**
+   - **Workspace data store type**: Select **Lakehouse**
+   - **Lakehouse**: Select `HealthcareLakehouse`
+   - **Root folder**: Select **Files**
+   - **File path type**: Select **File path**
+   - For the file path, click **Add dynamic content** and enter:
 
-The Copy activity now appears in your pipeline canvas.
+```
+raw/@{item()}.csv
+```
 
-### Alt Step 4: Add Copy Activities for Remaining Files
+   - **File format**: **DelimitedText**
+   - Check **First row as header**
 
-Repeat the Copy Data assistant (or duplicate and modify the existing activity) for each remaining CSV file:
+#### 3.4 Configure the Destination (Parameterized)
 
-1. **Right-click** the `Copy_patients` activity on the canvas → **Duplicate**
-2. Select the duplicated activity and update its settings:
-   - **Source tab**: Change the file path to the next CSV file (e.g., `raw/encounters.csv`)
-   - **Destination tab**: Change the table name (e.g., `bronze_encounters`)
-3. Rename the activity to match (e.g., `Copy encounters`)
+1. Go to the **Destination** tab:
+   - **Data store type**: Select **Workspace**
+   - **Workspace data store type**: Select **Lakehouse**
+   - **Lakehouse**: Select `HealthcareLakehouse`
+   - **Root folder**: Select **Tables**
+   - For **Table name**, click **Add dynamic content** and enter:
 
-Repeat for all 7 files:
+```
+bronze_@{item()}
+```
 
-| Activity Name | Source File (in Files/raw/) | Destination Table |
-|--------------|----------------------------|-------------------|
-| Copy patients | `patients.csv` | `bronze_patients` |
-| Copy encounters | `encounters.csv` | `bronze_encounters` |
-| Copy conditions | `conditions.csv` | `bronze_conditions` |
-| Copy medications | `medications.csv` | `bronze_medications` |
-| Copy vitals | `vitals.csv` | `bronze_vitals` |
-| Copy clinical_notes | `clinical_notes.csv` | `bronze_clinical_notes` |
-| Copy claims | `claims.csv` | `bronze_claims` |
+   - **Table action**: Select **Overwrite**
 
-### Alt Step 5: Connect Activities (Optional)
+> **How it works:** The `@{item()}` expression resolves to the current value in the loop — so on the first iteration it's `patients`, then `encounters`, etc. This means the source reads `raw/patients.csv` and writes to table `bronze_patients`, then `raw/encounters.csv` → `bronze_encounters`, and so on for all 7 files.
 
-You can chain the activities in sequence or leave them to run in parallel:
+#### 3.5 Go Back to the Main Pipeline
 
-- **Sequential:** Drag a **green arrow** (On Success) from one activity to the next: `Copy patients` → `Copy encounters` → `Copy conditions` → ... → `Copy claims`
-- **Parallel:** Leave activities unconnected — they will all run at the same time (faster, but uses more capacity)
+Click the pipeline name in the breadcrumb at the top to return to the main pipeline canvas. You'll see your ForEach activity containing the Copy activity.
 
-> **Tip:** For this lab, parallel execution is fine since the files are small and independent.
-
-### Alt Step 6: Run the Pipeline
+### Alt Step 4: Run the Pipeline
 
 1. Click **▷ Run** in the toolbar
 2. A confirmation dialog appears — click **Save and run**
-3. Watch the progress in the **Output** tab below the canvas — each activity will show a green checkmark when complete
+3. Watch the progress in the **Output** tab below the canvas — the ForEach activity will iterate through all 7 files
 4. The entire pipeline should complete in 2–3 minutes
 
-### Alt Step 7: Verify Results
+> **Tip:** If you unchecked **Sequential** in Step 3.1, all 7 copies will run in parallel, completing in under a minute.
+
+### Alt Step 5: Verify Results
 
 1. Go to your `HealthcareLakehouse`
-2. Under **Tables**, verify all 7 `bronze_*` tables are present
+2. Under **Tables**, verify all 7 `bronze_*` tables are present:
+   - `bronze_patients`
+   - `bronze_encounters`
+   - `bronze_conditions`
+   - `bronze_medications`
+   - `bronze_vitals`
+   - `bronze_clinical_notes`
+   - `bronze_claims`
 3. Click any table to preview the data — it should match the notebook approach
 
 > **Tip:** If tables don't appear immediately, click the **Refresh** icon (🔄) in the Tables section header.
 
-### Alt Step 8: Schedule the Pipeline (Optional)
+### Alt Step 6: Schedule the Pipeline (Optional)
 
 In a production setting, you'd schedule this pipeline to run on a recurring basis:
 
@@ -379,7 +384,7 @@ In a production setting, you'd schedule this pipeline to run on a recurring basi
 2. Set the frequency (e.g., Daily at 2:00 AM)
 3. Enable the schedule
 
-> **Key Takeaway:** Pipelines with the Copy Data assistant are ideal when you want a guided no-code experience, visual monitoring, built-in retry logic, and email alerts on failure — features that are harder to build into notebooks.
+> **Key Takeaway:** Using a ForEach activity with a parameterized Copy activity is the fastest no-code approach — one activity handles all 7 files, and adding a new file in the future only requires adding its name to the array. No duplication, no manual repetition.
 
 ---
 
