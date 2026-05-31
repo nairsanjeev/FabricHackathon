@@ -239,101 +239,147 @@ You should see a mix of insurance types (Medicare ~40%, Commercial ~30%, Medicai
 
 ---
 
-## Alternate Path: Data Pipeline (No-Code Bronze Ingestion)
+## Alternate Path: Pipeline with Copy Data Assistant (No-Code Bronze Ingestion)
 
-Instead of writing a Spark notebook for Bronze ingestion, you can use a **Fabric Data Pipeline** — a no-code/low-code orchestration tool. This approach is common in production environments where data engineers want visual, schedulable, and monitorable pipelines.
+Instead of writing a Spark notebook for Bronze ingestion, you can use a **Fabric Pipeline** with the **Copy Data assistant** — a no-code/low-code approach. This method is common in production environments where data engineers want visual, schedulable, and monitorable pipelines.
 
-### Why Choose Data Pipeline?
+> **Assumption:** You have already downloaded the lab data files to your local machine at `C:\FabricHackathon\data` (see the Pre-Requisite section at the top of this module).
+
+### Why Choose a Pipeline?
 
 | Approach | Best For |
 |----------|----------|
 | **Notebook** (Steps 4–5 above) | Learning, flexibility, custom logic, rapid prototyping |
-| **Data Pipeline** (this section) | Production workloads, scheduling, monitoring, no-code preference |
+| **Pipeline** (this section) | Production workloads, scheduling, monitoring, no-code preference |
 
 Both approaches produce identical Bronze Delta tables.
 
-### Alt Step 1: Create a Data Pipeline
+> **Reference:** This approach follows the same pattern as the Microsoft Learn quickstart: [Create your first pipeline to copy data](https://learn.microsoft.com/en-us/fabric/data-factory/create-first-pipeline-with-sample-data).
+
+### Alt Step 1: Upload CSV Files to the Lakehouse
+
+Before creating the pipeline, upload your local CSV files to the Lakehouse so the pipeline can access them as a source.
+
+1. Go to your `HealthcareLakehouse`
+2. In the Lakehouse explorer, click on **Files** in the left panel
+3. Click the **⋯ (ellipsis)** next to **Files** and select **New subfolder**
+4. Name the subfolder: `raw`
+5. Click **Create**
+6. Click into the `raw` folder
+7. Click **Upload** → **Upload files**
+8. Navigate to `C:\FabricHackathon\data` on your local machine and select **all 7 CSV files**:
+   - `patients.csv`
+   - `encounters.csv`
+   - `conditions.csv`
+   - `medications.csv`
+   - `vitals.csv`
+   - `clinical_notes.csv`
+   - `claims.csv`
+9. Click **Upload**
+
+Wait for all files to finish uploading. You should see all 7 files listed in the `raw` folder.
+
+### Alt Step 2: Create a Pipeline
 
 1. Go to your workspace
 2. Click **+ New item**
-3. Search for and select **Data pipeline**
-4. Name: `Bronze Ingestion Pipeline`
+3. Search for and select **Pipeline**
+4. Enter the name: `Bronze Ingestion Pipeline`
 5. Click **Create**
 
-### Alt Step 2: Add a Copy Data Activity for Each CSV
+You will be taken to the pipeline canvas where you can build your data flow.
 
-We'll create a **Copy Data** activity for each CSV file. You can create one and then duplicate it for the remaining files.
+### Alt Step 3: Use the Copy Data Assistant
 
-#### First Activity: patients.csv
+The **Copy Data assistant** provides a guided, wizard-based experience to configure your copy activity.
 
-1. In the pipeline canvas, click **Add activity** → **Copy data**
-2. Rename the activity to: `Copy patients`
-3. Configure the **Source** tab:
-   - **Data store type**: Select **Workspace**
-   - **Workspace data store type**: Select **Lakehouse**
-   - **Lakehouse**: Select `HealthcareLakehouse`
-   - **Root folder**: Select **Files**
-   - **File path**: Browse to `raw/patients.csv`
-   - **File format**: **DelimitedText** (CSV)
-   - Check **First row as header**
-4. Configure the **Destination** tab:
-   - **Data store type**: Select **Workspace**
-   - **Workspace data store type**: Select **Lakehouse**
-   - **Lakehouse**: Select `HealthcareLakehouse`
-   - **Root folder**: Select **Tables**
-   - **Table name**: Enter `bronze_patients`
-   - **Table action**: **Overwrite**
+#### 3.1 Launch the Copy Data Assistant
 
-#### Remaining Activities
+1. In the pipeline canvas, click **Copy data assistant** (the button appears at the top of the canvas or via **Add activity** → **Copy data assistant**)
 
-Repeat the above for each CSV file, or use this faster approach:
+#### 3.2 Configure the Source
 
-1. **Right-click** the `Copy patients` activity → **Duplicate**
-2. Update the duplicated activity:
-   - Rename to `Copy encounters`
-   - Change source file path to `raw/encounters.csv`
-   - Change destination table name to `bronze_encounters`
-3. Repeat for all 7 files:
+1. On the **Choose data source** page, select **Workspace** as the data store type
+2. Select **Lakehouse** as the workspace data store type
+3. Select your `HealthcareLakehouse`
+4. Set **Root folder** to **Files**
+5. Browse to the `raw` folder and select **`patients.csv`**
+6. Ensure **File format** is set to **DelimitedText**
+7. Check **First row as header**
+8. Click **Next** — you'll see a preview of the data
 
-| Activity Name | Source File | Destination Table |
-|--------------|-------------|-------------------|
-| Copy patients | `raw/patients.csv` | `bronze_patients` |
-| Copy encounters | `raw/encounters.csv` | `bronze_encounters` |
-| Copy conditions | `raw/conditions.csv` | `bronze_conditions` |
-| Copy medications | `raw/medications.csv` | `bronze_medications` |
-| Copy vitals | `raw/vitals.csv` | `bronze_vitals` |
-| Copy clinical_notes | `raw/clinical_notes.csv` | `bronze_clinical_notes` |
-| Copy claims | `raw/claims.csv` | `bronze_claims` |
+#### 3.3 Configure the Destination
 
-### Alt Step 3: Connect Activities in Sequence
+1. Select **Lakehouse** as the destination
+2. Select your `HealthcareLakehouse`
+3. Set **Root folder** to **Tables**
+4. For **Load settings**, select **Load to new table**
+5. Enter the **Table name**: `bronze_patients`
+6. Click **Next**
 
-1. Drag a **green arrow** (On Success) from `Copy patients` to `Copy encounters`
-2. Continue chaining all 7 activities in sequence
-3. The pipeline canvas should show: `Copy patients` → `Copy encounters` → `Copy conditions` → ... → `Copy claims`
+#### 3.4 Review and Save
 
-> **Tip:** You can also run all 7 activities in parallel by leaving them unconnected. Parallel execution is faster but uses more Spark capacity.
+1. On the **Review + create** page, verify your source and destination settings
+2. Clear the **Start data transfer immediately** checkbox (we'll run the full pipeline after adding all activities)
+3. Click **Save**
 
-### Alt Step 4: Run the Pipeline
+The Copy activity now appears in your pipeline canvas.
+
+### Alt Step 4: Add Copy Activities for Remaining Files
+
+Repeat the Copy Data assistant (or duplicate and modify the existing activity) for each remaining CSV file:
+
+1. **Right-click** the `Copy_patients` activity on the canvas → **Duplicate**
+2. Select the duplicated activity and update its settings:
+   - **Source tab**: Change the file path to the next CSV file (e.g., `raw/encounters.csv`)
+   - **Destination tab**: Change the table name (e.g., `bronze_encounters`)
+3. Rename the activity to match (e.g., `Copy encounters`)
+
+Repeat for all 7 files:
+
+| Activity Name | Source File (in Files/raw/) | Destination Table |
+|--------------|----------------------------|-------------------|
+| Copy patients | `patients.csv` | `bronze_patients` |
+| Copy encounters | `encounters.csv` | `bronze_encounters` |
+| Copy conditions | `conditions.csv` | `bronze_conditions` |
+| Copy medications | `medications.csv` | `bronze_medications` |
+| Copy vitals | `vitals.csv` | `bronze_vitals` |
+| Copy clinical_notes | `clinical_notes.csv` | `bronze_clinical_notes` |
+| Copy claims | `claims.csv` | `bronze_claims` |
+
+### Alt Step 5: Connect Activities (Optional)
+
+You can chain the activities in sequence or leave them to run in parallel:
+
+- **Sequential:** Drag a **green arrow** (On Success) from one activity to the next: `Copy patients` → `Copy encounters` → `Copy conditions` → ... → `Copy claims`
+- **Parallel:** Leave activities unconnected — they will all run at the same time (faster, but uses more capacity)
+
+> **Tip:** For this lab, parallel execution is fine since the files are small and independent.
+
+### Alt Step 6: Run the Pipeline
 
 1. Click **▷ Run** in the toolbar
-2. Watch the progress — each activity will show a green checkmark when complete
-3. The entire pipeline should complete in 2–3 minutes
+2. A confirmation dialog appears — click **Save and run**
+3. Watch the progress in the **Output** tab below the canvas — each activity will show a green checkmark when complete
+4. The entire pipeline should complete in 2–3 minutes
 
-### Alt Step 5: Verify Results
+### Alt Step 7: Verify Results
 
 1. Go to your `HealthcareLakehouse`
 2. Under **Tables**, verify all 7 `bronze_*` tables are present
 3. Click any table to preview the data — it should match the notebook approach
 
-### Alt Step 6: Schedule the Pipeline (Optional)
+> **Tip:** If tables don't appear immediately, click the **Refresh** icon (🔄) in the Tables section header.
 
-In a production setting, you'd schedule this pipeline to run daily:
+### Alt Step 8: Schedule the Pipeline (Optional)
+
+In a production setting, you'd schedule this pipeline to run on a recurring basis:
 
 1. Click **Schedule** in the pipeline toolbar
-2. Set frequency: Daily at 2:00 AM
+2. Set the frequency (e.g., Daily at 2:00 AM)
 3. Enable the schedule
 
-> **Key Takeaway:** Data Pipelines are ideal when you want visual monitoring, built-in retry logic, and email alerts on failure — features that are harder to build into notebooks.
+> **Key Takeaway:** Pipelines with the Copy Data assistant are ideal when you want a guided no-code experience, visual monitoring, built-in retry logic, and email alerts on failure — features that are harder to build into notebooks.
 
 ---
 
