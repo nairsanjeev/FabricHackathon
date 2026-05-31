@@ -81,11 +81,7 @@ You will be taken to the Lakehouse explorer view, which shows two main sections:
 
 ## Step 3: Upload the CSV Data Files to the Lakehouse
 
-Now we'll upload the synthetic healthcare CSV files to the Lakehouse `Files/raw/` folder. Choose **one** of the two options below:
-
----
-
-### Option A: Manual Upload (Browser)
+Now we'll upload the synthetic healthcare CSV files to the Lakehouse `Files/raw/` folder.
 
 1. In the Lakehouse explorer, click on **Files** in the left panel
 2. Click the **⋯ (ellipsis)** next to **Files** and select **New subfolder**
@@ -105,71 +101,7 @@ Now we'll upload the synthetic healthcare CSV files to the Lakehouse `Files/raw/
 
 Wait for all files to finish uploading. You should see all 7 files listed in the `raw` folder.
 
----
-
-### Option B: Use a Pipeline to Copy Files (No-Code)
-
-Instead of manually uploading through the browser, you can use a **Pipeline** with the **Copy Data assistant** to move files from your local machine into the Lakehouse. This mirrors how production data ingestion works.
-
-> **Reference:** This approach follows the same pattern as the Microsoft Learn quickstart: [Create your first pipeline to copy data](https://learn.microsoft.com/en-us/fabric/data-factory/create-first-pipeline-with-sample-data).
-
-#### B.1 Create a Pipeline
-
-1. Go back to your workspace (click the workspace name in the breadcrumb)
-2. Click **+ New item**
-3. Search for and select **Pipeline**
-4. Enter the name: `Upload Raw Files`
-5. Click **Create**
-
-#### B.2 Launch the Copy Data Assistant
-
-1. In the pipeline canvas, click **Copy data assistant**
-
-#### B.3 Configure the Source (Your Local Files)
-
-1. On the **Choose data source** page, search for and select **File system** as the data source
-2. Create a new connection:
-   - **Connection name**: `LocalFiles`
-   - **Host**: `localhost`  
-   - **User name / Password**: Your Windows credentials (or leave blank if running locally with the on-premises data gateway)
-3. Click **Connect**
-4. For **File path or folder**, browse to or enter: `C:\FabricHackathon\data`
-5. Check **Recursively** (not strictly needed here, but harmless)
-6. Set **File format** to **DelimitedText** (CSV)
-7. Check **First row as header**
-8. Click **Next** — you'll see a preview of the files
-
-> **Note:** Connecting to a local file system requires the **On-premises Data Gateway** to be installed on your machine. If you don't have a gateway configured, use **Option A** (manual upload) instead. See [Install an on-premises data gateway](https://learn.microsoft.com/en-us/data-integration/gateway/service-gateway-install) for setup instructions.
-
-#### B.4 Configure the Destination (Lakehouse Files)
-
-1. Select **Lakehouse** as the destination
-2. Select your `HealthcareLakehouse`
-3. Set **Root folder** to **Files**
-4. Set **Folder path** to: `raw`
-5. Set **File format** to **DelimitedText**
-6. Click **Next**
-
-#### B.5 Review and Run
-
-1. On the **Review + create** page, verify:
-   - **Source**: Local file system → `C:\FabricHackathon\data`
-   - **Destination**: `Files/raw/` in `HealthcareLakehouse`
-2. Leave **Start data transfer immediately** checked
-3. Click **Save + Run**
-
-The pipeline will copy all 7 CSV files from your local folder into the `Files/raw/` folder in the Lakehouse. This typically completes in under a minute.
-
----
-
-### Verify the Upload
-
-Regardless of which option you chose:
-
-1. Go to your `HealthcareLakehouse`
-2. Navigate to **Files** → **raw**
-3. Confirm all 7 CSV files are present
-4. Click on any CSV file (e.g., `patients.csv`) to preview its contents — you should see columns like `patient_id`, `first_name`, `last_name`, etc.
+> **Verify:** Click on any CSV file (e.g., `patients.csv`) to preview its contents. You should see columns like `patient_id`, `first_name`, `last_name`, etc.
 
 ---
 
