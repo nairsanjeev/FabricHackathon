@@ -79,9 +79,13 @@ You will be taken to the Lakehouse explorer view, which shows two main sections:
 
 ---
 
-## Step 3: Upload the CSV Data Files
+## Step 3: Upload the CSV Data Files to the Lakehouse
 
-Now we'll upload the synthetic healthcare CSV files to the Lakehouse.
+Now we'll upload the synthetic healthcare CSV files to the Lakehouse `Files/raw/` folder. Choose **one** of the two options below:
+
+---
+
+### Option A: Manual Upload (Browser)
 
 1. In the Lakehouse explorer, click on **Files** in the left panel
 2. Click the **⋯ (ellipsis)** next to **Files** and select **New subfolder**
@@ -89,7 +93,7 @@ Now we'll upload the synthetic healthcare CSV files to the Lakehouse.
 4. Click **Create**
 5. Click into the `raw` folder
 6. Click **Upload** → **Upload files**
-7. Navigate to the `data/` folder from the lab materials and select **all 7 CSV files**:
+7. Navigate to `C:\FabricHackathon\data` on your local machine and select **all 7 CSV files**:
    - `patients.csv`
    - `encounters.csv`
    - `conditions.csv`
@@ -101,7 +105,71 @@ Now we'll upload the synthetic healthcare CSV files to the Lakehouse.
 
 Wait for all files to finish uploading. You should see all 7 files listed in the `raw` folder.
 
-> **Verify:** Click on any CSV file (e.g., `patients.csv`) to preview its contents. You should see columns like `patient_id`, `first_name`, `last_name`, etc.
+---
+
+### Option B: Use a Pipeline to Copy Files (No-Code)
+
+Instead of manually uploading through the browser, you can use a **Pipeline** with the **Copy Data assistant** to move files from your local machine into the Lakehouse. This mirrors how production data ingestion works.
+
+> **Reference:** This approach follows the same pattern as the Microsoft Learn quickstart: [Create your first pipeline to copy data](https://learn.microsoft.com/en-us/fabric/data-factory/create-first-pipeline-with-sample-data).
+
+#### B.1 Create a Pipeline
+
+1. Go back to your workspace (click the workspace name in the breadcrumb)
+2. Click **+ New item**
+3. Search for and select **Pipeline**
+4. Enter the name: `Upload Raw Files`
+5. Click **Create**
+
+#### B.2 Launch the Copy Data Assistant
+
+1. In the pipeline canvas, click **Copy data assistant**
+
+#### B.3 Configure the Source (Your Local Files)
+
+1. On the **Choose data source** page, search for and select **File system** as the data source
+2. Create a new connection:
+   - **Connection name**: `LocalFiles`
+   - **Host**: `localhost`  
+   - **User name / Password**: Your Windows credentials (or leave blank if running locally with the on-premises data gateway)
+3. Click **Connect**
+4. For **File path or folder**, browse to or enter: `C:\FabricHackathon\data`
+5. Check **Recursively** (not strictly needed here, but harmless)
+6. Set **File format** to **DelimitedText** (CSV)
+7. Check **First row as header**
+8. Click **Next** — you'll see a preview of the files
+
+> **Note:** Connecting to a local file system requires the **On-premises Data Gateway** to be installed on your machine. If you don't have a gateway configured, use **Option A** (manual upload) instead. See [Install an on-premises data gateway](https://learn.microsoft.com/en-us/data-integration/gateway/service-gateway-install) for setup instructions.
+
+#### B.4 Configure the Destination (Lakehouse Files)
+
+1. Select **Lakehouse** as the destination
+2. Select your `HealthcareLakehouse`
+3. Set **Root folder** to **Files**
+4. Set **Folder path** to: `raw`
+5. Set **File format** to **DelimitedText**
+6. Click **Next**
+
+#### B.5 Review and Run
+
+1. On the **Review + create** page, verify:
+   - **Source**: Local file system → `C:\FabricHackathon\data`
+   - **Destination**: `Files/raw/` in `HealthcareLakehouse`
+2. Leave **Start data transfer immediately** checked
+3. Click **Save + Run**
+
+The pipeline will copy all 7 CSV files from your local folder into the `Files/raw/` folder in the Lakehouse. This typically completes in under a minute.
+
+---
+
+### Verify the Upload
+
+Regardless of which option you chose:
+
+1. Go to your `HealthcareLakehouse`
+2. Navigate to **Files** → **raw**
+3. Confirm all 7 CSV files are present
+4. Click on any CSV file (e.g., `patients.csv`) to preview its contents — you should see columns like `patient_id`, `first_name`, `last_name`, etc.
 
 ---
 
@@ -236,127 +304,6 @@ encounters_df.groupBy("facility_name").count().orderBy("count", ascending=False)
 ```
 
 You should see a mix of insurance types (Medicare ~40%, Commercial ~30%, Medicaid ~20%), encounter types (ED, Inpatient, Outpatient, Ambulatory), and common diagnoses like hypertension, diabetes, and heart failure.
-
----
-
-## Alternate Path: Pipeline with Copy Data Assistant (No-Code Bronze Ingestion)
-
-Instead of writing a Spark notebook for Bronze ingestion, you can use a **Fabric Pipeline** with the **Copy Data assistant** — a no-code/low-code approach. This method is common in production environments where data engineers want visual, schedulable, and monitorable pipelines.
-
-> **Assumption:** You have already downloaded the lab data files to your local machine at `C:\FabricHackathon\data` (see the Pre-Requisite section at the top of this module).
-
-### Why Choose a Pipeline?
-
-| Approach | Best For |
-|----------|----------|
-| **Notebook** (Steps 4–5 above) | Learning, flexibility, custom logic, rapid prototyping |
-| **Pipeline** (this section) | Production workloads, scheduling, monitoring, no-code preference |
-
-Both approaches produce identical Bronze Delta tables.
-
-> **Reference:** This approach follows the same pattern as the Microsoft Learn quickstart: [Create your first pipeline to copy data](https://learn.microsoft.com/en-us/fabric/data-factory/create-first-pipeline-with-sample-data).
-
-### Alt Step 1: Upload CSV Files to the Lakehouse
-
-Before creating the pipeline, upload your local CSV files to the Lakehouse so the pipeline can access them as a source.
-
-1. Go to your `HealthcareLakehouse`
-2. In the Lakehouse explorer, click on **Files** in the left panel
-3. Click the **⋯ (ellipsis)** next to **Files** and select **New subfolder**
-4. Name the subfolder: `raw`
-5. Click **Create**
-6. Click into the `raw` folder
-7. Click **Upload** → **Upload files**
-8. Navigate to `C:\FabricHackathon\data` on your local machine and select **all 7 CSV files**:
-   - `patients.csv`
-   - `encounters.csv`
-   - `conditions.csv`
-   - `medications.csv`
-   - `vitals.csv`
-   - `clinical_notes.csv`
-   - `claims.csv`
-9. Click **Upload**
-
-Wait for all files to finish uploading. You should see all 7 files listed in the `raw` folder.
-
-### Alt Step 2: Create a Pipeline
-
-1. Go to your workspace
-2. Click **+ New item**
-3. Search for and select **Pipeline**
-4. Enter the name: `Bronze Ingestion Pipeline`
-5. Click **Create**
-
-You will be taken to the pipeline canvas where you can build your data flow.
-
-### Alt Step 3: Copy the Entire Folder in One Shot
-
-The fastest approach is a single **Copy activity** that points at the entire `raw/` folder. The Copy activity will automatically create one table per CSV file — no loops, no duplication, no expressions.
-
-#### 3.1 Add a Copy Data Activity
-
-1. In the pipeline canvas, click **Copy data assistant** (the button at the top of the canvas)
-
-#### 3.2 Configure the Source (Folder-Level)
-
-1. On the **Choose data source** page:
-   - **Data store type**: Select **Workspace**
-   - **Workspace data store type**: Select **Lakehouse**
-   - **Lakehouse**: Select `HealthcareLakehouse`
-   - **Root folder**: Select **Files**
-   - Browse to the **`raw`** folder — select the **folder itself** (do NOT drill into individual files)
-   - **File format**: Select **DelimitedText**
-   - Check **First row as header**
-2. Click **Next** — you'll see a preview showing all CSV files in the folder
-
-#### 3.3 Configure the Destination
-
-1. Select **Lakehouse** as the destination
-2. Select your `HealthcareLakehouse`
-3. Set **Root folder** to **Tables**
-4. For **Load settings**, select **Load to new table**
-5. Set **Table name** to: **`bronze_`** (a prefix — the Copy activity will append the source file name automatically)
-   
-   > **Note:** If the wizard does not allow a prefix, you can leave the table name mapping as-is. The activity will create tables named after the source files (e.g., `patients`, `encounters`). You can rename them later, or simply use `patients` instead of `bronze_patients` for the rest of the lab.
-
-6. Click **Next**
-
-#### 3.4 Review and Run
-
-1. On the **Review + create** page, verify:
-   - **Source**: `Files/raw/` (folder, multiple files)
-   - **Destination**: `Tables/` in `HealthcareLakehouse`
-2. Leave **Start data transfer immediately** checked
-3. Click **Save + Run**
-
-The single Copy activity will process all 7 CSV files and create the corresponding tables in your Lakehouse. This typically completes in under 2 minutes.
-
-### Alt Step 4: Verify Results
-
-1. Go to your `HealthcareLakehouse`
-2. Under **Tables**, verify that tables have been created for all 7 datasets:
-   - `bronze_patients` (or `patients`)
-   - `bronze_encounters` (or `encounters`)
-   - `bronze_conditions` (or `conditions`)
-   - `bronze_medications` (or `medications`)
-   - `bronze_vitals` (or `vitals`)
-   - `bronze_clinical_notes` (or `clinical_notes`)
-   - `bronze_claims` (or `claims`)
-3. Click any table to preview the data
-
-> **Tip:** If tables don't appear immediately, click the **Refresh** icon (🔄) in the Tables section header.
-
-> **Note:** If the tables were created without the `bronze_` prefix, you can either rename them manually or simply use the file-name-based table names throughout the rest of the lab. The downstream notebooks reference `bronze_*` tables — adjust the table names in Module 2 if needed.
-
-### Alt Step 5: Schedule the Pipeline (Optional)
-
-In a production setting, you'd schedule this pipeline to run on a recurring basis:
-
-1. Click **Schedule** in the pipeline toolbar
-2. Set the frequency (e.g., Daily at 2:00 AM)
-3. Enable the schedule
-
-> **Key Takeaway:** The folder-level Copy activity is the simplest possible no-code approach — one activity, one configuration, all files ingested. No loops, no expressions, no duplication.
 
 ---
 
