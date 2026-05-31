@@ -289,94 +289,66 @@ Wait for all files to finish uploading. You should see all 7 files listed in the
 
 You will be taken to the pipeline canvas where you can build your data flow.
 
-### Alt Step 3: Use a ForEach Activity to Copy All Files at Once
+### Alt Step 3: Copy the Entire Folder in One Shot
 
-Instead of creating a separate Copy activity for each CSV file, we'll use a **ForEach** activity that loops over all 7 files with a single parameterized Copy activity inside. This is the fastest and most maintainable approach.
+The fastest approach is a single **Copy activity** that points at the entire `raw/` folder. The Copy activity will automatically create one table per CSV file — no loops, no duplication, no expressions.
 
-#### 3.1 Add a ForEach Activity
+#### 3.1 Add a Copy Data Activity
 
-1. In the pipeline canvas, click **Add activity** → **ForEach**
-2. Rename the activity to: `ForEach CSV File`
-3. In the **Settings** tab of the ForEach activity:
-   - Check **Sequential** (uncheck if you want parallel execution — parallel is faster)
-   - In the **Items** field, click **Add dynamic content** (or click in the field and select the pipeline expression builder)
-   - Enter the following expression:
+1. In the pipeline canvas, click **Copy data assistant** (the button at the top of the canvas)
 
-```json
-@createArray('patients','encounters','conditions','medications','vitals','clinical_notes','claims')
-```
+#### 3.2 Configure the Source (Folder-Level)
 
-This creates an array of the 7 file names that the loop will iterate over.
-
-#### 3.2 Add a Copy Activity Inside the ForEach
-
-1. Click the **pencil icon** (✏️) on the ForEach activity to open its inner canvas
-2. Click **Add activity** → **Copy data**
-3. Rename the activity to: `Copy CSV to Bronze`
-
-#### 3.3 Configure the Source (Parameterized)
-
-1. Select the Copy activity and go to the **Source** tab:
+1. On the **Choose data source** page:
    - **Data store type**: Select **Workspace**
    - **Workspace data store type**: Select **Lakehouse**
    - **Lakehouse**: Select `HealthcareLakehouse`
    - **Root folder**: Select **Files**
-   - **File path type**: Select **File path**
-   - For the file path, click **Add dynamic content** and enter:
-
-```
-raw/@{item()}.csv
-```
-
-   - **File format**: **DelimitedText**
+   - Browse to the **`raw`** folder — select the **folder itself** (do NOT drill into individual files)
+   - **File format**: Select **DelimitedText**
    - Check **First row as header**
+2. Click **Next** — you'll see a preview showing all CSV files in the folder
 
-#### 3.4 Configure the Destination (Parameterized)
+#### 3.3 Configure the Destination
 
-1. Go to the **Destination** tab:
-   - **Data store type**: Select **Workspace**
-   - **Workspace data store type**: Select **Lakehouse**
-   - **Lakehouse**: Select `HealthcareLakehouse`
-   - **Root folder**: Select **Tables**
-   - For **Table name**, click **Add dynamic content** and enter:
+1. Select **Lakehouse** as the destination
+2. Select your `HealthcareLakehouse`
+3. Set **Root folder** to **Tables**
+4. For **Load settings**, select **Load to new table**
+5. Set **Table name** to: **`bronze_`** (a prefix — the Copy activity will append the source file name automatically)
+   
+   > **Note:** If the wizard does not allow a prefix, you can leave the table name mapping as-is. The activity will create tables named after the source files (e.g., `patients`, `encounters`). You can rename them later, or simply use `patients` instead of `bronze_patients` for the rest of the lab.
 
-```
-bronze_@{item()}
-```
+6. Click **Next**
 
-   - **Table action**: Select **Overwrite**
+#### 3.4 Review and Run
 
-> **How it works:** The `@{item()}` expression resolves to the current value in the loop — so on the first iteration it's `patients`, then `encounters`, etc. This means the source reads `raw/patients.csv` and writes to table `bronze_patients`, then `raw/encounters.csv` → `bronze_encounters`, and so on for all 7 files.
+1. On the **Review + create** page, verify:
+   - **Source**: `Files/raw/` (folder, multiple files)
+   - **Destination**: `Tables/` in `HealthcareLakehouse`
+2. Leave **Start data transfer immediately** checked
+3. Click **Save + Run**
 
-#### 3.5 Go Back to the Main Pipeline
+The single Copy activity will process all 7 CSV files and create the corresponding tables in your Lakehouse. This typically completes in under 2 minutes.
 
-Click the pipeline name in the breadcrumb at the top to return to the main pipeline canvas. You'll see your ForEach activity containing the Copy activity.
-
-### Alt Step 4: Run the Pipeline
-
-1. Click **▷ Run** in the toolbar
-2. A confirmation dialog appears — click **Save and run**
-3. Watch the progress in the **Output** tab below the canvas — the ForEach activity will iterate through all 7 files
-4. The entire pipeline should complete in 2–3 minutes
-
-> **Tip:** If you unchecked **Sequential** in Step 3.1, all 7 copies will run in parallel, completing in under a minute.
-
-### Alt Step 5: Verify Results
+### Alt Step 4: Verify Results
 
 1. Go to your `HealthcareLakehouse`
-2. Under **Tables**, verify all 7 `bronze_*` tables are present:
-   - `bronze_patients`
-   - `bronze_encounters`
-   - `bronze_conditions`
-   - `bronze_medications`
-   - `bronze_vitals`
-   - `bronze_clinical_notes`
-   - `bronze_claims`
-3. Click any table to preview the data — it should match the notebook approach
+2. Under **Tables**, verify that tables have been created for all 7 datasets:
+   - `bronze_patients` (or `patients`)
+   - `bronze_encounters` (or `encounters`)
+   - `bronze_conditions` (or `conditions`)
+   - `bronze_medications` (or `medications`)
+   - `bronze_vitals` (or `vitals`)
+   - `bronze_clinical_notes` (or `clinical_notes`)
+   - `bronze_claims` (or `claims`)
+3. Click any table to preview the data
 
 > **Tip:** If tables don't appear immediately, click the **Refresh** icon (🔄) in the Tables section header.
 
-### Alt Step 6: Schedule the Pipeline (Optional)
+> **Note:** If the tables were created without the `bronze_` prefix, you can either rename them manually or simply use the file-name-based table names throughout the rest of the lab. The downstream notebooks reference `bronze_*` tables — adjust the table names in Module 2 if needed.
+
+### Alt Step 5: Schedule the Pipeline (Optional)
 
 In a production setting, you'd schedule this pipeline to run on a recurring basis:
 
@@ -384,7 +356,7 @@ In a production setting, you'd schedule this pipeline to run on a recurring basi
 2. Set the frequency (e.g., Daily at 2:00 AM)
 3. Enable the schedule
 
-> **Key Takeaway:** Using a ForEach activity with a parameterized Copy activity is the fastest no-code approach — one activity handles all 7 files, and adding a new file in the future only requires adding its name to the array. No duplication, no manual repetition.
+> **Key Takeaway:** The folder-level Copy activity is the simplest possible no-code approach — one activity, one configuration, all files ingested. No loops, no expressions, no duplication.
 
 ---
 
