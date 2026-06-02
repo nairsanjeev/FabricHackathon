@@ -345,7 +345,7 @@ This visual goes on a **separate page** to keep the main monitoring view unclutt
 1. In the **Pages** panel on the left, click the **+** icon to add a new page
 2. Rename the first page (Page 1) to `Patient Monitoring`
 3. Rename the new page to `Department Alerts`
-4. On the **Department Alerts** page, click **Add visual** and select **Table**, then enter this query:
+4. On the **Department Alerts** page, click **Add visual** and select **Heatmap**, then enter this query:
 ```kql
 PatientVitals
 | where todatetime(timestamp) > ago(5m)
@@ -355,7 +355,7 @@ PatientVitals
     by facility_name, department
 | extend alert_pct = round(todouble(sirs_alerts) / todouble(total_patients) * 100, 1)
 ```
-2. Visual type: **Table** or **Heatmap**
+2. Visual type: **Heatmap**
 3. Title: `Department Alert Summary`
 
 ### Step 11: Set Continuous Auto-Refresh
