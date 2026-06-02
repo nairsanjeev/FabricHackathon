@@ -35,6 +35,11 @@ To create a semantic model with the ability to select tables, you must start fro
 
 1. In the **SQL analytics endpoint** view, click **New semantic model** in the top toolbar
 2. Give it a name: **HealthcareLakehouse-SemanticModel** (or keep the suggested name)
+3. For **Storage mode**, select **Direct Lake on SQL**
+
+![New semantic model dialog — select Direct Lake on SQL](images/new_semantic_model_directlake.png)
+
+> **Note:** When creating the semantic model from the SQL analytics endpoint, choose **Direct Lake on SQL**. This mode reads the tables through the SQL analytics endpoint layer, which ensures reliable table discovery and query routing for Lakehouse tables.
 
 ### Step 3: Select Tables for the Model
 
