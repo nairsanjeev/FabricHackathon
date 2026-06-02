@@ -151,6 +151,17 @@ You **must publish the Eventstream before the connection string becomes availabl
 
 Even though we configured the destination table in Step 5, the table may not actually be created in the KQL database until data flows through the Eventstream. To avoid `Failed to resolve table` errors when building the dashboard, we'll create a small notebook that creates the table and inserts a few sample rows directly in the KQL database.
 
+**First, copy your Eventhouse URI (you'll need it in the notebook):**
+
+1. Go to your workspace → click on `PatientVitalsEventhouse`
+2. Click on the KQL database
+3. Click **Copy URI** in the toolbar, and select **Query URI**
+4. It will look like: `https://xyz123abc.kusto.fabric.microsoft.com`
+
+![Eventhouse system overview showing Copy URI button for Query URI](images/Module4-Get%20Kusto%20URI%20from%20QUery%20URI%20in%20Eventhouse.png)
+
+**Now create the notebook:**
+
 1. Go to your workspace
 2. Click **+ New item** → **Notebook**
 3. Rename to: `Seed PatientVitals Table`
@@ -166,14 +177,6 @@ Paste the following in **Cell 1**:
 KUSTO_URI = "https://<your-eventhouse-uri>.kusto.fabric.microsoft.com"
 DATABASE_NAME = "PatientVitalsEventhouse"  # Usually same name as the Eventhouse
 ```
-
-> **How to find your Eventhouse URI:**
-> 1. Go to your workspace → click on `PatientVitalsEventhouse`
-> 2. Click on the KQL database
-> 3. Click **Copy URI** in the toolbar, and select **Query URI**
-> 4. It will look like: `https://xyz123abc.kusto.fabric.microsoft.com`
-
-![Eventhouse system overview showing Copy URI button for Query URI](images/Module4-Get%20Kusto%20URI%20from%20QUery%20URI%20in%20Eventhouse.png)
 
 Paste the following in **Cell 2**:
 
