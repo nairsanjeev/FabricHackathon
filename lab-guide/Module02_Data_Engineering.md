@@ -50,7 +50,7 @@ Instead of creating a notebook from scratch and pasting code cell-by-cell, we've
 
 1. Click **▶ Run all** at the top of the notebook
 
-![Click Run all to execute the notebook](images/Module2-runall.png)
+![Click Run all to execute the notebook](images/Module2%20-%20run%20all.png)
 
 2. The notebook will process all Silver and Gold tables end-to-end (~5 minutes)
 3. Each cell has detailed markdown above it explaining:
@@ -84,7 +84,7 @@ Instead of creating a notebook from scratch and pasting code cell-by-cell, we've
 
 Go back to your `HealthcareLakehouse` and refresh the Tables section. You should now have the following tables:
 
-![Silver and Gold tables visible in the Lakehouse Explorer](images/Module2-silver-gold-tables.png)
+![Silver and Gold tables visible in the Lakehouse Explorer](images/Module2-verifytables.png)
 
 **Gold Tables:**
 | Table | Description | Key Metric |
