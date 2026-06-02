@@ -41,6 +41,9 @@ In this module, we'll monitor for **temperature + heart rate + respiratory rate*
 1. Go to your workspace
 2. Click **+ New item**
 3. Search for and select **Eventhouse**
+
+![New item dialog with Eventhouse highlighted](images/Module4-NewEventHouse.png)
+
 4. Name: `PatientVitalsEventhouse`
 5. Click **Create**
 
@@ -61,6 +64,9 @@ This will automatically create a KQL database inside the Eventhouse.
 1. Go to your workspace
 2. Click **+ New item**
 3. Search for and select **Eventstream**
+
+![New item dialog with Eventstream highlighted](images/Module4-NewEVentStream.png)
+
 4. Name: `PatientVitalsStream`
 5. Click **Create**
 
@@ -70,7 +76,13 @@ The Eventstream needs a source that your simulator notebook can send data to. We
 
 1. In the Eventstream editor, click **Add source** (in the toolbar)
 2. From the dropdown, select **Custom endpoint**
+
+![Add source dropdown with Custom endpoint highlighted](images/Module4-customeendpoint.png)
+
 3. Name: `VitalsSimulator`
+
+![Custom endpoint source name configuration](images/Module4-CustomEndpointSourceName.png)
+
 4. Click **Add**
 
 ### Step 5: Add the Eventhouse as a Destination
@@ -79,6 +91,9 @@ Now we need to route the incoming data to our Eventhouse for storage and KQL que
 
 1. In the Eventstream canvas, click **Add destination** (in the toolbar)
 2. Select **Eventhouse** from the list
+
+![Add destination menu with Eventhouse highlighted](images/Module4-AddEvenhouseasDestination.png)
+
 3. Configure the destination:
    - **Data ingestion mode**: Select **Event processing before ingestion** (not "Direct ingestion" — Direct ingestion does not allow creating new tables)
    - **Destination name**: `PatientVitalsDB`
@@ -87,6 +102,8 @@ Now we need to route the incoming data to our Eventhouse for storage and KQL que
    - **KQL Database**: Select the database (same name as the Eventhouse)
    - **Destination table**: Click **Create new** → type `PatientVitals` → click **Done**
    - **Input data format**: Select **JSON**
+
+![Eventhouse destination configuration with Create new table highlighted](images/Module4-CreateNewKQLDestinationTable%20in%20Destination%20mapping.png)
 
 > ⚠️ **Critical:** You **must** select **Event processing before ingestion** as the ingestion mode — this is what enables the **Create new** button for the destination table. If you select "Direct ingestion" instead, you will not be able to create a new table and the **Save** button will remain disabled. Make sure the table name `PatientVitals` is confirmed before proceeding.
 
@@ -118,6 +135,9 @@ You **must publish the Eventstream before the connection string becomes availabl
    - **Event Hub name** — e.g., `es_xxxxxxxx`
    - **Connection string–primary key** — starts with `Endpoint=sb://...`
 7. Click the **copy** icon next to the **Connection string–primary key** to copy it
+
+![Eventstream connection details showing Event Hub protocol and connection string](images/Module4-GetCOnnectionstrig.png)
+
 8. **Save this connection string** — you'll paste it into the simulator notebook later
 
 > **The connection string looks like:**
@@ -152,6 +172,8 @@ DATABASE_NAME = "PatientVitalsEventhouse"  # Usually same name as the Eventhouse
 > 2. Click on the KQL database
 > 3. Click **Copy URI** in the toolbar, and select **Query URI**
 > 4. It will look like: `https://xyz123abc.kusto.fabric.microsoft.com`
+
+![Eventhouse system overview showing Copy URI button for Query URI](images/Module4-Get%20Kusto%20URI%20from%20QUery%20URI%20in%20Eventhouse.png)
 
 Paste the following in **Cell 2**:
 
