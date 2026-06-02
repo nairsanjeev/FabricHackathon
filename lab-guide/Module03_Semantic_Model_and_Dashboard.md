@@ -29,6 +29,8 @@ To create a semantic model with the ability to select tables, you must start fro
 2. In the top-right corner of the Lakehouse view, click the dropdown that says **Lakehouse** and switch to **SQL analytics endpoint**
 3. You should now see the SQL endpoint view with your tables listed in the left panel
 
+![SQL Analytics Endpoint view with New semantic model button](images/NewSemanticModefromSQLEndpoint.png)
+
 > ⚠️ **Important:** If you try to create a semantic model directly from the Lakehouse view, you may not be able to select individual tables. Always switch to the **SQL analytics endpoint** first.
 
 ### Step 2: Create a New Semantic Model
@@ -37,7 +39,7 @@ To create a semantic model with the ability to select tables, you must start fro
 2. Give it a name: **HealthcareLakehouse-SemanticModel** (or keep the suggested name)
 3. For **Storage mode**, select **Direct Lake on SQL**
 
-![New semantic model dialog — select Direct Lake on SQL](images/new_semantic_model_directlake.png)
+![New semantic model dialog — select Direct Lake on SQL](images/Modlue3-Semantic%20Mode%20-%20Direct%20Lake%20on%20SQL.png)
 
 > **Note:** When creating the semantic model from the SQL analytics endpoint, choose **Direct Lake on SQL**. This mode reads the tables through the SQL analytics endpoint layer, which ensures reliable table discovery and query routing for Lakehouse tables.
 
@@ -60,9 +62,11 @@ The semantic model opens in the **Model view** (diagram view) where you can see 
 
 ### Step 4: Create Relationships
 
-> ⚠️ **Important:** Before creating relationships, make sure the semantic model is in **Edit mode**. Look at the top toolbar — if you see a button that says **Edit**, click it to switch from read-only to edit mode. You should see the toolbar options change (e.g., **New measure**, **Manage relationships** become available). If the model is not in edit mode, you won't be able to drag columns or create relationships.
+> ⚠️ **Important:** Before creating relationships, make sure the semantic model is in **Edit mode**. Look at the top-right corner — if you see **Viewing**, click the pencil icon and select **Editing** to switch to edit mode. You should see the toolbar options change (e.g., **New measure**, **Manage relationships** become available).
 
-In the Model view (diagram view), create the following relationships:
+![Semantic model in Edit mode showing tables](images/Moldule3-SemanticModel%20Edit%20Mode.png)
+
+Create the following relationships:
 
 | From Table | From Column | To Table | To Column | Cardinality |
 |------------|-------------|----------|-----------|-------------|
@@ -72,18 +76,28 @@ In the Model view (diagram view), create the following relationships:
 | `gold_ed_utilization` | `patient_id` | `silver_patients` | `patient_id` | Many-to-One |
 | `gold_population_health` | `patient_id` | `silver_patients` | `patient_id` | One-to-One |
 
-**To create a relationship:**
-1. In the diagram view, locate the **From Table** (e.g., `gold_encounter_summary`). You may need to scroll or rearrange the tables by dragging their title bars.
-2. Find the **From Column** inside that table (e.g., `patient_id`). The columns are listed within each table box.
-3. **Click and hold** on that column name, then **drag** it to the matching **To Column** in the **To Table** (e.g., `patient_id` in `silver_patients`). You'll see a line appear as you drag.
-4. When you release, a **Create relationship** dialog will appear. Verify:
-   - The correct tables and columns are shown
-   - The **Cardinality** matches the table above (e.g., Many-to-One)
-   - **Cross-filter direction** is set to **Single** (default is fine)
-5. Click **OK** to create the relationship. A line connecting the two tables will now appear in the diagram.
-6. Repeat for each relationship in the table above.
+**To create relationships using Manage Relationships:**
 
-> **Tip:** If you don't see the Model diagram view, look for a button that says **Open data model** or switch to the **Model** tab. You can also use **Manage relationships** in the toolbar to create or edit relationships via a dialog instead of dragging.
+1. In the toolbar, click **Manage relationships**
+
+![Manage relationships button in the toolbar](images/Module%203%20-%20Manage%20Relationship%20in%20Semantic%20Model.png)
+
+2. Click **New relationship**
+3. In the **New relationship** dialog:
+   - Select the **From table** (e.g., `gold_encounter_summary`)
+   - Select the **From column** (e.g., `patient_id`)
+   - Select the **To table** (e.g., `silver_patients`)
+   - Select the **To column** (e.g., `patient_id`)
+   - Set the **Cardinality** (e.g., Many to one)
+   - Leave **Cross-filter direction** as **Single**
+   - Check **Make this relationship active**
+   - Check **Assume referential integrity**
+4. Click **OK** to create the relationship
+5. Repeat for each relationship in the table above
+
+![New relationship dialog showing configuration](images/Module3-New%20relationshipfrom%20Manage%20relationship%20and%20Assume%20referential%20integrity.png)
+
+> **Tip:** Using **Manage relationships** lets you create all relationships in one place without dragging columns across the diagram.
 
 ### Step 5: Create DAX Measures
 
