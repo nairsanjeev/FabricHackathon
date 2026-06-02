@@ -30,6 +30,8 @@ Instead of creating a notebook from scratch and pasting code cell-by-cell, we've
 
 2. In your Fabric workspace, click **Import** → **Notebook** → **From this computer**
 
+![Import notebook from this computer](images/Module2-importnotebook.png)
+
 3. Select the downloaded `.ipynb` file and click **Upload**
 
 4. Open the imported notebook
@@ -37,6 +39,9 @@ Instead of creating a notebook from scratch and pasting code cell-by-cell, we've
 ### Step 2: Attach the Lakehouse
 
 1. In the **Explorer** pane on the left, click **Add data items** → **From OneLake catalog**
+
+![Add data items from OneLake catalog](images/Module2-attachlakehousetonotebook.png)
+
 2. Search for `HealthcareLakehouse`
 3. ⚠️ You will see **two items** with the same name. One is the **Lakehouse** and the other is the **SQL Analytics Endpoint**. **Select the Lakehouse** (blue house/database icon). Click on the item details if needed to confirm the type is **Lakehouse**, not SQL Analytics Endpoint.
 4. Click **Add**
