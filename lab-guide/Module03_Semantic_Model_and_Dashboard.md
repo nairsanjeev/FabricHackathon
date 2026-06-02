@@ -104,7 +104,10 @@ Create the following relationships:
 Now we'll add business measures using DAX (Data Analysis Expressions). These measures calculate KPIs that update dynamically based on filters.
 
 1. Click on the `gold_readmissions` table
-2. Click **New measure** in the toolbar
+2. Right-click the table name (or click the **...** menu on the table) and select **New measure**
+
+![New measure option from table context menu](images/Module3-NewMeasure.png)
+
 3. Enter each measure below, clicking **New measure** for each one:
 
 #### Readmission Measures (on `gold_readmissions` table)
@@ -219,10 +222,15 @@ Instead of manually building each visual, use **Power BI Copilot** to generate r
 
 ### Step 6: Create a New Report and Open Copilot
 
-1. From the Semantic Model view, click **New Report** in the toolbar (or go to your workspace and click **+ New item** → **Report** → **Pick a semantic model** → select the HealthcareLakehouse model)
+1. From the Semantic Model view, click **File** → **Create new report**
+
+![File menu showing Create new report option](images/Module3-CreateNewReport.png)
+
 2. You will be taken to the Power BI report editor
 3. In the report editor, look for the **Copilot** icon in the toolbar (it looks like a sparkle ✨)
 4. Click it to open the Copilot pane on the right side
+
+![Power BI report editor with Copilot pane open](images/Module3-ReportEditorWithCopilot.png)
 
 > **Note:** If you don't see the Copilot icon, Copilot may not be enabled for your tenant. Use the **Alternate Path** (manual approach) below instead.
 
