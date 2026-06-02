@@ -363,18 +363,14 @@ PatientVitals
 This is the key step that makes the dashboard update automatically as data flows in.
 
 1. At the top of the dashboard, click the **Manage** tab in the ribbon
-2. Look for the **Auto refresh** button and click it (or find it under the dashboard toolbar area)
-3. Toggle **Auto refresh** to **On**
-4. Set the **Minimum time interval** to **30 seconds**
-5. Click **Apply**
-6. You should now see a small refresh indicator at the top of the dashboard showing the countdown to the next refresh
+2. Click **Auto refresh** in the toolbar
+3. Toggle **Auto refresh** to **Enabled**
+4. Set the **Minimum time interval** to **10 seconds**
+5. Set the **Default refresh rate** to **10 seconds**
 
-> **Alternative method:** If you don't see the Auto refresh button in the Manage tab:
-> 1. Click the **pencil/Edit** icon at the top-right of the dashboard
-> 2. In editing mode, click the **⚙️ gear icon** (Settings) at the top
-> 3. Look for **Auto refresh** in the settings panel
-> 4. Toggle it **On** and set the interval to **30 seconds**
-> 5. Click **Apply** and then **Save** the dashboard
+![Manage tab showing Auto refresh settings with Enabled toggle and 10-second intervals](images/Module4-RTIDshboardRefresh.png)
+
+6. You should now see the dashboard auto-refreshing at the configured interval
 
 > **Note:** The visuals will show empty or zero results until you start the simulator in Part D. This is expected.
 
