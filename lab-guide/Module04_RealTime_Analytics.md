@@ -27,7 +27,7 @@ In this module, we'll monitor for **temperature + heart rate + respiratory rate*
 
 1. Create an **Eventhouse** with a KQL database
 2. Create an **Eventstream** to receive vitals data and configure the destination table
-3. Build a **Real-Time Dashboard** with auto-refresh (tiles show empty until data flows)
+3. Build a **Real-Time Dashboard** with auto-refresh (visuals show empty until data flows)
 4. Run a **simulator notebook** that pushes vitals data to the Eventstream
 5. **Watch the dashboard update in real time** as the simulator runs
 6. Write **KQL queries** for deeper clinical analysis
@@ -274,16 +274,23 @@ The `PatientVitals` table now exists in the KQL database with sample data, so da
 4. Click **Create**
 5. After the dashboard opens, you will see a prompt: **"The Workspace contains a single KQL database, would you like to use it as a data source?"** — click **Yes**
    - This automatically connects the dashboard to the `PatientVitalsEventhouse` KQL database
-   - If you don't see this prompt, you can add the data source manually in Step 10 when adding your first tile
+   - If you don't see this prompt, you can add the data source manually in Step 10 when adding your first visual
 
-### Step 10: Add Dashboard Tiles
+### Step 10: Add Dashboard Visuals
+
+In the new Real-Time Dashboard interface, you add visuals (not tiles) using the **Add visual** button in the toolbar.
+
+![Real-Time Dashboard editor showing Add visual button and visual type options](images/Module4-ReatimeDashboardVisual.png)
 
 > ⚠️ **Note:** If your table has a different name than `PatientVitals` (as shown by `.show tables`), replace `PatientVitals` with your actual table name in each query below.
 
-> 💡 **Tip:** For each tile, after entering the query, click **Apply changes** first. The visual formatting options (visual type, title, conditional formatting) only become available after you apply the query. Apply changes → then configure the visual settings.
+> 💡 **Tip:** For each visual, after entering the query, click **Apply changes** first. The visual formatting options (visual type, title, conditional formatting) only become available after you apply the query. Apply changes → then configure the visual settings.
 
-#### Tile 1: SIRS Alert Count (Big Number)
-1. Click **+ Add tile**
+#### Visual 1: SIRS Alert Count (Big Number)
+1. Click **Add visual** in the toolbar and select **Stat**
+
+![Add visual dropdown showing Stat option highlighted](images/Module4-RealtimeDashboardVisual-Stat.png)
+
 2. Select your KQL database as the data source
 3. Enter this query:
 ```kql
@@ -296,8 +303,8 @@ PatientVitals
 5. Title: `Active SIRS Alerts`
 6. Add conditional formatting: Red if > 0
 
-#### Tile 2: Patient Vitals Grid
-1. Add a new tile with this query:
+#### Visual 2: Patient Vitals Grid
+1. Click **Add visual** and select **Table**, then enter this query:
 ```kql
 PatientVitals
 | summarize arg_max(timestamp, *) by patient_id
@@ -309,8 +316,8 @@ PatientVitals
 3. Title: `Current Patient Vitals`
 4. Add conditional formatting on `sirs_alert` column (highlight TRUE in red)
 
-#### Tile 3: Heart Rate Trend
-1. Add a tile:
+#### Visual 3: Heart Rate Trend
+1. Click **Add visual** and select **Time chart**, then enter this query:
 ```kql
 PatientVitals
 | where patient_id in ("RT-P001", "RT-P002", "RT-P003")
@@ -321,8 +328,8 @@ PatientVitals
 2. Visual type: **Time chart**
 3. Title: `Heart Rate — High-Risk Patients`
 
-#### Tile 4: SpO2 Monitor
-1. Add a tile:
+#### Visual 4: SpO2 Monitor
+1. Click **Add visual** and select **Time chart**, then enter this query:
 ```kql
 PatientVitals
 | where todatetime(timestamp) > ago(10m)
@@ -332,8 +339,8 @@ PatientVitals
 2. Visual type: **Time chart**
 3. Title: `Average SpO2 by Facility`
 
-#### Tile 5: Department Alert Heat Map
-1. Add a tile:
+#### Visual 5: Department Alert Heat Map
+1. Click **Add visual** and select **Table**, then enter this query:
 ```kql
 PatientVitals
 | where todatetime(timestamp) > ago(5m)
@@ -364,9 +371,9 @@ This is the key step that makes the dashboard update automatically as data flows
 > 4. Toggle it **On** and set the interval to **30 seconds**
 > 5. Click **Apply** and then **Save** the dashboard
 
-> **Note:** The tiles will show empty or zero results until you start the simulator in Part D. This is expected.
+> **Note:** The visuals will show empty or zero results until you start the simulator in Part D. This is expected.
 
-> 📌 **Keep this dashboard tab open!** Open a **new browser tab** to create the simulator notebook in Part D. Once the simulator starts sending data, come back to this tab and watch the dashboard tiles update automatically every 30 seconds.
+> 📌 **Keep this dashboard tab open!** Open a **new browser tab** to create the simulator notebook in Part D. Once the simulator starts sending data, come back to this tab and watch the dashboard visuals update automatically every 30 seconds.
 
 ---
 
@@ -594,7 +601,7 @@ PatientVitals
 | count
 ```
 
-> ⚠️ If the table name shown by `.show tables` is different from `PatientVitals`, use that name in all subsequent queries and dashboard tiles.
+> ⚠️ If the table name shown by `.show tables` is different from `PatientVitals`, use that name in all subsequent queries and dashboard visuals.
 
 > #### 🛠️ Troubleshooting: Simulator runs but `.show tables` returns nothing
 >
@@ -621,7 +628,7 @@ PatientVitals
 Now switch back to your **ICU Command Center Dashboard** tab:
 
 1. You should see:
-   - **SIRS Alert Count** tile showing 2–3 active alerts
+   - **SIRS Alert Count** visual showing 2–3 active alerts
    - **Patient Vitals Grid** populating with 20 patients, SIRS alert patients in red at the top
    - **Heart Rate Trend** chart drawing a live line as new data arrives for RT-P001, RT-P002, RT-P003
    - **SpO2 Monitor** showing oxygen saturation trends by facility
