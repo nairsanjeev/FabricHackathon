@@ -88,10 +88,15 @@ Now we'll upload the synthetic healthcare CSV files to the Lakehouse `Files/raw/
 
 1. In the Lakehouse explorer, click on **Files** in the left panel
 2. Click the **⋯ (ellipsis)** next to **Files** and select **New subfolder**
+
+![Right-click on Files to create a new subfolder](images/createsubfolder.png)
+
 3. Name the subfolder: `raw`
 4. Click **Create**
 5. Click into the `raw` folder
 6. Click **Upload** → **Upload files**
+
+![Upload files option in the raw folder](images/uploadfilestofolder.png)
 7. Navigate to `C:\FabricHackathon\data` on your local machine and select **all 7 CSV files**:
    - `patients.csv`
    - `encounters.csv`
@@ -118,7 +123,12 @@ Now we'll create a Spark notebook that reads the raw CSV files and saves them as
 2. Click **+ New item**
 3. Search for and select **Notebook**
 4. Click the notebook name at the top (e.g., "Notebook 1") and rename it to: `01 - Bronze Data Ingestion`
+
+![Creating the Bronze Data Ingestion notebook](images/createbronzenotebook.png)
+
 5. In the **Explorer** pane on the left, click **Add data items** → **From OneLake catalog**
+
+![Add data items from OneLake catalog](images/AddLakehouse.png)
 6. Search for `HealthcareLakehouse` in the OneLake catalog
 7. You will see **two items** with the same name — one is the **Lakehouse** and the other is the **SQL Analytics Endpoint** (shown with a different icon). **Select the Lakehouse item** (it has a blue house/database icon, not the SQL endpoint icon). If unsure, click on the item to view its details and confirm the type is **Lakehouse**.
 8. Click **Add** to attach it
@@ -189,6 +199,8 @@ Ingesting conditions...
 ...
 ✅ Bronze layer ingestion complete!
 ```
+
+![Successful Bronze ingestion with tables visible in Explorer](images/bronze-ingestion.png)
 
 ---
 
