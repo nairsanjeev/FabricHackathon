@@ -314,7 +314,6 @@ PatientVitals
 ```
 2. Visual type: **Table**
 3. Title: `Current Patient Vitals`
-4. Add conditional formatting on `sirs_alert` column (highlight TRUE in red)
 
 #### Visual 3: Heart Rate Trend
 1. Click **Add visual** and select **Time chart**, then enter this query:
@@ -340,7 +339,13 @@ PatientVitals
 3. Title: `Average SpO2 by Facility`
 
 #### Visual 5: Department Alert Heat Map
-1. Click **Add visual** and select **Table**, then enter this query:
+
+This visual goes on a **separate page** to keep the main monitoring view uncluttered.
+
+1. In the **Pages** panel on the left, click the **+** icon to add a new page
+2. Rename the first page (Page 1) to `Patient Monitoring`
+3. Rename the new page to `Department Alerts`
+4. On the **Department Alerts** page, click **Add visual** and select **Table**, then enter this query:
 ```kql
 PatientVitals
 | where todatetime(timestamp) > ago(5m)
