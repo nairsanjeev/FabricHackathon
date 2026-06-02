@@ -49,6 +49,9 @@ Instead of creating a notebook from scratch and pasting code cell-by-cell, we've
 ### Step 3: Run the Notebook
 
 1. Click **▶ Run all** at the top of the notebook
+
+![Click Run all to execute the notebook](images/Module2-runall.png)
+
 2. The notebook will process all Silver and Gold tables end-to-end (~5 minutes)
 3. Each cell has detailed markdown above it explaining:
    - **Business context** — why this metric matters in healthcare
@@ -80,6 +83,8 @@ Instead of creating a notebook from scratch and pasting code cell-by-cell, we've
 ## Step 4: Verify Your Tables
 
 Go back to your `HealthcareLakehouse` and refresh the Tables section. You should now have the following tables:
+
+![Silver and Gold tables visible in the Lakehouse Explorer](images/Module2-silver-gold-tables.png)
 
 **Gold Tables:**
 | Table | Description | Key Metric |
