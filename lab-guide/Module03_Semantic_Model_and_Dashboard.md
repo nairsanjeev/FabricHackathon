@@ -247,6 +247,9 @@ AI Instructions let you provide **plain-text guidance** that Copilot and the Dat
 
 1. Open your semantic model in **Power BI Desktop** (or select the semantic model in the Power BI service)
 2. Click **Prep data for AI** on the Home ribbon
+
+![Prep data for AI button highlighted in the semantic model ribbon](images/Module5-SemanticModel-PrepDataforAI.png)
+
 3. Go to the **Add AI instructions** tab
 4. Enter instructions that help AI understand your healthcare data:
 
@@ -284,9 +287,11 @@ Metro General Hospital, Community Medical Center, and Riverside Health System.
 ### Step 8: Mark the Semantic Model as "Approved for Copilot"
 
 1. In the semantic model view, click **File** → **Settings** (or click the gear icon)
-2. Scroll to the **AI and Copilot** section
-3. Toggle **"Approved for Copilot"** to **ON**
-4. Click **Save**
+2. Scroll down and expand the **Approved for Copilot** section
+3. Check the **"Approved for Copilot"** checkbox
+4. Click **Apply**
+
+![Approved for Copilot setting checked in semantic model settings](images/Module%2003%20-%20Approved%20for%20Copilot.png)
 
 > **Why this matters:** Models not marked as approved show a warning dialog before every Copilot response ("This model hasn't been approved — answer quality may be low"). Enabling this setting removes that friction and tells Copilot it can confidently use this data source, resulting in faster and more direct answers.
 
