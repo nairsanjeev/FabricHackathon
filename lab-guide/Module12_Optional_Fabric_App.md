@@ -2,8 +2,8 @@
 
 | Duration | 60 minutes |
 |----------|------------|
-| Objective | Build and deploy a full-stack web application on Microsoft Fabric using the Rayfin CLI that provides a Clinical Quality Command Center for hospital executives |
-| Fabric Features | Fabric Apps (Preview), Rayfin CLI, TypeScript data models, GraphQL API, Fabric SSO, Static Hosting |
+| Objective | Use VS Code Agent Mode (vibe coding) to build and deploy a full-stack web application on Microsoft Fabric using the Rayfin CLI — a Clinical Quality Command Center for hospital executives |
+| Fabric Features | Fabric Apps (Preview), Rayfin CLI, GitHub Copilot Agent Mode, TypeScript, GraphQL API, Fabric SSO |
 
 ---
 
@@ -27,23 +27,20 @@ A Fabric App combines your existing Lakehouse data with a purpose-built applicat
 
 A **Clinical Quality Command Center** application with:
 
-1. **Facility Scorecards** — Real-time quality metrics pulled from your Gold tables
-2. **Care Gap Tracker** — A system for logging care gaps (e.g., "CHF patient discharged without follow-up scheduled") with priority, assignee, and status
-3. **Quality Alerts** — Configurable thresholds that flag when metrics exceed targets (e.g., readmission rate > 15%)
+1. **Facility Scorecards** — Real-time quality metrics for each hospital
+2. **Care Gap Tracker** — A CRUD system for logging care gaps with priority, assignee, and status
+3. **Quality Alerts** — Threshold-based alerts when metrics exceed targets
 
-The app uses:
-- **Rayfin data models** (TypeScript decorators) for the Care Gap and Alert entities
-- **GraphQL API** (auto-generated) for CRUD operations
-- **React frontend** with a rich dashboard UI
-- **Fabric SSO** for production authentication
+**How you'll build it:** Using **vibe coding** with VS Code and GitHub Copilot Agent Mode. Instead of copying and pasting code, you'll describe what you want in natural language and let Copilot generate the implementation.
 
 ---
 
 ## Prerequisites
 
 - Completed Modules 1–5 (Lakehouse with Gold tables populated)
-- Node.js 18+ installed on your machine
-- A code editor (VS Code recommended)
+- **VS Code** with **GitHub Copilot** extension installed
+- Node.js 18+ installed
+- Docker Desktop running (for local Rayfin backend)
 - Fabric Apps workload enabled in your tenant (see Step 1)
 
 ---
@@ -80,25 +77,26 @@ Open a terminal and run:
 npm create @microsoft/rayfin@latest -- "HealthFirst-QualityCenter" --template todoapp --workspace "HLS-FabricHack"
 ```
 
-Then navigate to the project:
+Then:
 
 ```bash
 cd HealthFirst-QualityCenter
-```
-
-Install dependencies:
-
-```bash
 npm install
 ```
 
-You now have a scaffolded Fabric App project. The key structure is:
+### Step 4: Open in VS Code
+
+```bash
+code .
+```
+
+You now have a scaffolded Fabric App project. Take a moment to explore the structure:
 
 ```
 HealthFirst-QualityCenter/
 ├── rayfin/
 │   ├── data/
-│   │   ├── schema.ts        ← Register all entities here
+│   │   ├── schema.ts        ← Entity registry
 │   │   └── Todo.ts          ← Template entity (we'll replace)
 │   ├── rayfin.yml           ← Backend configuration
 │   └── .env                 ← Environment variables
@@ -109,586 +107,188 @@ HealthFirst-QualityCenter/
 
 ---
 
-## Part B: Define the Data Model
+## Part B: Vibe Code the Data Model
 
-We'll replace the template Todo entity with healthcare-specific entities for our Quality Command Center.
+Now the fun begins. Open **GitHub Copilot Chat** in VS Code (`Ctrl+Shift+I` or click the Copilot icon) and switch to **Agent Mode** (select "Agent" from the mode dropdown at the top of the chat panel).
 
-### Step 4: Create the CareGap Entity
+### Step 5: Generate the CareGap Entity
 
-Create a new file `rayfin/data/CareGap.ts`:
+Type the following prompt into Copilot Agent Mode:
 
-```typescript
-import { entity, uuid, text, date, set, boolean } from '@microsoft/rayfin-core';
+> **Prompt:**
+> ```
+> I'm building a Fabric App using Rayfin. Delete the Todo.ts file in rayfin/data/ 
+> and create a new entity file rayfin/data/CareGap.ts for tracking clinical care gaps 
+> in a hospital network.
+>
+> Use @entity() decorator from @microsoft/rayfin-core. The entity should have:
+> - id (uuid)
+> - title (text, required, max 200 chars)
+> - description (text, max 1000 chars)
+> - patient_id (text, required)
+> - facility (text, required) — one of our 3 hospitals
+> - priority (set: Critical, High, Medium, Low)
+> - status (set: Open, In Progress, Resolved, Escalated)
+> - assigned_to (text, optional, max 100)
+> - diagnosis (text, optional, max 100)
+> - resolution_notes (text, optional, max 500)
+> - created_at (date, required)
+> - resolved_at (date, optional)
+> - due_date (date, optional)
+> - user_id (text, required — for row-level access)
+> ```
 
-@entity()
-export class CareGap {
-  @uuid() id!: string;
+**Review** what Copilot generates. It should create a TypeScript class with Rayfin decorators. Accept the changes.
 
-  @text({ min: 1, max: 200 }) title!: string;
+### Step 6: Generate the QualityAlert Entity
 
-  @text({ max: 1000 }) description!: string;
+> **Prompt:**
+> ```
+> Create another Rayfin entity file rayfin/data/QualityAlert.ts for tracking 
+> quality metric alerts. When a hospital metric exceeds a threshold, an alert is created.
+>
+> Fields:
+> - id (uuid)
+> - metric_name (text, required, max 200)
+> - facility (text, required)
+> - current_value (decimal)
+> - threshold_value (decimal)
+> - metric_type (set: Readmission Rate, ALOS, Denial Rate, ED Volume, Mortality)
+> - alert_status (set: Active, Acknowledged, Resolved)
+> - notes (text, optional, max 500)
+> - triggered_at (date, required)
+> - acknowledged_at (date, optional)
+> - user_id (text, required)
+> ```
 
-  @text() patient_id!: string;
+### Step 7: Update the Schema Registry
 
-  @text() facility!: string;
-
-  @set('Critical', 'High', 'Medium', 'Low') priority!: 'Critical' | 'High' | 'Medium' | 'Low';
-
-  @set('Open', 'In Progress', 'Resolved', 'Escalated') status!: 'Open' | 'In Progress' | 'Resolved' | 'Escalated';
-
-  @text({ optional: true, max: 100 }) assigned_to?: string;
-
-  @text({ optional: true, max: 100 }) diagnosis?: string;
-
-  @text({ optional: true, max: 500 }) resolution_notes?: string;
-
-  @date() created_at!: Date;
-
-  @date({ optional: true }) resolved_at?: Date;
-
-  @date({ optional: true }) due_date?: Date;
-
-  @text() user_id!: string;
-}
-```
-
-### Step 5: Create the QualityAlert Entity
-
-Create a new file `rayfin/data/QualityAlert.ts`:
-
-```typescript
-import { entity, uuid, text, date, set, decimal } from '@microsoft/rayfin-core';
-
-@entity()
-export class QualityAlert {
-  @uuid() id!: string;
-
-  @text({ min: 1, max: 200 }) metric_name!: string;
-
-  @text() facility!: string;
-
-  @decimal() current_value!: number;
-
-  @decimal() threshold_value!: number;
-
-  @set('Readmission Rate', 'ALOS', 'Denial Rate', 'ED Volume', 'Mortality')
-  metric_type!: 'Readmission Rate' | 'ALOS' | 'Denial Rate' | 'ED Volume' | 'Mortality';
-
-  @set('Active', 'Acknowledged', 'Resolved')
-  alert_status!: 'Active' | 'Acknowledged' | 'Resolved';
-
-  @text({ optional: true, max: 500 }) notes?: string;
-
-  @date() triggered_at!: Date;
-
-  @date({ optional: true }) acknowledged_at?: Date;
-
-  @text() user_id!: string;
-}
-```
-
-### Step 6: Register Entities in the Schema
-
-Replace the contents of `rayfin/data/schema.ts` with:
-
-```typescript
-import type { CareGap } from './CareGap.js';
-import type { QualityAlert } from './QualityAlert.js';
-
-export type QualityCenterSchema = {
-  CareGap: CareGap;
-  QualityAlert: QualityAlert;
-};
-```
-
-### Step 7: Delete the Template Entity
-
-Remove the template file that came with the scaffold:
-
-```bash
-rm rayfin/data/Todo.ts
-```
-
-(On Windows: `del rayfin\data\Todo.ts`)
+> **Prompt:**
+> ```
+> Update rayfin/data/schema.ts to register my CareGap and QualityAlert entities 
+> instead of the Todo entity. Export a type called QualityCenterSchema.
+> ```
 
 ---
 
-## Part C: Configure the Backend
+## Part C: Vibe Code the Backend Configuration
 
-### Step 8: Update rayfin.yml
+### Step 8: Configure rayfin.yml
 
-Open `rayfin/rayfin.yml` and update it to:
-
-```yaml
-id: healthfirst-qualitycenter
-name: HealthFirst-QualityCenter
-version: 1.0.0
-services:
-  auth:
-    enabled: true
-    expiryInMinutes: 60
-    refreshToken:
-      lifetimeInDays: 30
-    allowedRedirectUris:
-      - http://localhost:5173
-      - http://localhost:5173/auth/callback
-    password:
-      enabled: true
-    fabric:
-      enabled: true
-  data:
-    enabled: true
-    dialect: mssql
-  staticHosting:
-    enabled: true
-    root: .
-    folder: dist
-    buildCommand: npm run build
-    indexDocument: index.html
-```
-
-Key points:
-- **`password.enabled: true`** — allows local development with email/password
-- **`fabric.enabled: true`** — enables Fabric SSO for production deployment
-- **`staticHosting`** — hosts your React frontend alongside the backend
+> **Prompt:**
+> ```
+> Update rayfin/rayfin.yml to configure this as a healthcare quality center app:
+> - id: healthfirst-qualitycenter
+> - name: HealthFirst-QualityCenter
+> - Enable auth with both password (for local dev) and fabric SSO (for production)
+> - Set token expiry to 60 minutes, refresh token to 30 days
+> - Allow redirects from http://localhost:5173 and http://localhost:5173/auth/callback
+> - Enable data service with mssql dialect
+> - Enable static hosting from the dist folder with "npm run build" as build command
+> ```
 
 ---
 
-## Part D: Build the Frontend
+## Part D: Vibe Code the Frontend
 
-### Step 9: Install Frontend Dependencies
+### Step 9: Install the Rayfin Client
+
+Run in the terminal:
 
 ```bash
 npm install @microsoft/rayfin-client
 ```
 
-### Step 10: Create the Rayfin Client
+### Step 10: Generate the Rayfin Client Module
 
-Create `src/lib/rayfin.ts`:
-
-```typescript
-import { RayfinClient } from '@microsoft/rayfin-client';
-import type { CareGap } from '../../rayfin/data/CareGap';
-import type { QualityAlert } from '../../rayfin/data/QualityAlert';
-
-type AppSchema = {
-  CareGap: CareGap;
-  QualityAlert: QualityAlert;
-};
-
-export const client = new RayfinClient<AppSchema>({
-  baseUrl: import.meta.env.VITE_RAYFIN_API_URL ?? 'http://localhost:5168',
-  publishableKey: import.meta.env.VITE_RAYFIN_PUBLISHABLE_KEY ?? '',
-});
-```
+> **Prompt:**
+> ```
+> Create src/lib/rayfin.ts that initializes a RayfinClient from @microsoft/rayfin-client.
+> Import the CareGap and QualityAlert types from the rayfin/data folder.
+> Use VITE_RAYFIN_API_URL env var (default http://localhost:5168) and VITE_RAYFIN_PUBLISHABLE_KEY.
+> ```
 
 ### Step 11: Build the Quality Command Center UI
 
-Replace `src/App.tsx` with the following application shell. This creates a tabbed interface with three views:
+This is where vibe coding really shines. Give Copilot a rich, descriptive prompt:
 
-```tsx
-import { useState, useEffect } from 'react';
-import { client } from './lib/rayfin';
+> **Prompt:**
+> ```
+> Replace src/App.tsx with a Clinical Quality Command Center application for 
+> HealthFirst Medical Group (a 3-hospital network: Metro General Hospital, 
+> Community Medical Center, Riverside Health Center).
+>
+> The app should have:
+> 
+> 1. A professional header with blue gradient background, title "HealthFirst 
+>    Clinical Quality Command Center" and subtitle about real-time monitoring.
+>
+> 2. Three tabbed views:
+>
+>    TAB 1 - Facility Scorecards:
+>    - Card for each facility showing: 30-day readmission rate, avg length of stay,
+>      ED volume (30d), and denial rate
+>    - Color-coded metrics: green if within target, yellow for warning, red for danger
+>    - Targets: readmission ≤15%, ALOS ≤4.5 days, denial rate ≤12%
+>    - Show trend indicator (improving/worsening/stable) on each card
+>    - Use hardcoded sample data matching our Lakehouse results:
+>      Metro General: 20% readmit, 4.8 ALOS, 145 ED, 12.3% denial
+>      Community Medical: 24.7% readmit, 5.2 ALOS, 112 ED, 15.1% denial
+>      Riverside: 16.2% readmit, 3.9 ALOS, 89 ED, 9.8% denial
+>
+>    TAB 2 - Care Gap Tracker:
+>    - Table showing all care gaps from the database (use the Rayfin client)
+>    - Columns: Priority (color badge), Title, Facility, Diagnosis, Status, 
+>      Assigned To, Created date
+>    - "+ Log Care Gap" button that opens an inline form with fields for all 
+>      required CareGap entity fields
+>    - Form has dropdowns for priority and facility
+>    - Show count of open gaps in the tab label
+>
+>    TAB 3 - Quality Alerts:
+>    - Card list of alerts from the database
+>    - Each card shows metric_name, facility, current vs threshold value
+>    - Active alerts have red left border, acknowledged have gray
+>    - "Acknowledge" button on active alerts that updates status
+>    - Show count of active alerts in tab label
+>    - If no alerts, show green success message
+>
+> 3. Use inline styles with Segoe UI font, Microsoft Fluent-inspired design 
+>    (not Material, not Tailwind). Light background #f4f6f8, white cards with 
+>    subtle shadows.
+>
+> 4. Load data on mount using the Rayfin client from src/lib/rayfin.ts.
+>    Use client.data.CareGap.select([...]).orderBy({created_at:'desc'}).execute()
+>    and similar for QualityAlert.
+>
+> Make it look impressive — this is a demo for hospital executives.
+> ```
 
-// Types from our data model
-interface CareGap {
-  id: string;
-  title: string;
-  description: string;
-  patient_id: string;
-  facility: string;
-  priority: 'Critical' | 'High' | 'Medium' | 'Low';
-  status: 'Open' | 'In Progress' | 'Resolved' | 'Escalated';
-  assigned_to?: string;
-  diagnosis?: string;
-  due_date?: Date;
-  created_at: Date;
-}
+**Review** the generated code. Copilot should produce a complete React component with all three views. You may need to iterate:
 
-interface QualityAlert {
-  id: string;
-  metric_name: string;
-  facility: string;
-  current_value: number;
-  threshold_value: number;
-  metric_type: string;
-  alert_status: 'Active' | 'Acknowledged' | 'Resolved';
-  triggered_at: Date;
-}
+> **Follow-up prompts if needed:**
+> - "The tab badges should show counts of active items"
+> - "Add a MetricCard subcomponent that takes label, value, status, and target"  
+> - "The create form should call client.data.CareGap.create() and refresh the list"
 
-type Tab = 'scorecards' | 'care-gaps' | 'alerts';
+### Step 12: Iterate and Refine (Optional)
 
-export default function App() {
-  const [activeTab, setActiveTab] = useState<Tab>('scorecards');
-  const [careGaps, setCareGaps] = useState<CareGap[]>([]);
-  const [alerts, setAlerts] = useState<QualityAlert[]>([]);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
+This is the beauty of vibe coding — you can keep refining:
 
-  useEffect(() => {
-    // Check auth state and load data
-    loadData();
-  }, []);
+> **Example iteration prompts:**
+> - "Add a dark mode toggle in the header"
+> - "Make the facility scorecard data come from an API call instead of hardcoded values"
+> - "Add a chart showing readmission rate trend over time"
+> - "Add status change dropdown on each care gap row so users can update status inline"
+> - "Add export to CSV button on the care gap table"
 
-  async function loadData() {
-    try {
-      const gaps = await client.data.CareGap.select([
-        'id', 'title', 'description', 'patient_id', 'facility',
-        'priority', 'status', 'assigned_to', 'diagnosis', 'due_date', 'created_at'
-      ]).orderBy({ created_at: 'desc' }).execute();
-      setCareGaps(gaps);
-
-      const alertData = await client.data.QualityAlert.select([
-        'id', 'metric_name', 'facility', 'current_value',
-        'threshold_value', 'metric_type', 'alert_status', 'triggered_at'
-      ]).orderBy({ triggered_at: 'desc' }).execute();
-      setAlerts(alertData);
-
-      setIsAuthenticated(true);
-    } catch (error) {
-      console.error('Failed to load data:', error);
-    }
-  }
-
-  return (
-    <div style={{ fontFamily: 'Segoe UI, sans-serif', minHeight: '100vh', background: '#f4f6f8' }}>
-      {/* Header */}
-      <header style={{
-        background: 'linear-gradient(135deg, #0078D4 0%, #004578 100%)',
-        color: 'white', padding: '20px 32px',
-        boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
-      }}>
-        <h1 style={{ margin: 0, fontSize: '24px', fontWeight: 600 }}>
-          🏥 HealthFirst Clinical Quality Command Center
-        </h1>
-        <p style={{ margin: '4px 0 0', opacity: 0.85, fontSize: '14px' }}>
-          Real-time quality monitoring across Metro General, Community Medical Center, and Riverside Health
-        </p>
-      </header>
-
-      {/* Navigation Tabs */}
-      <nav style={{ background: 'white', borderBottom: '1px solid #e1e5e8', padding: '0 32px' }}>
-        {(['scorecards', 'care-gaps', 'alerts'] as Tab[]).map(tab => (
-          <button
-            key={tab}
-            onClick={() => setActiveTab(tab)}
-            style={{
-              padding: '14px 20px', border: 'none', background: 'none',
-              cursor: 'pointer', fontSize: '14px', fontWeight: 500,
-              color: activeTab === tab ? '#0078D4' : '#605E5C',
-              borderBottom: activeTab === tab ? '3px solid #0078D4' : '3px solid transparent',
-            }}
-          >
-            {tab === 'scorecards' && '📊 Facility Scorecards'}
-            {tab === 'care-gaps' && `🔍 Care Gaps (${careGaps.filter(g => g.status !== 'Resolved').length})`}
-            {tab === 'alerts' && `⚠️ Quality Alerts (${alerts.filter(a => a.alert_status === 'Active').length})`}
-          </button>
-        ))}
-      </nav>
-
-      {/* Content */}
-      <main style={{ padding: '24px 32px', maxWidth: '1400px', margin: '0 auto' }}>
-        {activeTab === 'scorecards' && <FacilityScoreCards />}
-        {activeTab === 'care-gaps' && <CareGapTracker gaps={careGaps} onRefresh={loadData} />}
-        {activeTab === 'alerts' && <AlertPanel alerts={alerts} onRefresh={loadData} />}
-      </main>
-    </div>
-  );
-}
-
-// ─── Facility Scorecards ──────────────────────────────────────────
-function FacilityScoreCards() {
-  const facilities = [
-    {
-      name: 'Metro General Hospital',
-      readmissionRate: 20.0, alos: 4.8, edVolume: 145,
-      denialRate: 12.3, trend: 'improving'
-    },
-    {
-      name: 'Community Medical Center',
-      readmissionRate: 24.7, alos: 5.2, edVolume: 112,
-      denialRate: 15.1, trend: 'worsening'
-    },
-    {
-      name: 'Riverside Health Center',
-      readmissionRate: 16.2, alos: 3.9, edVolume: 89,
-      denialRate: 9.8, trend: 'stable'
-    },
-  ];
-
-  return (
-    <div>
-      <h2 style={{ fontSize: '20px', marginBottom: '16px', color: '#323130' }}>
-        Facility Performance Scorecards
-      </h2>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: '20px' }}>
-        {facilities.map(f => (
-          <div key={f.name} style={{
-            background: 'white', borderRadius: '8px', padding: '24px',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.08)', border: '1px solid #e8eaed'
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ fontSize: '16px', margin: 0, color: '#323130' }}>{f.name}</h3>
-              <span style={{
-                fontSize: '12px', padding: '2px 8px', borderRadius: '12px',
-                background: f.trend === 'improving' ? '#DFF6DD' : f.trend === 'worsening' ? '#FDE7E9' : '#F3F2F1',
-                color: f.trend === 'improving' ? '#107C10' : f.trend === 'worsening' ? '#D13438' : '#605E5C',
-              }}>
-                {f.trend === 'improving' ? '↗ Improving' : f.trend === 'worsening' ? '↘ Worsening' : '→ Stable'}
-              </span>
-            </div>
-
-            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '20px' }}>
-              <MetricCard
-                label="30-Day Readmission"
-                value={`${f.readmissionRate}%`}
-                status={f.readmissionRate > 15 ? 'danger' : 'good'}
-                target="≤ 15%"
-              />
-              <MetricCard
-                label="Avg Length of Stay"
-                value={`${f.alos} days`}
-                status={f.alos > 4.5 ? 'warning' : 'good'}
-                target="≤ 4.5 days"
-              />
-              <MetricCard
-                label="ED Volume (30d)"
-                value={`${f.edVolume}`}
-                status="neutral"
-                target=""
-              />
-              <MetricCard
-                label="Denial Rate"
-                value={`${f.denialRate}%`}
-                status={f.denialRate > 12 ? 'warning' : 'good'}
-                target="≤ 12%"
-              />
-            </div>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
-
-function MetricCard({ label, value, status, target }: {
-  label: string; value: string; status: 'good' | 'warning' | 'danger' | 'neutral'; target: string;
-}) {
-  const colors = {
-    good: { bg: '#DFF6DD', text: '#107C10' },
-    warning: { bg: '#FFF4CE', text: '#797600' },
-    danger: { bg: '#FDE7E9', text: '#D13438' },
-    neutral: { bg: '#F3F2F1', text: '#323130' },
-  };
-  return (
-    <div style={{ background: colors[status].bg, borderRadius: '6px', padding: '12px' }}>
-      <div style={{ fontSize: '12px', color: '#605E5C', marginBottom: '4px' }}>{label}</div>
-      <div style={{ fontSize: '22px', fontWeight: 700, color: colors[status].text }}>{value}</div>
-      {target && <div style={{ fontSize: '11px', color: '#605E5C', marginTop: '2px' }}>Target: {target}</div>}
-    </div>
-  );
-}
-
-// ─── Care Gap Tracker ──────────────────────────────────────────────
-function CareGapTracker({ gaps, onRefresh }: { gaps: CareGap[]; onRefresh: () => void }) {
-  const [showForm, setShowForm] = useState(false);
-
-  async function handleCreate(e: React.FormEvent<HTMLFormElement>) {
-    e.preventDefault();
-    const form = e.currentTarget;
-    const formData = new FormData(form);
-
-    await client.data.CareGap.create({
-      title: formData.get('title') as string,
-      description: formData.get('description') as string,
-      patient_id: formData.get('patient_id') as string,
-      facility: formData.get('facility') as string,
-      priority: formData.get('priority') as CareGap['priority'],
-      status: 'Open',
-      assigned_to: formData.get('assigned_to') as string || undefined,
-      diagnosis: formData.get('diagnosis') as string || undefined,
-      created_at: new Date(),
-      user_id: 'current-user',
-    });
-
-    setShowForm(false);
-    onRefresh();
-  }
-
-  const priorityColors: Record<string, string> = {
-    Critical: '#D13438', High: '#CA5010', Medium: '#8764B8', Low: '#0078D4'
-  };
-
-  return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
-        <h2 style={{ fontSize: '20px', color: '#323130', margin: 0 }}>Care Gap Tracker</h2>
-        <button
-          onClick={() => setShowForm(!showForm)}
-          style={{
-            background: '#0078D4', color: 'white', border: 'none', borderRadius: '4px',
-            padding: '8px 16px', cursor: 'pointer', fontWeight: 500
-          }}
-        >
-          + Log Care Gap
-        </button>
-      </div>
-
-      {showForm && (
-        <form onSubmit={handleCreate} style={{
-          background: 'white', padding: '20px', borderRadius: '8px',
-          marginBottom: '16px', boxShadow: '0 2px 6px rgba(0,0,0,0.08)'
-        }}>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '12px' }}>
-            <input name="title" placeholder="Care gap title" required style={inputStyle} />
-            <select name="priority" required style={inputStyle}>
-              <option value="Critical">Critical</option>
-              <option value="High">High</option>
-              <option value="Medium" selected>Medium</option>
-              <option value="Low">Low</option>
-            </select>
-            <input name="patient_id" placeholder="Patient ID" required style={inputStyle} />
-            <select name="facility" required style={inputStyle}>
-              <option value="Metro General Hospital">Metro General Hospital</option>
-              <option value="Community Medical Center">Community Medical Center</option>
-              <option value="Riverside Health Center">Riverside Health Center</option>
-            </select>
-            <input name="diagnosis" placeholder="Diagnosis (optional)" style={inputStyle} />
-            <input name="assigned_to" placeholder="Assigned to (optional)" style={inputStyle} />
-            <textarea name="description" placeholder="Description" required
-              style={{ ...inputStyle, gridColumn: '1 / -1' }} rows={3} />
-          </div>
-          <div style={{ marginTop: '12px', display: 'flex', gap: '8px' }}>
-            <button type="submit" style={{
-              background: '#0078D4', color: 'white', border: 'none',
-              borderRadius: '4px', padding: '8px 20px', cursor: 'pointer'
-            }}>Save</button>
-            <button type="button" onClick={() => setShowForm(false)} style={{
-              background: '#F3F2F1', color: '#323130', border: 'none',
-              borderRadius: '4px', padding: '8px 20px', cursor: 'pointer'
-            }}>Cancel</button>
-          </div>
-        </form>
-      )}
-
-      {/* Care Gap Table */}
-      <div style={{ background: 'white', borderRadius: '8px', overflow: 'hidden', boxShadow: '0 2px 6px rgba(0,0,0,0.08)' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '14px' }}>
-          <thead>
-            <tr style={{ background: '#F3F2F1' }}>
-              <th style={thStyle}>Priority</th>
-              <th style={thStyle}>Title</th>
-              <th style={thStyle}>Facility</th>
-              <th style={thStyle}>Diagnosis</th>
-              <th style={thStyle}>Status</th>
-              <th style={thStyle}>Assigned To</th>
-              <th style={thStyle}>Created</th>
-            </tr>
-          </thead>
-          <tbody>
-            {gaps.map(gap => (
-              <tr key={gap.id} style={{ borderBottom: '1px solid #EDEBE9' }}>
-                <td style={tdStyle}>
-                  <span style={{
-                    background: priorityColors[gap.priority] + '20',
-                    color: priorityColors[gap.priority],
-                    padding: '2px 8px', borderRadius: '12px', fontSize: '12px', fontWeight: 600
-                  }}>{gap.priority}</span>
-                </td>
-                <td style={tdStyle}>{gap.title}</td>
-                <td style={tdStyle}>{gap.facility}</td>
-                <td style={tdStyle}>{gap.diagnosis || '—'}</td>
-                <td style={tdStyle}>{gap.status}</td>
-                <td style={tdStyle}>{gap.assigned_to || 'Unassigned'}</td>
-                <td style={tdStyle}>{new Date(gap.created_at).toLocaleDateString()}</td>
-              </tr>
-            ))}
-            {gaps.length === 0 && (
-              <tr><td colSpan={7} style={{ ...tdStyle, textAlign: 'center', color: '#605E5C' }}>
-                No care gaps logged yet. Click "+ Log Care Gap" to get started.
-              </td></tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
-}
-
-// ─── Quality Alerts Panel ──────────────────────────────────────────
-function AlertPanel({ alerts, onRefresh }: { alerts: QualityAlert[]; onRefresh: () => void }) {
-  async function acknowledgeAlert(id: string) {
-    await client.data.QualityAlert.update(
-      { id },
-      { alert_status: 'Acknowledged', acknowledged_at: new Date() }
-    );
-    onRefresh();
-  }
-
-  return (
-    <div>
-      <h2 style={{ fontSize: '20px', color: '#323130', marginBottom: '16px' }}>Quality Alerts</h2>
-      <div style={{ display: 'grid', gap: '12px' }}>
-        {alerts.map(alert => (
-          <div key={alert.id} style={{
-            background: 'white', borderRadius: '8px', padding: '16px 20px',
-            boxShadow: '0 2px 6px rgba(0,0,0,0.08)',
-            borderLeft: `4px solid ${alert.alert_status === 'Active' ? '#D13438' : '#A19F9D'}`,
-          }}>
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <div>
-                <div style={{ fontWeight: 600, fontSize: '15px', color: '#323130' }}>
-                  {alert.metric_name}
-                </div>
-                <div style={{ fontSize: '13px', color: '#605E5C', marginTop: '4px' }}>
-                  {alert.facility} • {alert.metric_type}
-                </div>
-                <div style={{ fontSize: '14px', marginTop: '8px' }}>
-                  Current: <strong style={{ color: '#D13438' }}>{alert.current_value}%</strong>
-                  {' '} | Threshold: {alert.threshold_value}%
-                </div>
-              </div>
-              {alert.alert_status === 'Active' && (
-                <button onClick={() => acknowledgeAlert(alert.id)} style={{
-                  background: '#FFF4CE', color: '#797600', border: '1px solid #797600',
-                  borderRadius: '4px', padding: '6px 12px', cursor: 'pointer', fontSize: '12px'
-                }}>Acknowledge</button>
-              )}
-            </div>
-          </div>
-        ))}
-        {alerts.length === 0 && (
-          <div style={{
-            background: '#DFF6DD', borderRadius: '8px', padding: '24px',
-            textAlign: 'center', color: '#107C10'
-          }}>
-            ✅ No active quality alerts. All metrics within acceptable thresholds.
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
-
-// ─── Shared Styles ─────────────────────────────────────────────────
-const inputStyle: React.CSSProperties = {
-  padding: '8px 12px', borderRadius: '4px', border: '1px solid #C8C6C4',
-  fontSize: '14px', fontFamily: 'Segoe UI, sans-serif'
-};
-const thStyle: React.CSSProperties = {
-  textAlign: 'left', padding: '10px 12px', fontWeight: 600, fontSize: '12px', color: '#605E5C'
-};
-const tdStyle: React.CSSProperties = {
-  padding: '10px 12px'
-};
-```
-
-> **Tip:** This is a single-file app for simplicity in the lab. In production, you would split components into separate files under `src/components/`.
+Each prompt generates more features. Accept what works, reject what doesn't, and keep iterating until you're happy with the result.
 
 ---
 
 ## Part E: Run Locally and Test
 
-### Step 12: Start the Local Development Stack
+### Step 13: Start the Local Development Stack
 
 ```bash
 npm run dev
@@ -700,7 +300,7 @@ This starts:
 
 Open `http://localhost:5173` in your browser.
 
-### Step 13: Sign Up for Local Testing
+### Step 14: Sign Up for Local Testing
 
 Since we're running locally, use email/password authentication:
 
@@ -708,7 +308,7 @@ Since we're running locally, use email/password authentication:
 2. Enter any email (e.g., `admin@healthfirst.local`) and a password
 3. You're now authenticated and can use the app
 
-### Step 14: Test the Application
+### Step 15: Test the Application
 
 1. **Facility Scorecards** — Verify the three facility cards display with color-coded metrics
 2. **Care Gap Tracker** — Click **+ Log Care Gap** and create a test entry:
@@ -719,74 +319,50 @@ Since we're running locally, use email/password authentication:
    - Diagnosis: Heart Failure
    - Description: "Patient with 3 prior admissions for CHF exacerbation discharged without scheduled cardiology follow-up within 7 days"
 3. Verify the care gap appears in the table
-4. **Quality Alerts** — (Alerts are empty initially — we'll seed data in the next step)
 
-### Step 15: Seed Sample Quality Alerts
+### Step 16: Seed Quality Alerts with Copilot
 
-Open a second terminal and run a quick script to create sample alerts. Create a file `seed-alerts.ts` in the project root:
+Use Copilot to generate a seed script:
 
-```typescript
-// seed-alerts.ts — Run with: npx tsx seed-alerts.ts
-import { client } from './src/lib/rayfin';
-
-async function seed() {
-  // Sign in first (local dev)
-  await client.auth.signIn({ email: 'admin@healthfirst.local', password: 'your-password' });
-
-  const alerts = [
-    {
-      metric_name: 'CHF 30-Day Readmission Rate Exceeded',
-      facility: 'Community Medical Center',
-      current_value: 24.7,
-      threshold_value: 15.0,
-      metric_type: 'Readmission Rate' as const,
-      alert_status: 'Active' as const,
-      triggered_at: new Date(),
-      user_id: 'system',
-    },
-    {
-      metric_name: 'ALOS Above National Benchmark',
-      facility: 'Metro General Hospital',
-      current_value: 4.8,
-      threshold_value: 4.5,
-      metric_type: 'ALOS' as const,
-      alert_status: 'Active' as const,
-      triggered_at: new Date(Date.now() - 86400000), // yesterday
-      user_id: 'system',
-    },
-    {
-      metric_name: 'Claims Denial Rate Spike',
-      facility: 'Community Medical Center',
-      current_value: 15.1,
-      threshold_value: 12.0,
-      metric_type: 'Denial Rate' as const,
-      alert_status: 'Active' as const,
-      triggered_at: new Date(Date.now() - 172800000), // 2 days ago
-      user_id: 'system',
-    },
-  ];
-
-  for (const alert of alerts) {
-    await client.data.QualityAlert.create(alert);
-    console.log(`Created alert: ${alert.metric_name}`);
-  }
-}
-
-seed().catch(console.error);
-```
+> **Prompt:**
+> ```
+> Create a seed-alerts.ts script in the project root that:
+> 1. Signs in with email/password (admin@healthfirst.local)
+> 2. Creates 3 sample QualityAlert records using the Rayfin client:
+>    - "CHF 30-Day Readmission Rate Exceeded" at Community Medical Center 
+>      (current: 24.7%, threshold: 15%)
+>    - "ALOS Above National Benchmark" at Metro General Hospital 
+>      (current: 4.8, threshold: 4.5)
+>    - "Claims Denial Rate Spike" at Community Medical Center 
+>      (current: 15.1%, threshold: 12%)
+> All should be Active status.
+> ```
 
 Run it:
 ```bash
 npx tsx seed-alerts.ts
 ```
 
-Refresh the app — you should now see three active quality alerts with red indicators.
+Refresh the app — you should see three active quality alerts with red indicators.
 
 ---
 
-## Part F: Deploy to Fabric
+## Part F: Fix Issues with Copilot
 
-### Step 16: Deploy the Application
+If anything doesn't work (compile errors, runtime issues, UI glitches), use Copilot to fix it:
+
+> **Example fix prompts:**
+> - "I'm getting a TypeScript error on line 42 — the types don't match the Rayfin client response"
+> - "The care gap form isn't submitting — debug the handleCreate function"
+> - "The alerts aren't loading — check if the select fields match the QualityAlert entity"
+
+This is the real workflow of vibe coding: **prompt → generate → test → fix → iterate**.
+
+---
+
+## Part G: Deploy to Fabric
+
+### Step 17: Deploy the Application
 
 When you're satisfied with local testing, deploy to Fabric:
 
@@ -801,7 +377,7 @@ The CLI will:
 4. Build and upload the React frontend
 5. Print the live URL
 
-### Step 17: Access the Deployed App
+### Step 18: Access the Deployed App
 
 After deployment, the CLI outputs:
 - **App URL** — The public URL where your app is hosted (requires Fabric SSO)
@@ -811,7 +387,7 @@ After deployment, the CLI outputs:
 2. Sign in with your Microsoft Entra ID credentials (Fabric SSO)
 3. The app loads with the same UI, now backed by a Fabric SQL Database
 
-### Step 18: Verify in the Fabric Portal
+### Step 19: Verify in the Fabric Portal
 
 1. Go to your **HLS-FabricHack** workspace
 2. Find the **HealthFirst-QualityCenter** app item
@@ -822,31 +398,51 @@ After deployment, the CLI outputs:
 
 ---
 
-## Part G: Share and Discuss
+## Part H: Share and Extend
 
-### Step 19: Share the App
+### Step 20: Share the App
 
 1. In the Fabric portal, select your app
 2. Click **Share** or manage permissions
 3. Grant **Run and interact** permission to colleagues who should use the app
 4. They can now open the App URL and sign in with their Fabric SSO credentials
 
-### Step 20: Discussion — The Value of a Fabric App
+### Step 21: Keep Vibe Coding — Extension Ideas
 
-**Why this matters for healthcare:**
+Now that the app is deployed, try adding more features using Copilot prompts:
 
-| Traditional Approach | Fabric App Approach |
-|---------------------|---------------------|
-| Power BI report emailed weekly | Live app updated in real-time |
-| Care gaps tracked in spreadsheets | Structured database with audit trail |
-| Quality alerts via email — easily missed | Centralized command center with acknowledgment workflow |
-| Separate systems for data + actions | Single platform: data → insight → action |
+| Prompt Idea | What It Adds |
+|-------------|--------------|
+| "Add a fourth tab called Insights that shows a natural language Q&A interface where users type questions and the app calls our Data Agent API" | AI-powered analytics in the app |
+| "Add a dashboard summary at the top of the Scorecards tab showing total open care gaps, active alerts, and network-wide readmission rate as KPI cards" | Executive summary view |
+| "Add email notification setup — when a Critical care gap is created, show a toast notification" | Action workflow |
+| "Add a patient timeline view that shows all care gaps for a specific patient ID in chronological order" | Patient-centric view |
+| "Add role-based access — only users with 'quality_admin' claim can acknowledge alerts" | RBAC with Rayfin permissions |
 
-**Real-World Extensions:**
-- Connect the Care Gap entity to your Lakehouse data using a scheduled pipeline that auto-creates gaps when metrics exceed thresholds
-- Add push notifications when Critical alerts fire
-- Embed Power BI visuals from your semantic model directly in the app
-- Integrate with the Data Agent API so users can ask natural language questions within the command center
+---
+
+## 💡 Discussion: Vibe Coding + Fabric Apps
+
+**What just happened:**
+- You built a full-stack, production-ready application in ~60 minutes
+- You wrote **zero code by hand** — every line was generated by Copilot
+- The app has authentication, a database, APIs, and a hosted frontend
+- It runs on Microsoft Fabric with enterprise governance
+
+**Why this matters for healthcare IT:**
+
+| Traditional Development | Vibe Coding + Fabric Apps |
+|------------------------|---------------------------|
+| 3-6 month dev cycle | 60-minute prototype → production |
+| Dedicated dev team needed | Clinical informaticist + Copilot |
+| Separate infra, auth, DB setup | All bundled in Fabric |
+| Compliance review for each component | Built on compliant Fabric platform |
+
+**Discussion Questions:**
+1. What other clinical workflows could be built this way? (Discharge planning? Care coordination?)
+2. How does the speed of vibe coding change the ROI calculation for custom apps?
+3. What governance guardrails should exist when AI generates production code?
+4. How could this app connect to your Data Agent to provide both structured views AND natural language queries?
 
 ---
 
@@ -856,12 +452,13 @@ Confirm you have completed:
 
 - [ ] Fabric Apps enabled in tenant settings
 - [ ] `HealthFirst-QualityCenter` app created in workspace
-- [ ] Data models defined (CareGap, QualityAlert)
-- [ ] Backend configured with auth + static hosting
-- [ ] Frontend built with Facility Scorecards, Care Gap Tracker, and Alert Panel
+- [ ] Data models generated via Copilot (CareGap, QualityAlert)
+- [ ] Backend configured via Copilot (rayfin.yml)
+- [ ] Frontend generated via Copilot (Scorecards, Care Gaps, Alerts)
 - [ ] App runs locally with test data
 - [ ] App deployed to Fabric with `rayfin up`
 - [ ] App accessible via Fabric SSO
+- [ ] At least one extension feature added via vibe coding
 
 ---
 
@@ -874,3 +471,4 @@ Confirm you have completed:
 - [Deploy to Fabric](https://learn.microsoft.com/en-us/fabric/apps/deploy-app)
 - [Configure Authentication](https://learn.microsoft.com/en-us/fabric/apps/authentication)
 - [Project Structure](https://learn.microsoft.com/en-us/fabric/apps/project-structure)
+- [GitHub Copilot Agent Mode](https://code.visualstudio.com/docs/copilot/chat/chat-agent-mode)
