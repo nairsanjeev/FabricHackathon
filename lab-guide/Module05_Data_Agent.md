@@ -272,6 +272,8 @@ ORDER BY frequent_flyer_count DESC
 
 Switch to the **Data** tab in the Explorer pane to access the agent chat interface. Try these questions one at a time. Observe how the agent translates your question into a query and returns results.
 
+![Data Agent testing interface showing readmission rate results by facility](images/Module%205%200%20Data%20Agent%20-%20testing%20.png)
+
 #### Question 1: Readmission Overview
 ```
 What is the overall 30-day readmission rate, and how does it break down by facility?
