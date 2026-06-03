@@ -354,70 +354,70 @@ What factors distinguish patients who are readmitted within 30 days from those w
 
 ---
 
-## Part E: Power BI Copilot — AI-Powered Insights (Reading View)
+## Part E: Standalone Copilot Experience in Power BI
 
-Beyond the report editor, Power BI offers a **Copilot experience in reading view** that enables business users to interact with published reports using natural language. This is the broader Copilot experience that shows AI's value for decision-makers who consume reports but don't build them.
+The **Standalone Copilot** is a full-screen, cross-item AI experience accessed from the Power BI left navigation bar. Unlike the report-scoped Copilot in Parts B and D, the Standalone Copilot can find and answer questions across **any report, semantic model, or Fabric data agent** you have access to — without requiring you to open a specific report first. It automatically identifies the best data source for your question, generates visuals on demand, creates new DAX calculations, and delivers advanced analytical insights including causal reasoning and anomaly detection.
 
-### Step 13: Switch to Reading View
+### Step 13: Open the Standalone Copilot
 
-1. Save and close the report editor (click **Reading view** or simply open the published report from your workspace)
-2. In the report's reading view, click the **Copilot** button in the top toolbar
-3. The Copilot pane opens — this is the **consumer-facing Copilot** designed for business users
+1. In the Power BI service (app.fabric.microsoft.com), look at the **left navigation bar**
+2. Click the **Copilot** icon (sparkle ✨) — it's in the left nav pane below Home
 
-> **Note:** This Copilot experience works on published reports and is designed for people who consume insights rather than build reports. It can answer questions across all pages of the report.
+![Standalone Copilot accessed from the left navigation in Power BI](images/Module03-PowerBI-Uber-Copilot.png)
 
-### Step 14: AI-Powered Prompts That Show Business Value
+3. The full-screen Copilot chat interface opens
+4. You can start asking questions immediately — Copilot will find the right data source automatically
 
-Try these prompts to see how Copilot delivers insights that go beyond simple data retrieval:
+> **Note:** The Standalone Copilot requires your admin to enable the tenant setting: *"Users can access a standalone, cross-item Power BI Copilot experience"*. It also works best when your semantic model is [marked as approved for Copilot](https://learn.microsoft.com/en-us/power-bi/create-reports/copilot-prepare-data-ai#mark-your-model-as-approved-for-copilot).
 
-#### Prompt 1: Cross-Page Insight Synthesis
+> **Tip:** You can also attach a specific report or semantic model using the **+** button in the chat to ensure Copilot uses that source for your questions.
+
+### Step 14: Standalone Copilot Prompts — Advanced AI Insights
+
+Try these 5 prompts to see the Standalone Copilot's advanced capabilities — from generating visuals to surfacing causal relationships:
+
+#### Prompt 1: On-Demand Visualization with Causal Insight
 ```
-Give me a complete picture of our hospital system's performance across quality, financials, and patient volume
+Using the Healthcare Operations Dashboard, create a scatter plot showing the relationship between average length of stay and readmission rate by diagnosis. Which diagnoses suggest that shorter stays may be contributing to readmissions?
 ```
-**Why this matters:** Copilot synthesizes data from multiple report pages into a unified narrative. A human analyst would need to flip between pages and mentally connect the dots — Copilot does this instantly.
+**Why this matters:** The Standalone Copilot generates a visual AND interprets it in a single response. It goes beyond charting to surface **causal hypotheses** — identifying where premature discharge may be driving readmissions. This is the kind of insight that typically requires a data scientist, delivered in seconds.
 
-#### Prompt 2: Causal Analysis
+#### Prompt 2: Multi-Metric Visual Comparison
 ```
-Why might our readmission rate be higher for certain diagnoses? What does the data suggest about contributing factors?
+Show me a grouped bar chart comparing denial rate, collection rate, and average claim amount across all payers in my healthcare data. Highlight which payer represents the biggest financial risk.
 ```
-**Why this matters:** This demonstrates AI's ability to reason about causality. Copilot examines correlated dimensions (diagnosis, facility, length of stay) and proposes explanations grounded in data — moving beyond "what happened" to "why it happened."
+**Why this matters:** Copilot creates a complex multi-measure visualization and adds interpretive commentary. It demonstrates AI's ability to **synthesize multiple KPIs into a risk assessment** — going beyond what static dashboards show by adding analytical judgment.
 
-#### Prompt 3: Anomaly and Outlier Detection
+#### Prompt 3: Anomaly Detection and Root Cause
 ```
-Are there any facilities or diagnoses that stand out as significantly different from the average in terms of readmissions or denials?
+Analyze our hospital data and identify any facilities or diagnoses where readmission rates are statistically unusual compared to the overall average. What factors in the data might explain these outliers?
 ```
-**Why this matters:** Copilot identifies statistical outliers across your data without requiring the user to know what to look for. This is proactive intelligence — surfacing problems before they're asked about.
+**Why this matters:** This demonstrates **proactive anomaly detection** — the Copilot scans across dimensions to find outliers without being told where to look. It then performs root cause reasoning by examining correlated factors (length of stay, diagnosis mix, patient demographics), delivering the type of exploratory analysis that would take an analyst hours.
 
-#### Prompt 4: Actionable Recommendations
+#### Prompt 4: Predictive Pattern Recognition
 ```
-Based on our denial rates and collection patterns, which payers should we prioritize for process improvement, and what is the estimated revenue impact?
+Based on the patterns in our encounter and financial data, which combination of insurance type, diagnosis, and facility has the highest probability of claim denial? What does this suggest about where to focus denial prevention efforts?
 ```
-**Why this matters:** Copilot doesn't just report numbers — it translates data into business action with quantified impact. This demonstrates AI moving from descriptive analytics to prescriptive guidance.
+**Why this matters:** Copilot identifies **multi-dimensional patterns** that are invisible in standard charts. By finding the intersection of factors that predict denials, it provides **prescriptive guidance** — telling you not just what happened, but where to intervene. This shows AI's value in moving from descriptive to predictive analytics.
 
-#### Prompt 5: Trend Interpretation
+#### Prompt 5: Strategic Synthesis with Visualization
 ```
-What trends are emerging in our patient volume and encounter types over time, and what might they mean for capacity planning?
+Create a summary dashboard view of our hospital system's biggest operational challenges. Include a visual showing the top 5 diagnoses by financial impact (charges minus collections) and explain how readmission patterns relate to our revenue gaps.
 ```
-**Why this matters:** Copilot interprets temporal patterns and connects them to operational implications. This shows AI's value in forward-looking analysis — not just reporting the past but informing future decisions.
+**Why this matters:** The Standalone Copilot combines **visual creation with strategic narrative** — generating both a chart and an explanation of how different metrics interconnect. It demonstrates AI's ability to think across domains (clinical quality + financial performance) and articulate systemic relationships that inform executive decision-making.
 
-#### Prompt 6: Comparative Intelligence
-```
-Compare our top 3 facilities across all available metrics. Which facility is performing best overall and which needs the most attention?
-```
-**Why this matters:** Copilot performs multi-dimensional comparison and synthesizes a balanced scorecard view. It weights multiple factors and provides a holistic assessment — the kind of analysis that typically requires a dedicated analytics team.
+### What Makes the Standalone Copilot Different?
 
-### What Makes This Different from Traditional BI?
+| Capability | Report Copilot (Part D) | Standalone Copilot (Part E) |
+|-----------|------------------------|----------------------------|
+| **Scope** | Current report only | Any report, semantic model, or data agent |
+| **Access** | Must open a specific report first | Start from left nav — asks any question |
+| **Visual generation** | Creates visuals in the report canvas | Generates visuals inline in chat |
+| **Data source** | Fixed to report's semantic model | Auto-discovers best data source |
+| **DAX generation** | Uses existing measures | Can create new DAX calculations on the fly |
+| **Use case** | Report authoring & refinement | Business user exploration & strategic Q&A |
 
-| Traditional BI | Power BI Copilot |
-|---------------|------------------|
-| User must know which chart to look at | AI finds relevant data across all pages |
-| Requires pre-built visuals for every question | Answers ad-hoc questions on the fly |
-| Shows "what happened" | Explains "why" and "what to do about it" |
-| Requires analyst to connect dots | Synthesizes insights across dimensions |
-| Static dashboards | Interactive, conversational exploration |
-| One-size-fits-all views | Personalized answers to specific questions |
-
-> **Key Takeaway:** The reading-view Copilot transforms Power BI from a reporting tool into an **AI-powered analytical advisor**. Business users can ask strategic questions in plain language and get synthesized, actionable intelligence — no DAX knowledge or report authoring skills required.
+> **Key Takeaway:** The Standalone Copilot is Power BI's most powerful AI experience — it turns the entire organization's data estate into a **conversational analytics platform**. Business users ask strategic questions in plain language and get visuals, causal insights, anomaly detection, and prescriptive recommendations — without ever needing to know which report to open or how to write DAX.
 
 ---
 
@@ -435,7 +435,7 @@ Before moving to Module 4, confirm:
 - [ ] Slicers work and filter the visuals correctly
 - [ ] Report is saved as `Healthcare Operations Dashboard`
 - [ ] Report Copilot (edit mode) tested — summarization and data Q&A
-- [ ] Reading View Copilot tested — causal analysis and cross-page insights
+- [ ] Standalone Copilot tested — visuals, causal insights, and anomaly detection
 
 ---
 
