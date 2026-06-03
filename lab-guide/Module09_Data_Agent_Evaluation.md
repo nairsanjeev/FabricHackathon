@@ -1,10 +1,10 @@
-# Module 7B (Optional): Data Agent Evaluation — LLM-as-Judge
+# Module 9 (Optional): Data Agent Evaluation — LLM-as-Judge
 
 | Duration | 30 minutes |
 |----------|------------|
 | Objective | Programmatically evaluate your Data Agent's accuracy using ground-truth DAX queries, the Fabric Data Agent SDK, and an LLM-as-Judge pattern with calibration-adjusted scoring |
 | Fabric Features | Data Agent SDK, Semantic Link (DAX evaluation), Fabric Built-in AI Endpoint |
-| Prerequisites | Module 7 complete (Data Agent created and configured) |
+| Prerequisites | Module 5 complete (Data Agent created and configured) |
 
 ---
 
@@ -75,7 +75,7 @@ Paste in **Cell 2**:
 from fabric.dataagent.client import FabricDataAgentManagement, FabricOpenAI
 import pandas as pd
 
-# ⚠️ Update this name to match your Data Agent from Module 7
+# ⚠️ Update this name to match your Data Agent from Module 5
 DATA_AGENT_NAME = "HealthFirst Clinical Analyst"
 
 # View current agent configuration
@@ -140,7 +140,7 @@ import time
 # Your workspace and semantic model — update if names differ
 WORKSPACE_ID = fabric.resolve_workspace_id()
 SEMANTIC_MODEL = "HealthcareLakehouse-SemanticModel"  # From Module 3
-DATA_AGENT_NAME = "HealthFirst Clinical Analyst"       # From Module 7
+DATA_AGENT_NAME = "HealthFirst Clinical Analyst"       # From Module 5
 
 print(f"Workspace ID: {WORKSPACE_ID}")
 print(f"Semantic Model: {SEMANTIC_MODEL}")
@@ -201,8 +201,8 @@ ROW(
     "Diabetes Patients",
     COUNTROWS(
         FILTER(
-            'gold_chronic_conditions',
-            'gold_chronic_conditions'[has_diabetes] = TRUE()
+            'gold_population_health',
+            'gold_population_health'[has_diabetes] = TRUE()
         )
     )
 )
@@ -840,7 +840,7 @@ To build a comprehensive test suite:
 
 ---
 
-## ✅ Module 7B Checklist
+## ✅ Module 9 Checklist
 
 Before proceeding, confirm:
 
@@ -857,4 +857,4 @@ Before proceeding, confirm:
 
 ---
 
-**[← Module 7: Data Agent & Power BI Copilot](Module07_Data_Agent.md)** | **[Module 8 (Optional): VS Code Agent Mode →](Module08_VSCode_Agent_Mode.md)** | **[Back to Overview](../README.md)**
+**[← Module 8: VS Code Agent Mode](Module08_VSCode_Agent_Mode.md)** | **[Module 10: Fabric IQ →](Module10_Fabric_IQ.md)** | **[Back to Overview](../README.md)**

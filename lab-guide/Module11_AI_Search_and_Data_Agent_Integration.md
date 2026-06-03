@@ -4,7 +4,7 @@
 |----------|---------------|
 | Objective | Connect an Azure AI Search index (unstructured documents) to a Fabric Data Agent that also uses your semantic model/Lakehouse tables, then validate combined answers with citations and metrics |
 | Fabric Features | Data Agent, Azure AI Search Index connector (preview), Lakehouse/Semantic model data sources |
-| Prerequisites | Module 3 and Module 7 completed |
+| Prerequisites | Module 3 and Module 5 completed |
 
 ---
 
@@ -194,7 +194,7 @@ You will use this URL in Fabric Data Agent when adding **AI Search Index**.
 
 ### Step 12: Open Your Existing Data Agent
 
-1. In your Fabric workspace, open the Data Agent from Module 7 (or create a new one)
+1. In your Fabric workspace, open the Data Agent from Module 5 (or create a new one)
 2. Go to the **Data** tab
 
 ### Step 13: Add AI Search Index
@@ -209,7 +209,6 @@ In the same Data Agent, also include your structured sources:
 
 - `gold_readmissions`
 - `gold_encounter_summary`
-- `gold_facility_summary` (if created)
 - `gold_financial`
 - `gold_population_health`
 - Semantic model used in Module 3 (if available in your tenant flow)
@@ -323,7 +322,7 @@ You are done when your Data Agent can answer at least two prompts with:
 
 - Add a `document_confidence` field and ask the agent to report evidence quality
 - Segment policy docs by facility and test site-specific grounding
-- Build an evaluation notebook (similar to Module 7B) that scores:
+- Build an evaluation notebook (similar to Module 9) that scores:
   - metric correctness
   - citation presence
   - guidance relevance

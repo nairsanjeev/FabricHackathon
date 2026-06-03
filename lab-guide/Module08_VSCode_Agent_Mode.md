@@ -228,7 +228,7 @@ and the array_contains pattern for population health.
 
 ---
 
-## Part F: Build the Gen AI Pipeline (Module 5 Equivalent)
+## Part F: Build the Gen AI Pipeline (Module 6 Equivalent)
 
 ### Step 9: Create the Clinical Intelligence Notebook
 
@@ -475,4 +475,4 @@ Confirm you have completed:
 
 ---
 
-**[← Module 7: Data Agent & Power BI Copilot](Module07_Data_Agent.md)** | **[Module 9 (Optional): Readmission Prediction →](Module09_Readmission_Prediction.md)** | **[Back to Overview](../README.md)**
+**[← Module 7: Readmission Prediction](Module07_Readmission_Prediction.md)** | **[Module 9 (Optional): Data Agent Evaluation →](Module09_Data_Agent_Evaluation.md)** | **[Back to Overview](../README.md)**

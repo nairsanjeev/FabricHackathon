@@ -1,11 +1,11 @@
-# Module 9: Predicting Hospital Readmissions with AutoML (Optional)
+# Module 7: Predicting Hospital Readmissions with AutoML
 
 | Duration | 45–60 minutes |
 |----------|---------------|
 | Objective | Use Fabric's built-in AI endpoint as a feature engineering assistant, then leverage AutoML (FLAML) to automatically find the best model for predicting 30-day hospital readmissions |
 | Tools | Fabric Notebook, Fabric AI Services (built-in Azure OpenAI), PySpark, FLAML AutoML, MLflow |
 
-> **⚠️ This module is OPTIONAL.** It builds on the data created in Modules 1–2 and the Gen AI skills from Module 5. You will use Gen AI as an **ML feature engineering assistant** and AutoML to automatically discover the best algorithm.
+This module builds on the data created in Modules 1–2 and the Gen AI skills from Module 6. You will use Gen AI as an **ML feature engineering assistant** and AutoML to automatically discover the best algorithm.
 
 ---
 
@@ -1086,7 +1086,7 @@ This closes the loop — Gen AI suggested the features, AutoML found the best mo
 
 ---
 
-## ✅ Module 9 Checklist
+## ✅ Module 7 Checklist
 
 Confirm you have completed:
 
@@ -1124,4 +1124,4 @@ Confirm you have completed:
 
 ---
 
-**[← Module 8: VS Code Agent Mode](Module08_VSCode_Agent_Mode.md)** | **[Back to Overview](../README.md)**
+**[← Module 6: Gen AI — Clinical Intelligence](Module06_GenAI_Clinical_Intelligence.md)** | **[Module 8: VS Code Agent Mode →](Module08_VSCode_Agent_Mode.md)** | **[Back to Overview](../README.md)**

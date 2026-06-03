@@ -763,4 +763,4 @@ Before moving to Module 5, confirm:
 
 ---
 
-**[← Module 3: Semantic Model & Dashboard](Module03_Semantic_Model_and_Dashboard.md)** | **[Module 5: Gen AI — Clinical Intelligence →](Module05_GenAI_Clinical_Intelligence.md)**
+**[← Module 3: Semantic Model, Dashboard & Power BI Copilot](Module03_Semantic_Model_and_Dashboard.md)** | **[Module 5: Data Agent →](Module05_Data_Agent.md)**

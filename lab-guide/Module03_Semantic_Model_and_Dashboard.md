@@ -1,9 +1,9 @@
-# Module 3: Semantic Model & Power BI Dashboard
+# Module 3: Semantic Model, Dashboard & Power BI Copilot
 
 | Duration | 45 minutes |
 |----------|------------|
-| Objective | Build a star-schema Semantic Model on Gold tables and create an interactive Power BI dashboard for healthcare operations |
-| Fabric Features | Semantic Model, Power BI Report, DAX Measures |
+| Objective | Build a star-schema Semantic Model on Gold tables, create an interactive Power BI dashboard, and test Power BI Copilot for AI-assisted analytics |
+| Fabric Features | Semantic Model, Power BI Report, DAX Measures, Power BI Copilot |
 
 ---
 
@@ -300,6 +300,52 @@ Create a financial and population health dashboard page. Include:
 
 ---
 
+## Part D: Test Power BI Copilot
+
+Now that your report is saved, let's test **Power BI Copilot** — an AI assistant that can answer questions about your data, create visuals, and summarize report pages.
+
+### Step 11: Open Copilot
+
+1. Open the `Healthcare Operations Dashboard` report you just saved
+2. Click the **Copilot** button in the top ribbon — the Copilot pane opens on the right
+
+> **Note:** Power BI Copilot requires Fabric capacity (F64 or higher) and must be enabled by your admin. If you don't see the Copilot button, check with your instructor.
+
+### Step 12: Try These Prompts
+
+Test each prompt in the Copilot pane and observe how it uses your semantic model:
+
+#### Prompt 1: Summarize the Current Page
+```
+Summarize the key insights from this report page
+```
+**What to observe:** Copilot reads the visuals on the current page and generates a narrative summary — great for quick meeting prep.
+
+#### Prompt 2: Create a Visual
+```
+Create a bar chart showing readmission rate by facility
+```
+**What to observe:** Copilot generates a visual using DAX queries against your semantic model. It should use the `gold_readmissions` table.
+
+#### Prompt 3: Ask a Data Question
+```
+What is our overall 30-day readmission rate and how does it compare across facilities?
+```
+**What to observe:** Copilot returns a data-driven answer using your readmission measures.
+
+#### Prompt 4: Request a Board-Ready Narrative
+```
+Write a summary for the hospital board about our quality metrics, including readmission rates and length of stay
+```
+**What to observe:** Copilot generates executive-level narrative text suitable for board presentations.
+
+> **Copilot Tips:**
+> - Reference specific table and column names for better results
+> - Ask for one thing at a time — don't combine multiple requests
+> - Copilot can create visuals, change chart types, and add filters, but cannot resize visuals or apply conditional formatting
+
+---
+
 ## ✅ Module 3 Checklist
 
 Before moving to Module 4, confirm:
@@ -313,6 +359,7 @@ Before moving to Module 4, confirm:
   - [ ] Population Health & Financials
 - [ ] Slicers work and filter the visuals correctly
 - [ ] Report is saved as `Healthcare Operations Dashboard`
+- [ ] Power BI Copilot tested with at least 2 prompts
 
 ---
 

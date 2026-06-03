@@ -18,17 +18,15 @@ Healthcare providers — hospital administrators, clinical informaticists, data 
 | 9:20 – 9:50 | [Module 1 — Lakehouse & Data Ingestion](lab-guide/Module01_Setup_and_Data_Ingestion.md) | 30 min | Lakehouse, Upload, Spark Notebook |
 | 9:50 – 10:35 | [Module 2 — Data Engineering](lab-guide/Module02_Data_Engineering.md) | 45 min | Spark Notebooks, Delta Tables |
 | 10:35 – 10:45 | *Break* | 10 min | |
-| 10:45 – 11:30 | [Module 3 — Semantic Model & Power BI Dashboard](lab-guide/Module03_Semantic_Model_and_Dashboard.md) | 45 min | Semantic Model, Power BI, Copilot |
+| 10:45 – 11:30 | [Module 3 — Semantic Model, Dashboard & Power BI Copilot](lab-guide/Module03_Semantic_Model_and_Dashboard.md) | 45 min | Semantic Model, Power BI, Copilot |
 | 11:30 – 12:30 | [Module 4 — Real-Time Analytics](lab-guide/Module04_RealTime_Analytics.md) | 60 min | Eventhouse, KQL, Real-Time Dashboard |
 | 12:30 – 1:15 | *Lunch Break* | 45 min | |
-| 1:15 – 1:45 | [Module 5 — Gen AI: Clinical Intelligence](lab-guide/Module05_GenAI_Clinical_Intelligence.md) | 30 min | Notebooks, Fabric AI Services |
-| 1:45 – 2:25 | [Module 6 — Prep Data for AI](lab-guide/Module06_Prep_Data_for_AI.md) | 40 min | Data Quality, Semantic Link, MCP |
-| 2:25 – 2:45 | [Module 6B — Testing Power BI Copilot](lab-guide/Module06B_Testing_Copilot.md) | 20 min | Power BI Copilot, Standalone Copilot |
-| 2:45 – 3:15 | [Module 7 — Data Agent & Power BI Copilot](lab-guide/Module07_Data_Agent.md) | 30 min | Fabric Data Agent, Power BI Copilot |
-| 3:15 – 3:30 | *Wrap-Up & Q&A* | 15 min | |
-| *(Optional)* | [Module 7B — Data Agent Evaluation (LLM-as-Judge)](lab-guide/Module07B_Data_Agent_Evaluation.md) | 30 min | Data Agent SDK, LLM-as-Judge, Semantic Link |
+| 1:15 – 1:55 | [Module 5 — Data Agent](lab-guide/Module05_Data_Agent.md) | 40 min | Prep Data for AI, Fabric Data Agent |
+| 1:55 – 2:25 | [Module 6 — Gen AI: Clinical Intelligence](lab-guide/Module06_GenAI_Clinical_Intelligence.md) | 30 min | Notebooks, Fabric AI Services |
+| 2:25 – 3:25 | [Module 7 — Predicting Readmissions with AutoML](lab-guide/Module07_Readmission_Prediction.md) | 45–60 min | Azure OpenAI, FLAML AutoML, MLflow |
+| 3:25 – 3:40 | *Wrap-Up & Q&A* | 15 min | |
 | *(Optional)* | [Module 8 — Building with VS Code Agent Mode](lab-guide/Module08_VSCode_Agent_Mode.md) | 60–90 min | GitHub Copilot Agent Mode, VS Code |
-| *(Optional)* | [Module 9 — Predicting Readmissions with AutoML](lab-guide/Module09_Readmission_Prediction.md) | 45–60 min | Azure OpenAI, FLAML AutoML, MLflow |
+| *(Optional)* | [Module 9 — Data Agent Evaluation (LLM-as-Judge)](lab-guide/Module09_Data_Agent_Evaluation.md) | 30 min | Data Agent SDK, LLM-as-Judge, Semantic Link |
 | *(Optional)* | [Module 10 — Fabric IQ: Ontology & Plan](lab-guide/Module10_Fabric_IQ.md) | 45–60 min | Fabric IQ, Ontology, Plan, Data Agent |
 | *(Optional)* | [Module 11 — AI Search + Data Agent (Structured + Unstructured)](lab-guide/Module11_AI_Search_and_Data_Agent_Integration.md) | 45–60 min | Azure AI Search, Fabric Data Agent |
 
@@ -43,15 +41,13 @@ FabricHackathon/
 │   ├── Module00_Introduction.md       ← Healthcare challenges & lab overview
 │   ├── Module01_Setup_and_Data_Ingestion.md  ← Lakehouse + Data Pipeline alt path
 │   ├── Module02_Data_Engineering.md
-│   ├── Module03_Semantic_Model_and_Dashboard.md  ← + Power BI Copilot alt path
+│   ├── Module03_Semantic_Model_and_Dashboard.md  ← + Power BI Copilot
 │   ├── Module04_RealTime_Analytics.md
-│   ├── Module05_GenAI_Clinical_Intelligence.md
-│   ├── Module06_Prep_Data_for_AI.md   ← Data quality & AI-ready preparation
-│   ├── Module06B_Testing_Copilot.md   ← Testing Power BI & Standalone Copilot
-│   ├── Module07_Data_Agent.md         ← Data Agent + Power BI Copilot testing
-│   ├── Module07B_Data_Agent_Evaluation.md ← LLM-as-Judge evaluation pipeline
+│   ├── Module05_Data_Agent.md         ← Prep Data for AI + Data Agent
+│   ├── Module06_GenAI_Clinical_Intelligence.md ← AI-powered clinical note analysis
+│   ├── Module07_Readmission_Prediction.md ← GenAI-powered readmission prediction with AutoML
 │   ├── Module08_VSCode_Agent_Mode.md  ← (Optional) Build entire lab with AI agent
-│   ├── Module09_Readmission_Prediction.md ← (Optional) GenAI-powered readmission prediction
+│   ├── Module09_Data_Agent_Evaluation.md ← (Optional) LLM-as-Judge evaluation pipeline
 │   ├── Module10_Fabric_IQ.md          ← (Optional) Ontology + Plan with LLM-assisted design
 │   └── Module11_AI_Search_and_Data_Agent_Integration.md ← (Optional) Combine unstructured + structured responses
 ├── data/
@@ -82,7 +78,7 @@ FabricHackathon/
 - A Microsoft Fabric workspace (capacity F64 or higher recommended)
 - A web browser (Microsoft Edge or Google Chrome)
 - The synthetic CSV data files from the `data/` folder (pre-generated)
-- For Module 5 (Gen AI): An Azure OpenAI Service endpoint with a GPT-4o deployment
+- For Module 6 (Gen AI): An Azure OpenAI Service endpoint with a GPT-4o deployment
 
 ## 📊 What You Will Build
 
@@ -91,13 +87,12 @@ By the end of this lab, you will have:
 1. **A Lakehouse** with Bronze → Silver → Gold data layers containing clinical, operational, and financial healthcare data
 2. **Spark Notebooks** that compute hospital quality measures including 30-day readmission rates, average length of stay, and ED utilization
 3. **A Semantic Model** (star schema) with measures for readmission rate, bed occupancy, and revenue analysis
-4. **A Power BI Dashboard** with pages for Patient Volume & Flow, Quality & Readmissions, and Population Health (with Power BI Copilot alternate path)
+4. **A Power BI Dashboard** with pages for Patient Volume & Flow, Quality & Readmissions, and Population Health — plus Power BI Copilot testing
 5. **A Real-Time Dashboard** monitoring simulated patient vitals with sepsis early-warning detection
-6. **A Gen AI Notebook** that summarizes clinical notes and suggests ICD-10 codes
-7. **AI-Ready Data** with quality checks and pre-built summary views (Patient 360°, Facility Summary)
-8. **A Data Agent** that lets you ask questions about your healthcare data in natural language
-9. **Power BI Copilot** tested for AI-assisted visual analytics and executive narrative generation
-10. **(Optional) VS Code Agent Mode** — experience building the entire lab through conversational AI with GitHub Copilot
+6. **A Data Agent** that lets you ask questions about your healthcare data in natural language, with Prep Data for AI configuration
+7. **A Gen AI Notebook** that summarizes clinical notes and suggests ICD-10 codes
+8. **A Readmission Prediction Model** using Gen AI-assisted feature engineering and AutoML (FLAML)
+9. **(Optional) VS Code Agent Mode** — experience building the entire lab through conversational AI with GitHub Copilot
 11. **(Optional) Readmission Prediction Model** — Gen AI-assisted feature engineering with XGBoost to predict 30-day hospital readmissions and generate patient risk scores
 12. **(Optional) AI Search + Data Agent Integration** — combine Azure AI Search document context with Fabric metrics in one grounded response
 

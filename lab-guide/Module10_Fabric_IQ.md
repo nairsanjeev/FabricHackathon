@@ -41,7 +41,7 @@ Healthcare organizations have dozens of tables — claims, encounters, patients,
 - Tenant admin has enabled:
   - **Ontology (preview)** — Admin Portal → Tenant Settings → Fabric IQ
   - **Users can create Plan (preview) items** — Admin Portal → Tenant Settings → Fabric IQ
-- For Part A: Azure OpenAI endpoint (same one from Module 5)
+- For Part A: Azure OpenAI endpoint (same one from Module 6)
 
 ---
 
@@ -266,7 +266,7 @@ For each question:
 
 ### Step 13: Compare with Table-Based Agent
 
-Think about how these questions would perform with a table-based Data Agent (Module 7) vs. the ontology-based agent:
+Think about how these questions would perform with a table-based Data Agent (Module 5) vs. the ontology-based agent:
 
 | Aspect | Table-Based Agent | Ontology-Based Agent |
 |--------|-------------------|---------------------|

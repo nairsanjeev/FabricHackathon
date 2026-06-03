@@ -1,4 +1,4 @@
-# Module 5: Gen AI — Clinical Intelligence
+# Module 6: Gen AI — Clinical Intelligence
 
 | Duration | 30 minutes |
 |----------|------------|
@@ -497,4 +497,4 @@ Before moving to Module 6, confirm:
 
 ---
 
-**[← Module 4: Real-Time Analytics](Module04_RealTime_Analytics.md)** | **[Module 6: Prep Data for AI →](Module06_Prep_Data_for_AI.md)**
+**[← Module 5: Data Agent](Module05_Data_Agent.md)** | **[Module 7: Readmission Prediction →](Module07_Readmission_Prediction.md)**

@@ -87,8 +87,8 @@ ROW(
     "Diabetes Patients",
     COUNTROWS(
         FILTER(
-            'gold_chronic_conditions',
-            'gold_chronic_conditions'[has_diabetes] = TRUE()
+            'gold_population_health',
+            'gold_population_health'[has_diabetes] = TRUE()
         )
     )
 )
