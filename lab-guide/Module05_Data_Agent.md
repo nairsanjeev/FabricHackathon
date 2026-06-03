@@ -295,21 +295,23 @@ and their likelihood of being readmitted within 30 days?
 
 **Expected:** The agent joins `gold_population_health` with `gold_readmissions` to show readmission rates stratified by chronic condition count, revealing whether multimorbidity correlates with readmission risk.
 
-#### Question 4: ED Utilization
+#### Question 4: CEO Executive Summary
 ```
-How many patients visited the ED more than 3 times this year? 
-What are their most common diagnoses?
-```
-
-**Expected:** The agent queries `gold_ed_utilization` and joins with conditions to identify frequent flyers and their diagnoses.
-
-#### Question 5: Financial Performance
-```
-What is our claims denial rate? Which payer has the highest denial rate, 
-and how much revenue have we lost to denials?
+Generate an executive summary for our CEO: What are the top 3 quality concerns 
+across our hospital network based on readmission rates, length of stay, 
+and patient volume by facility?
 ```
 
-**Expected:** The agent queries `gold_financial` to show denial rates and financial impact by payer.
+**Expected:** The agent queries multiple Gold tables and synthesizes a high-level narrative covering readmission performance, ALOS outliers, and volume distribution — the kind of briefing a CEO would receive before a board meeting.
+
+#### Question 5: Operational Intelligence Report
+```
+Create a facility performance scorecard: For each of our three facilities, 
+show total encounters, inpatient volume, average length of stay, 
+readmission rate, and the top diagnosis by volume.
+```
+
+**Expected:** The agent queries `gold_encounter_summary`, `gold_readmissions`, and `gold_alos` to build a comparative scorecard across Metro General, Community Medical Center, and Riverside Health Center.
 
 #### Question 6: Population Health
 ```
