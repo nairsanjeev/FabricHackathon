@@ -2,8 +2,8 @@
 
 | Duration | 45 minutes |
 |----------|------------|
-| Objective | Build a star-schema Semantic Model on Gold tables, create an interactive Power BI dashboard, and test Power BI Copilot for AI-assisted analytics |
-| Fabric Features | Semantic Model, Power BI Report, DAX Measures, Power BI Copilot |
+| Objective | Build a star-schema Semantic Model on Gold tables, create an interactive Power BI dashboard, and explore Power BI Copilot for AI-powered insights and causal analysis |
+| Fabric Features | Semantic Model, Power BI Report, DAX Measures, Power BI Report Copilot, Power BI Reading View Copilot |
 
 ---
 
@@ -300,16 +300,17 @@ Create a financial and population health dashboard page. Include:
 
 ---
 
-## Part D: Test Power BI Copilot
+## Part D: Power BI Report Copilot
 
-Now that your report is saved, let's test **Power BI Copilot** — an AI assistant that can answer questions about your data, create visuals, and summarize report pages.
+Now that your report is saved, let's test the **Report Copilot** — the AI assistant built into the Power BI report editor that can answer questions, summarize pages, and generate narrative insights from your data.
 
-### Step 11: Open Copilot
+### Step 11: Open Copilot in Edit Mode
 
 1. Open the `Healthcare Operations Dashboard` report you just saved
-2. Click the **Copilot** button in the top ribbon — the Copilot pane opens on the right
+2. Click **Edit** to enter the report editor
+3. Click the **Copilot** button in the top ribbon — the Copilot pane opens on the right
 
-> **Note:** Power BI Copilot requires Fabric capacity (F64 or higher) and must be enabled by your admin. If you don't see the Copilot button, check with your instructor.
+> **Note:** Report Copilot requires Fabric capacity (F64 or higher) and must be enabled by your admin. If you don't see the Copilot button, check with your instructor.
 
 ### Step 12: Try These Prompts
 
@@ -319,30 +320,104 @@ Test each prompt in the Copilot pane and observe how it uses your semantic model
 ```
 Summarize the key insights from this report page
 ```
-**What to observe:** Copilot reads the visuals on the current page and generates a narrative summary — great for quick meeting prep.
+**What to observe:** Copilot reads the visuals on the current page and generates a narrative summary — great for quick meeting prep or briefing stakeholders.
 
-#### Prompt 2: Create a Visual
-```
-Create a bar chart showing readmission rate by facility
-```
-**What to observe:** Copilot generates a visual using DAX queries against your semantic model. It should use the `gold_readmissions` table.
-
-#### Prompt 3: Ask a Data Question
+#### Prompt 2: Ask a Data Question
 ```
 What is our overall 30-day readmission rate and how does it compare across facilities?
 ```
-**What to observe:** Copilot returns a data-driven answer using your readmission measures.
+**What to observe:** Copilot returns a data-driven answer using your readmission measures. It understands relationships between tables and can aggregate across dimensions.
+
+#### Prompt 3: Identify Patterns and Correlations
+```
+Which diagnoses have the highest readmission rates, and are there patterns in patient demographics that correlate with higher readmissions?
+```
+**What to observe:** Copilot goes beyond simple aggregation — it identifies which categories are outliers and surfaces relationships between dimensions (diagnosis × demographics), showing AI's ability to surface non-obvious patterns.
 
 #### Prompt 4: Request a Board-Ready Narrative
 ```
-Write a summary for the hospital board about our quality metrics, including readmission rates and length of stay
+Write an executive summary for the hospital board covering our quality performance: readmission rates, average length of stay, and financial impact of denials. Include which areas need intervention.
 ```
-**What to observe:** Copilot generates executive-level narrative text suitable for board presentations.
+**What to observe:** Copilot generates executive-level narrative text with actionable recommendations — demonstrating AI's ability to synthesize multiple metrics into coherent strategy guidance.
 
-> **Copilot Tips:**
+#### Prompt 5: Root Cause Exploration
+```
+What factors distinguish patients who are readmitted within 30 days from those who are not? Consider diagnosis, length of stay, and facility.
+```
+**What to observe:** Copilot performs comparative analysis across multiple dimensions to identify distinguishing characteristics — this is causal reasoning that would take an analyst significant time to perform manually.
+
+> **Report Copilot Tips:**
 > - Reference specific table and column names for better results
 > - Ask for one thing at a time — don't combine multiple requests
-> - Copilot can create visuals, change chart types, and add filters, but cannot resize visuals or apply conditional formatting
+> - Report Copilot excels at summarization, Q&A, and narrative generation
+> - For visual creation, be specific about chart type and columns
+
+---
+
+## Part E: Power BI Copilot — AI-Powered Insights (Reading View)
+
+Beyond the report editor, Power BI offers a **Copilot experience in reading view** that enables business users to interact with published reports using natural language. This is the broader Copilot experience that shows AI's value for decision-makers who consume reports but don't build them.
+
+### Step 13: Switch to Reading View
+
+1. Save and close the report editor (click **Reading view** or simply open the published report from your workspace)
+2. In the report's reading view, click the **Copilot** button in the top toolbar
+3. The Copilot pane opens — this is the **consumer-facing Copilot** designed for business users
+
+> **Note:** This Copilot experience works on published reports and is designed for people who consume insights rather than build reports. It can answer questions across all pages of the report.
+
+### Step 14: AI-Powered Prompts That Show Business Value
+
+Try these prompts to see how Copilot delivers insights that go beyond simple data retrieval:
+
+#### Prompt 1: Cross-Page Insight Synthesis
+```
+Give me a complete picture of our hospital system's performance across quality, financials, and patient volume
+```
+**Why this matters:** Copilot synthesizes data from multiple report pages into a unified narrative. A human analyst would need to flip between pages and mentally connect the dots — Copilot does this instantly.
+
+#### Prompt 2: Causal Analysis
+```
+Why might our readmission rate be higher for certain diagnoses? What does the data suggest about contributing factors?
+```
+**Why this matters:** This demonstrates AI's ability to reason about causality. Copilot examines correlated dimensions (diagnosis, facility, length of stay) and proposes explanations grounded in data — moving beyond "what happened" to "why it happened."
+
+#### Prompt 3: Anomaly and Outlier Detection
+```
+Are there any facilities or diagnoses that stand out as significantly different from the average in terms of readmissions or denials?
+```
+**Why this matters:** Copilot identifies statistical outliers across your data without requiring the user to know what to look for. This is proactive intelligence — surfacing problems before they're asked about.
+
+#### Prompt 4: Actionable Recommendations
+```
+Based on our denial rates and collection patterns, which payers should we prioritize for process improvement, and what is the estimated revenue impact?
+```
+**Why this matters:** Copilot doesn't just report numbers — it translates data into business action with quantified impact. This demonstrates AI moving from descriptive analytics to prescriptive guidance.
+
+#### Prompt 5: Trend Interpretation
+```
+What trends are emerging in our patient volume and encounter types over time, and what might they mean for capacity planning?
+```
+**Why this matters:** Copilot interprets temporal patterns and connects them to operational implications. This shows AI's value in forward-looking analysis — not just reporting the past but informing future decisions.
+
+#### Prompt 6: Comparative Intelligence
+```
+Compare our top 3 facilities across all available metrics. Which facility is performing best overall and which needs the most attention?
+```
+**Why this matters:** Copilot performs multi-dimensional comparison and synthesizes a balanced scorecard view. It weights multiple factors and provides a holistic assessment — the kind of analysis that typically requires a dedicated analytics team.
+
+### What Makes This Different from Traditional BI?
+
+| Traditional BI | Power BI Copilot |
+|---------------|------------------|
+| User must know which chart to look at | AI finds relevant data across all pages |
+| Requires pre-built visuals for every question | Answers ad-hoc questions on the fly |
+| Shows "what happened" | Explains "why" and "what to do about it" |
+| Requires analyst to connect dots | Synthesizes insights across dimensions |
+| Static dashboards | Interactive, conversational exploration |
+| One-size-fits-all views | Personalized answers to specific questions |
+
+> **Key Takeaway:** The reading-view Copilot transforms Power BI from a reporting tool into an **AI-powered analytical advisor**. Business users can ask strategic questions in plain language and get synthesized, actionable intelligence — no DAX knowledge or report authoring skills required.
 
 ---
 
@@ -359,7 +434,8 @@ Before moving to Module 4, confirm:
   - [ ] Population Health & Financials
 - [ ] Slicers work and filter the visuals correctly
 - [ ] Report is saved as `Healthcare Operations Dashboard`
-- [ ] Power BI Copilot tested with at least 2 prompts
+- [ ] Report Copilot (edit mode) tested — summarization and data Q&A
+- [ ] Reading View Copilot tested — causal analysis and cross-page insights
 
 ---
 
