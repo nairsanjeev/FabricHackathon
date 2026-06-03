@@ -50,10 +50,12 @@ The Data Agent translates natural language into queries, runs them, and returns 
 
 ### Step 2: Select Data Sources
 
-After the Data Agent is created:
+After the Data Agent is created, you'll see the **"Build your data agent"** screen:
 
-1. You'll see a configuration screen for the agent
-2. Under **Data sources**, click **Add data**
+![Data Agent creation screen showing Add a data source option and Add Data dropdown](images/Module05%20Data%20Agent%20Add%20source.png)
+
+1. Click **Add data** in the toolbar (or the **"Add a data source"** card)
+2. From the dropdown, select **Data source**
 3. Select your **HealthcareLakehouse**
 4. Choose the following tables (select all Gold and Silver tables):
 
@@ -79,11 +81,22 @@ After the Data Agent is created:
 
 ---
 
-## Part B: Configure the Agent Instructions
+## Part B: Configure the Agent — Setup Tab
 
-### Step 3: Add Custom Instructions
+After adding your data source, switch to the **Setup** tab in the left Explorer pane. You'll see three configuration areas:
+- **Agent instructions** — overall guidance for the agent
+- **Data source instructions** (under HealthcareLakehouse) — context about this specific data source
+- **Example queries** (under HealthcareLakehouse) — natural language + SQL pairs to guide responses
 
-The Data Agent performs much better when it understands the healthcare context. In the agent configuration, find the **Instructions** section and paste:
+### Step 3: Add Agent Instructions
+
+The Data Agent performs much better when it understands the healthcare context.
+
+1. In the **Explorer** pane (left side), click the **Setup** tab
+2. Click **Agent instructions**
+3. In the instructions text box, paste the following:
+
+![Agent instructions page showing healthcare domain context](images/Module05-AgentInstructions.png)
 
 ```
 You are a clinical data analyst for HealthFirst Medical Group, a healthcare 
@@ -121,25 +134,154 @@ When answering:
 - If comparing facilities, present results in a table format
 ```
 
-### Step 4: Provide Example Questions
+### Step 4: Add Data Source Instructions
 
-If the agent configuration supports example questions/prompts, add these:
+Data source instructions provide context specific to the **HealthcareLakehouse** — telling the agent what's in this data source and how to use it.
 
-| Example Question | Expected Behavior |
-|---|---|
-| What is our readmission rate? | Query gold_readmissions, calculate % |
-| Which facility has the highest ALOS? | Query gold_alos or gold_encounter_summary |
-| How many ED frequent flyers do we have? | Query gold_ed_utilization, filter is_frequent_flyer |
-| What is our claims denial rate by payer? | Query gold_financial, group by payer |
-| Show me patients with diabetes and CHF | Query gold_population_health, filter flags |
+1. In the **Explorer** pane under **HealthcareLakehouse**, click **Data source instructions**
+2. You'll see two fields: **Data source description** and **Data source instructions**
+
+![Data source instructions page showing description and instructions fields](images/Module05-Data%20Source%20instrctions.png)
+
+3. In the **Data source description** field, enter:
+```
+Healthcare operational data for a 3-facility hospital network. Contains patient encounters, 
+clinical outcomes (readmissions, length of stay), financial claims, ED utilization patterns, 
+and population health metrics. Covers data from January 2024 through March 2026.
+```
+
+4. In the **Data source instructions** field, enter:
+```
+This Lakehouse contains Gold-layer analytics tables and Silver-layer detail tables.
+
+Gold tables (use for aggregated analytics):
+- gold_readmissions: 30-day readmission flags. Key columns: patient_id, index_facility, 
+  index_diagnosis, was_readmitted, days_to_readmission
+- gold_encounter_summary: One row per encounter. Key columns: encounter_type (ED, Inpatient, 
+  Outpatient, Ambulatory), facility_name, department, length_of_stay_days, total_charges
+- gold_financial: Claims data. Key columns: payer, claim_amount, paid_amount, denied_amount, 
+  claim_status (Paid, Denied, Paid on Appeal)
+- gold_ed_utilization: ED visit patterns. Key columns: ed_visit_count, is_frequent_flyer
+- gold_population_health: Chronic condition counts. Key columns: chronic_condition_count, 
+  multimorbidity (None, Moderate, High)
+- gold_alos: Length of stay analytics by diagnosis and facility
+
+Silver tables (use for patient-level detail):
+- silver_patients: Demographics (age, gender, race, insurance_type, risk_score)
+- silver_encounters: Raw encounter records
+- silver_conditions: ICD-10 diagnosis codes per patient
+- silver_medications: Medication orders and classes
+- silver_claims: Individual claim line items
+
+Join patterns:
+- Join gold tables to silver_patients on patient_id for demographic breakdowns
+- Join gold_financial to gold_encounter_summary on encounter_id for clinical+financial analysis
+```
+
+### Step 5: Add Example Queries
+
+Example queries teach the agent how to translate natural language questions into SQL. Each example is a pair: a **Question** (natural language) and a **SQL query** (the correct answer).
+
+1. In the **Explorer** pane under **HealthcareLakehouse**, click **Example queries**
+2. Click **+ Add** to create each example query pair
+
+![Example queries page showing question and SQL query input fields](images/Module05-Setup-ExampleQueriespng.png)
+
+Add the following example query pairs:
+
+#### Example 1: Readmission Rate
+**Question:**
+```
+What is our overall 30-day readmission rate?
+```
+**SQL query:**
+```sql
+SELECT 
+    COUNT(CASE WHEN was_readmitted = true THEN 1 END) * 100.0 / COUNT(*) AS readmission_rate_pct,
+    COUNT(*) AS total_index_admissions,
+    COUNT(CASE WHEN was_readmitted = true THEN 1 END) AS total_readmissions
+FROM gold_readmissions
+```
+
+#### Example 2: Readmission Rate by Facility
+**Question:**
+```
+Which facility has the highest readmission rate?
+```
+**SQL query:**
+```sql
+SELECT 
+    index_facility,
+    COUNT(CASE WHEN was_readmitted = true THEN 1 END) * 100.0 / COUNT(*) AS readmission_rate_pct,
+    COUNT(*) AS total_admissions
+FROM gold_readmissions
+GROUP BY index_facility
+ORDER BY readmission_rate_pct DESC
+```
+
+#### Example 3: Average Length of Stay
+**Question:**
+```
+What is the average length of stay for inpatient encounters by facility?
+```
+**SQL query:**
+```sql
+SELECT 
+    facility_name,
+    AVG(length_of_stay_days) AS avg_los_days,
+    COUNT(*) AS inpatient_count
+FROM gold_encounter_summary
+WHERE encounter_type = 'Inpatient' AND length_of_stay_days > 0
+GROUP BY facility_name
+ORDER BY avg_los_days DESC
+```
+
+#### Example 4: Denial Rate by Payer
+**Question:**
+```
+What is our claims denial rate by payer?
+```
+**SQL query:**
+```sql
+SELECT 
+    payer,
+    COUNT(CASE WHEN claim_status = 'Denied' THEN 1 END) * 100.0 / COUNT(*) AS denial_rate_pct,
+    SUM(CASE WHEN claim_status = 'Denied' THEN claim_amount ELSE 0 END) AS revenue_lost_to_denials,
+    COUNT(*) AS total_claims
+FROM gold_financial
+GROUP BY payer
+ORDER BY denial_rate_pct DESC
+```
+
+#### Example 5: ED Frequent Flyers
+**Question:**
+```
+How many ED frequent flyer patients do we have and what are their demographics?
+```
+**SQL query:**
+```sql
+SELECT 
+    p.insurance_type,
+    p.gender,
+    COUNT(DISTINCT e.patient_id) AS frequent_flyer_count
+FROM gold_ed_utilization e
+JOIN silver_patients p ON e.patient_id = p.patient_id
+WHERE e.is_frequent_flyer = true
+GROUP BY p.insurance_type, p.gender
+ORDER BY frequent_flyer_count DESC
+```
+
+3. After adding all examples, the agent will use these as reference patterns when generating SQL for similar questions
+
+> **Tip:** The more example queries you provide, the more accurate the agent's SQL generation becomes. Focus on your most common use cases and queries that involve joins between tables.
 
 ---
 
 ## Part C: Test the Data Agent
 
-### Step 5: Ask Clinical Questions
+### Step 6: Ask Clinical Questions
 
-In the agent chat interface, try these questions one at a time. Observe how the agent translates your question into a query and returns results.
+Switch to the **Data** tab in the Explorer pane to access the agent chat interface. Try these questions one at a time. Observe how the agent translates your question into a query and returns results.
 
 #### Question 1: Readmission Overview
 ```
@@ -188,7 +330,7 @@ readmission rate, average length of stay, and ED volume
 
 **Expected:** The agent queries multiple Gold tables and presents a comparative table.
 
-### Step 6: Try Your Own Questions
+### Step 7: Try Your Own Questions
 
 Think about what a hospital administrator or quality officer would want to know, and ask the agent. Some ideas:
 
@@ -202,7 +344,7 @@ Think about what a hospital administrator or quality officer would want to know,
 
 ## Part D: Refine and Share
 
-### Step 7: Iterate on Instructions
+### Step 8: Iterate on Instructions
 
 If the agent gives unexpected or incorrect answers:
 
@@ -216,7 +358,7 @@ When asked about "readmission rate," always return a percentage:
 (patients readmitted within 30 days / total index admissions) * 100
 ```
 
-### Step 8: Share the Agent
+### Step 9: Share the Agent
 
 1. Click the **Share** button in the agent settings
 2. Add colleagues or groups who should have access
@@ -251,11 +393,12 @@ When asked about "readmission rate," always return a percentage:
 
 Confirm you have completed:
 
-- [ ] Prep Data for AI configured (AI Data Schema, AI Instructions, Verified Answers)
-- [ ] Semantic model marked as Approved for Copilot
+- [ ] Prep Data for AI configured in Module 3 (descriptions, AI Instructions, Approved for Copilot)
 - [ ] Data Agent `HealthFirst Clinical Analyst` is created
 - [ ] Lakehouse tables are connected as data sources
-- [ ] Custom instructions added with healthcare domain context
+- [ ] Data source description and instructions added
+- [ ] Example queries added (5 question/SQL pairs)
+- [ ] Agent instructions added with healthcare domain context
 - [ ] Successfully tested at least 4 natural language queries with the Data Agent
 - [ ] The agent returns accurate, well-formatted responses
 
