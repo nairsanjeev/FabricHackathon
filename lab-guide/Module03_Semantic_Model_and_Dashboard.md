@@ -241,7 +241,47 @@ Adding descriptions to tables, columns, and measures helps Copilot locate the ri
 
 > **Why this matters:** When Copilot has descriptions, it can match your natural language question to the right table/column without guessing. This dramatically reduces response time and eliminates clarifying questions.
 
-### Step 7: Mark the Semantic Model as "Approved for Copilot"
+### Step 7: Prep Data for AI — Add AI Instructions
+
+AI Instructions let you provide **plain-text guidance** that Copilot and the Data Agent use when interpreting questions. This is where you encode domain knowledge, terminology, and analysis rules — so AI understands your organization's language.
+
+1. Open your semantic model in **Power BI Desktop** (or select the semantic model in the Power BI service)
+2. Click **Prep data for AI** on the Home ribbon
+3. Go to the **Add AI instructions** tab
+4. Enter instructions that help AI understand your healthcare data:
+
+```
+## Healthcare Analytics Context
+
+You are analyzing data for a hospital network with 3 facilities:
+Metro General Hospital, Community Medical Center, and Riverside Health System.
+
+## Key Terminology
+- "Readmission" = a patient returning to any facility within 30 days of discharge
+- "Frequent flyer" = a patient with 4 or more ED visits in the analysis period
+- "ALOS" = Average Length of Stay, measured in days for inpatient encounters only
+- "Denial rate" = percentage of claims with claim_status = 'Denied'
+- "Multimorbidity" = patients with 3 or more chronic conditions (High tier)
+- "Payment ratio" = paid_amount / claim_amount (1.0 = fully paid, 0.0 = fully denied)
+
+## Analysis Rules
+- When analyzing readmissions, always group by facility and diagnosis
+- When showing financial metrics, break down by insurance_type (Medicare, Medicaid, Commercial, Self-Pay)
+- A "high-risk" patient has risk_category = 'Critical' or 'High'
+- ED utilization analysis should highlight frequent flyers (is_frequent_flyer = TRUE)
+
+## Data Priority
+- Use gold_readmissions for 30-day readmission analysis
+- Use gold_financial for revenue cycle and claims questions
+- Use gold_encounter_summary for encounter-level questions
+- Use gold_population_health for chronic disease and risk analysis
+```
+
+5. Click **Apply**
+
+> **Why this matters:** Without instructions, AI might not know that "readmission" means a 30-day return, or that "frequent flyer" is a clinical term with a specific threshold. These instructions ground AI in your organization's definitions — resulting in accurate answers without follow-up clarification.
+
+### Step 8: Mark the Semantic Model as "Approved for Copilot"
 
 1. In the semantic model view, click **File** → **Settings** (or click the gear icon)
 2. Scroll to the **AI and Copilot** section
@@ -260,7 +300,7 @@ Instead of manually building each visual, use **Power BI Copilot** to generate r
 - Power BI Copilot must be enabled in your Fabric tenant (your admin may need to enable this in the Admin Portal → Tenant settings → Copilot)
 - Your semantic model must have tables and measures already created (complete Part A first)
 
-### Step 8: Create a New Report and Open Copilot
+### Step 9: Create a New Report and Open Copilot
 
 1. From the Semantic Model view, click **File** → **Create new report**
 
@@ -274,7 +314,7 @@ Instead of manually building each visual, use **Power BI Copilot** to generate r
 
 > **Note:** If you don't see the Copilot icon, Copilot may not be enabled for your tenant. Use the **Alternate Path** (manual approach) below instead.
 
-### Step 9: Generate Page 1 — Patient Volume & Flow
+### Step 10: Generate Page 1 — Patient Volume & Flow
 
 In the Copilot chat pane, type the following prompt:
 
@@ -293,7 +333,7 @@ Review what Copilot generates. You can refine by asking:
 Change the line chart to show the last 12 months only.
 ```
 
-### Step 10: Generate Page 2 — Quality & Readmissions
+### Step 11: Generate Page 2 — Quality & Readmissions
 
 Add a new page, then prompt Copilot:
 
@@ -307,7 +347,7 @@ Create a quality metrics page focused on 30-day hospital readmissions. Include:
 Use the gold_readmissions table and readmission measures.
 ```
 
-### Step 11: Generate Page 3 — Financials & Population Health
+### Step 12: Generate Page 3 — Financials & Population Health
 
 Add a new page, then prompt Copilot:
 
@@ -332,7 +372,7 @@ Create a financial and population health dashboard page. Include:
 
 > **Key Takeaway:** Copilot is excellent for rapid prototyping and getting 80% of the way there. You'll typically still need to fine-tune layouts, conditional formatting, and interactions manually.
 
-### Step 12: Save the Report
+### Step 13: Save the Report
 
 1. Click **File** → **Save**
 2. Name: `Healthcare Operations Dashboard`
@@ -344,7 +384,7 @@ Create a financial and population health dashboard page. Include:
 
 Now that your report is saved, let's test the **Report Copilot** — the AI assistant built into the Power BI report editor that can answer questions, summarize pages, and generate narrative insights from your data.
 
-### Step 13: Open Copilot in Edit Mode
+### Step 14: Open Copilot in Edit Mode
 
 1. Open the `Healthcare Operations Dashboard` report you just saved
 2. Click **Edit** to enter the report editor
@@ -352,7 +392,7 @@ Now that your report is saved, let's test the **Report Copilot** — the AI assi
 
 > **Note:** Report Copilot requires Fabric capacity (F64 or higher) and must be enabled by your admin. If you don't see the Copilot button, check with your instructor.
 
-### Step 14: Try These Prompts
+### Step 15: Try These Prompts
 
 Test each prompt in the Copilot pane and observe how it uses your semantic model:
 
@@ -398,7 +438,7 @@ What factors distinguish patients who are readmitted within 30 days from those w
 
 The **Standalone Copilot** is a full-screen, cross-item AI experience accessed from the Power BI left navigation bar. Unlike the report-scoped Copilot in Parts B and D, the Standalone Copilot can find and answer questions across **any report, semantic model, or Fabric data agent** you have access to — without requiring you to open a specific report first. It automatically identifies the best data source for your question, generates visuals on demand, creates new DAX calculations, and delivers advanced analytical insights including causal reasoning and anomaly detection.
 
-### Step 15: Open the Standalone Copilot
+### Step 16: Open the Standalone Copilot
 
 1. In the Power BI service (app.fabric.microsoft.com), look at the **left navigation bar**
 2. Click the **Copilot** icon (sparkle ✨) — it's in the left nav pane below Home
@@ -410,9 +450,9 @@ The **Standalone Copilot** is a full-screen, cross-item AI experience accessed f
    - This tells Copilot exactly which data source to use, bypassing the auto-discovery step (which is the slowest part)
    - With the report attached, Copilot skips searching across all your items and responds significantly faster
 
-> **Note:** The Standalone Copilot requires your admin to enable the tenant setting: *"Users can access a standalone, cross-item Power BI Copilot experience"*. It also works best when your semantic model is [marked as approved for Copilot](https://learn.microsoft.com/en-us/power-bi/create-reports/copilot-prepare-data-ai#mark-your-model-as-approved-for-copilot) (which you completed in Step 7).
+> **Note:** The Standalone Copilot requires your admin to enable the tenant setting: *"Users can access a standalone, cross-item Power BI Copilot experience"*. It also works best when your semantic model is [marked as approved for Copilot](https://learn.microsoft.com/en-us/power-bi/create-reports/copilot-prepare-data-ai#mark-your-model-as-approved-for-copilot) (which you completed in Step 8).
 
-### Step 16: Standalone Copilot Prompts — Advanced AI Insights
+### Step 17: Standalone Copilot Prompts — Advanced AI Insights
 
 With your `Healthcare Operations Dashboard` attached via the **+** button, try these 5 prompts to see the Standalone Copilot's advanced capabilities — from generating visuals to surfacing causal relationships:
 
