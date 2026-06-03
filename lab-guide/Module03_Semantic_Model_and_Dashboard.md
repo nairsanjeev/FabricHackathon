@@ -416,11 +416,11 @@ The **Standalone Copilot** is a full-screen, cross-item AI experience accessed f
 
 With your `Healthcare Operations Dashboard` attached via the **+** button, try these 5 prompts to see the Standalone Copilot's advanced capabilities — from generating visuals to surfacing causal relationships:
 
-#### Prompt 1: On-Demand Visualization with Causal Insight
+#### Prompt 1: Causal Analysis — Why Are Patients Being Readmitted?
 ```
-Using the Healthcare Operations Dashboard, create a scatter plot showing the relationship between average length of stay and readmission rate by diagnosis. Which diagnoses suggest that shorter stays may be contributing to readmissions?
+Using the Healthcare Operations Dashboard, what diagnoses have the highest readmission rates and what does the data suggest about why? Are there patterns in length of stay or facility that might be contributing to readmissions?
 ```
-**Why this matters:** The Standalone Copilot generates a visual AND interprets it in a single response. It goes beyond charting to surface **causal hypotheses** — identifying where premature discharge may be driving readmissions. This is the kind of insight that typically requires a data scientist, delivered in seconds.
+**Why this matters:** The Standalone Copilot goes beyond simple aggregation to surface **causal hypotheses** — identifying where factors like premature discharge or specific facility practices may be driving readmissions. This is the kind of insight that typically requires a data scientist, delivered in seconds.
 
 #### Prompt 2: Multi-Metric Visual Comparison
 ```
