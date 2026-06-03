@@ -229,10 +229,10 @@ Adding descriptions to tables, columns, and measures helps Copilot locate the ri
 | `silver_patients` | Patient demographics including age, gender, race, insurance, location, and risk score |
 
 4. For key columns used in analysis, click the column and add descriptions:
-   - `was_readmitted`: "TRUE if patient was readmitted within 30 days of discharge"
-   - `claim_status`: "Paid, Denied, or Paid on Appeal"
-   - `encounter_type`: "ED, Inpatient, Outpatient, or Ambulatory"
-   - `multimorbidity`: "None (0 conditions), Moderate (1-2), or High (3+)"
+   - `gold_readmissions` → `was_readmitted`: "TRUE if patient was readmitted within 30 days of discharge"
+   - `gold_financial` → `claim_status`: "Paid, Denied, or Paid on Appeal"
+   - `gold_encounter_summary` → `encounter_type`: "ED, Inpatient, Outpatient, or Ambulatory"
+   - `gold_population_health` → `multimorbidity`: "None (0 conditions), Moderate (1-2), or High (3+)"
 
 5. For your DAX measures, add descriptions explaining what they calculate:
    - `Readmission Rate`: "Percentage of inpatient encounters followed by readmission within 30 days"
