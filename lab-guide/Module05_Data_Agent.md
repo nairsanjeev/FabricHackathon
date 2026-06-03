@@ -279,15 +279,23 @@ What is the overall 30-day readmission rate, and how does it break down by facil
 
 **Expected:** The agent queries `gold_readmissions`, calculates the readmission rate, and breaks it down by facility_name.
 
-#### Question 2: Length of Stay
+#### Question 2: Causal Pattern Analysis
 ```
-What is the average length of stay for inpatient encounters? 
-Which diagnoses have the longest stays?
+Which diagnoses are most strongly associated with 30-day readmissions? 
+Are there specific facilities where certain diagnoses lead to higher readmission rates?
 ```
 
-**Expected:** The agent uses `gold_encounter_summary` or `gold_alos` to show ALOS with a breakdown by diagnosis.
+**Expected:** The agent cross-references `gold_readmissions` with diagnosis data to identify which conditions drive readmissions and whether facility-specific patterns exist.
 
-#### Question 3: ED Utilization
+#### Question 3: Risk Correlation Insight
+```
+Is there a relationship between the number of chronic conditions a patient has 
+and their likelihood of being readmitted within 30 days?
+```
+
+**Expected:** The agent joins `gold_population_health` with `gold_readmissions` to show readmission rates stratified by chronic condition count, revealing whether multimorbidity correlates with readmission risk.
+
+#### Question 4: ED Utilization
 ```
 How many patients visited the ED more than 3 times this year? 
 What are their most common diagnoses?
@@ -295,7 +303,7 @@ What are their most common diagnoses?
 
 **Expected:** The agent queries `gold_ed_utilization` and joins with conditions to identify frequent flyers and their diagnoses.
 
-#### Question 4: Financial Performance
+#### Question 5: Financial Performance
 ```
 What is our claims denial rate? Which payer has the highest denial rate, 
 and how much revenue have we lost to denials?
@@ -303,7 +311,7 @@ and how much revenue have we lost to denials?
 
 **Expected:** The agent queries `gold_financial` to show denial rates and financial impact by payer.
 
-#### Question 5: Population Health
+#### Question 6: Population Health
 ```
 How many patients have 3 or more chronic conditions? 
 What percentage are on Medicare?
@@ -311,7 +319,25 @@ What percentage are on Medicare?
 
 **Expected:** The agent queries `gold_population_health` for multimorbidity analysis and insurance breakdown.
 
-#### Question 6: Cross-Facility Comparison
+#### Question 7: Predictive Risk Factors
+```
+Which patient characteristics (age group, insurance type, chronic condition count) 
+are most common among patients who were readmitted? What does this suggest 
+about where we should focus prevention efforts?
+```
+
+**Expected:** The agent profiles readmitted patients across multiple dimensions from `gold_readmissions` and `gold_population_health`, surfacing actionable patterns for care management.
+
+#### Question 8: Financial-Clinical Correlation
+```
+Is there a pattern between claim denial rates and patient outcomes? 
+Do facilities with higher denial rates also have higher readmission rates 
+or longer average length of stay?
+```
+
+**Expected:** The agent queries `gold_financial`, `gold_readmissions`, and `gold_encounter_summary` to explore whether financial and clinical quality metrics are correlated across facilities.
+
+#### Question 9: Cross-Facility Comparison
 ```
 Compare Metro General Hospital and Community Medical Center across:
 readmission rate, average length of stay, and ED volume
