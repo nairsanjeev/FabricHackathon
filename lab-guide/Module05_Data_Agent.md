@@ -57,25 +57,14 @@ After the Data Agent is created, you'll see the **"Build your data agent"** scre
 1. Click **Add data** in the toolbar (or the **"Add a data source"** card)
 2. From the dropdown, select **Data source**
 3. Select your **HealthcareLakehouse**
-4. Choose the following tables (select all Gold and Silver tables):
+4. Choose the following **Gold layer** tables:
 
-**Gold layer tables (primary):**
 - `gold_readmissions`
 - `gold_ed_utilization`
 - `gold_encounter_summary`
 - `gold_alos`
 - `gold_financial`
 - `gold_population_health`
-
-**Silver layer tables (supplemental):**
-- `silver_patients`
-- `silver_encounters`
-- `silver_conditions`
-- `silver_medications`
-- `silver_claims`
-
-**AI-enriched table (if created in Module 6):**
-- `gold_clinical_ai_insights`
 
 5. Click **Confirm** to add all selected tables
 
@@ -127,6 +116,9 @@ Important tables:
 - gold_population_health: Patient-level chronic condition counts and risk info
 - gold_alos: Average length of stay broken down by diagnosis
 
+Boolean columns (was_readmitted, is_frequent_flyer) are stored as BIT.
+Use = 1 for true and = 0 for false in SQL queries.
+
 When answering:
 - Always specify which facility or facilities the data covers
 - Include relevant counts (N=) alongside percentages
@@ -152,30 +144,27 @@ and population health metrics. Covers data from January 2024 through March 2026.
 
 4. In the **Data source instructions** field, enter:
 ```
-This Lakehouse contains Gold-layer analytics tables and Silver-layer detail tables.
+This Lakehouse contains Gold-layer analytics tables.
 
-Gold tables (use for aggregated analytics):
+Gold tables:
 - gold_readmissions: 30-day readmission flags. Key columns: patient_id, index_facility, 
-  index_diagnosis, was_readmitted, days_to_readmission
+  index_diagnosis, was_readmitted (BIT: 1=yes, 0=no), days_to_readmission
 - gold_encounter_summary: One row per encounter. Key columns: encounter_type (ED, Inpatient, 
-  Outpatient, Ambulatory), facility_name, department, length_of_stay_days, total_charges
+  Outpatient, Ambulatory), facility_name, department, length_of_stay_days, total_charges, 
+  patient_id, age, gender, insurance_type
 - gold_financial: Claims data. Key columns: payer, claim_amount, paid_amount, denied_amount, 
   claim_status (Paid, Denied, Paid on Appeal)
-- gold_ed_utilization: ED visit patterns. Key columns: ed_visit_count, is_frequent_flyer
-- gold_population_health: Chronic condition counts. Key columns: chronic_condition_count, 
-  multimorbidity (None, Moderate, High)
+- gold_ed_utilization: ED visit patterns. Key columns: patient_id, ed_visit_count, 
+  is_frequent_flyer (BIT: 1=yes, 0=no)
+- gold_population_health: Chronic condition counts. Key columns: patient_id, 
+  chronic_condition_count, multimorbidity (None, Moderate, High), insurance_type, gender
 - gold_alos: Length of stay analytics by diagnosis and facility
 
-Silver tables (use for patient-level detail):
-- silver_patients: Demographics (age, gender, race, insurance_type, risk_score)
-- silver_encounters: Raw encounter records
-- silver_conditions: ICD-10 diagnosis codes per patient
-- silver_medications: Medication orders and classes
-- silver_claims: Individual claim line items
+Boolean columns are stored as BIT. Use = 1 for true, = 0 for false.
 
 Join patterns:
-- Join gold tables to silver_patients on patient_id for demographic breakdowns
 - Join gold_financial to gold_encounter_summary on encounter_id for clinical+financial analysis
+- Join gold_ed_utilization to gold_population_health on patient_id for risk analysis
 ```
 
 ### Step 5: Add Example Queries
@@ -197,9 +186,9 @@ What is our overall 30-day readmission rate?
 **SQL query:**
 ```sql
 SELECT 
-    COUNT(CASE WHEN was_readmitted = true THEN 1 END) * 100.0 / COUNT(*) AS readmission_rate_pct,
+    COUNT(CASE WHEN was_readmitted = 1 THEN 1 END) * 100.0 / COUNT(*) AS readmission_rate_pct,
     COUNT(*) AS total_index_admissions,
-    COUNT(CASE WHEN was_readmitted = true THEN 1 END) AS total_readmissions
+    COUNT(CASE WHEN was_readmitted = 1 THEN 1 END) AS total_readmissions
 FROM gold_readmissions
 ```
 
@@ -212,7 +201,7 @@ Which facility has the highest readmission rate?
 ```sql
 SELECT 
     index_facility,
-    COUNT(CASE WHEN was_readmitted = true THEN 1 END) * 100.0 / COUNT(*) AS readmission_rate_pct,
+    COUNT(CASE WHEN was_readmitted = 1 THEN 1 END) * 100.0 / COUNT(*) AS readmission_rate_pct,
     COUNT(*) AS total_admissions
 FROM gold_readmissions
 GROUP BY index_facility
@@ -256,18 +245,18 @@ ORDER BY denial_rate_pct DESC
 #### Example 5: ED Frequent Flyers
 **Question:**
 ```
-How many ED frequent flyer patients do we have and what are their demographics?
+How many ED frequent flyer patients do we have and what is the breakdown by chronic condition count?
 ```
 **SQL query:**
 ```sql
 SELECT 
-    p.insurance_type,
-    p.gender,
-    COUNT(DISTINCT e.patient_id) AS frequent_flyer_count
+    ph.multimorbidity,
+    COUNT(DISTINCT e.patient_id) AS frequent_flyer_count,
+    AVG(e.ed_visit_count) AS avg_ed_visits
 FROM gold_ed_utilization e
-JOIN silver_patients p ON e.patient_id = p.patient_id
-WHERE e.is_frequent_flyer = true
-GROUP BY p.insurance_type, p.gender
+JOIN gold_population_health ph ON e.patient_id = ph.patient_id
+WHERE e.is_frequent_flyer = 1
+GROUP BY ph.multimorbidity
 ORDER BY frequent_flyer_count DESC
 ```
 
@@ -320,7 +309,7 @@ How many patients have 3 or more chronic conditions?
 What percentage are on Medicare?
 ```
 
-**Expected:** The agent queries `gold_population_health` and `silver_patients` for multimorbidity analysis.
+**Expected:** The agent queries `gold_population_health` for multimorbidity analysis and insurance breakdown.
 
 #### Question 6: Cross-Facility Comparison
 ```
@@ -395,7 +384,7 @@ Confirm you have completed:
 
 - [ ] Prep Data for AI configured in Module 3 (descriptions, AI Instructions, Approved for Copilot)
 - [ ] Data Agent `HealthFirst Clinical Analyst` is created
-- [ ] Lakehouse tables are connected as data sources
+- [ ] Gold layer tables connected as data sources
 - [ ] Data source description and instructions added
 - [ ] Example queries added (5 question/SQL pairs)
 - [ ] Agent instructions added with healthcare domain context
