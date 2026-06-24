@@ -1124,4 +1124,595 @@ Confirm you have completed:
 
 ---
 
+## Optional Part E: Deploy the Model for Real-Time Predictions
+
+> **⏱ Duration:** 15–20 minutes  
+> **Objective:** Register the best AutoML model as a Fabric ML Model item and activate a real-time endpoint for on-demand scoring.
+
+### Why Deploy as a Real-Time Endpoint?
+
+Batch scoring (Part D) works well for daily risk reports, but clinical workflows often need **instant predictions** — for example, when a nurse opens a patient's chart or when an EHR system triggers a discharge alert. Fabric ML model endpoints provide:
+
+- **Zero-setup deployment** — no Docker containers, no Kubernetes, no infrastructure management
+- **Auto-scaling** — scales to 3 nodes under high traffic, scales to zero when idle
+- **Built-in authentication** — secured with Fabric workspace permissions
+- **REST API** — any application can call the endpoint with a simple HTTP request
+
+### Step 11: Register the Best Model with MLflow
+
+Create a new code cell and paste the following:
+
+```python
+import mlflow
+import mlflow.sklearn
+from mlflow.models import infer_signature
+
+# ── Register the AutoML best model as a Fabric ML Model ──────
+mlflow.set_experiment("AutoML_Readmission_Prediction")
+
+with mlflow.start_run(run_name="Register_Best_Model") as run:
+    # Infer model signature (input/output schema)
+    signature = infer_signature(X_train, automl.predict(X_train))
+    
+    # Log the best model with input example for endpoint validation
+    model_info = mlflow.sklearn.log_model(
+        sk_model=automl.model,
+        artifact_path="readmission_model",
+        signature=signature,
+        input_example=X_test.head(3),
+    )
+    
+    # Log key metrics alongside the model
+    mlflow.log_metrics({
+        "auc_roc": auc_roc,
+        "avg_precision": avg_precision,
+        "n_features": len(feature_columns),
+        "n_training_samples": len(X_train),
+    })
+    
+    # Log model metadata as tags
+    mlflow.set_tags({
+        "algorithm": automl.best_estimator,
+        "use_case": "30-day-readmission-prediction",
+        "department": "quality-improvement",
+        "automl_trials": str(len(automl.config_history)),
+    })
+    
+    print(f"✅ Model logged — Run ID: {run.info.run_id}")
+    print(f"   Model URI: {model_info.model_uri}")
+
+# ── Register as a versioned ML Model item ─────────────────────
+model_name = "Readmission_Risk_Model"
+model_uri = f"runs:/{run.info.run_id}/readmission_model"
+
+mv = mlflow.register_model(model_uri, model_name)
+
+print(f"\n✅ Model registered in Fabric:")
+print(f"   Name: {mv.name}")
+print(f"   Version: {mv.version}")
+print(f"   Status: {mv.status}")
+print(f"\n💡 You can now find this model under your workspace items.")
+```
+
+**What happens:**
+- The best AutoML model (including its preprocessing pipeline) is logged to MLflow with a **model signature** — this defines the expected input/output schema
+- `mlflow.register_model()` creates a **Fabric ML Model item** in your workspace that supports versioning, comparison, and endpoint deployment
+- The input example allows Fabric to validate endpoint requests
+
+### Step 12: Activate the Real-Time Endpoint (UI)
+
+Once the model is registered, you can activate its endpoint directly from the Fabric UI:
+
+1. Navigate to your **workspace** and find the **"Readmission_Risk_Model"** item (it appears as an ML Model with a blue icon)
+2. Open the model and select **Version 1**
+3. In the ribbon, click **"Activate version endpoint"**
+4. Wait 2–3 minutes for the status to change from **Activating** → **Active**
+5. Once active, note the **Endpoint URL** shown under "Endpoint details" — it ends with `/versions/1/score`
+
+> **⚠️ Limitations (Preview):**  
+> - Endpoints support: Sklearn, LightGBM, XGBoost, and Keras model flavors
+> - Models must have a defined signature (input/output schema)  
+> - Up to 5 active version endpoints per model
+
+### Step 13: Query the Endpoint for Real-Time Predictions
+
+Once the endpoint is active, you can call it from any notebook or application. Create a new code cell:
+
+```python
+import requests
+import json
+from synapse.ml.fabric.credentials import get_fabric_token
+
+# ── Get the endpoint URL ──────────────────────────────────────
+# Replace with your actual endpoint URL from the model's "Endpoint details" page.
+# Format: https://<region>.api.fabric.microsoft.com/v1/workspaces/<workspace-id>/models/<model-id>/versions/1/score
+
+# You can retrieve this programmatically or copy from the Fabric UI.
+# For this lab, we'll demonstrate the request format:
+
+# Build a sample payload from the test set
+sample_patients = X_test.head(5).to_dict(orient="records")
+payload = {"input_data": sample_patients}
+
+print("📋 Sample request payload (first patient):")
+print(json.dumps(sample_patients[0], indent=2)[:500])
+
+# ── Alternatively, use the PREDICT function for batch scoring ─
+# This works without activating an endpoint and is ideal for
+# scheduled scoring jobs:
+
+print("\n\n📊 Batch scoring with PREDICT (no endpoint needed):")
+print("─" * 50)
+
+from synapse.ml.predict import MLFlowTransformer
+
+# Load the registered model for batch inference
+model = MLFlowTransformer(
+    inputCols=feature_columns,
+    outputCol="prediction",
+    modelName="Readmission_Risk_Model",
+    modelVersion=1,
+)
+
+# Score a Spark DataFrame directly
+test_spark_df = spark.createDataFrame(X_test.head(20))
+predictions = model.transform(test_spark_df)
+predictions.select(feature_columns[:3] + ["prediction"]).show(5)
+
+print("✅ Batch predictions generated using registered model")
+```
+
+**Calling the endpoint from external applications:**
+
+Once activated, any application with appropriate permissions can call the endpoint:
+
+```python
+# Example: Calling the endpoint from an external Python application
+import requests
+
+url = "https://<region>.api.fabric.microsoft.com/v1/workspaces/<workspace-id>/models/<model-id>/versions/1/score"
+headers = {
+    "Authorization": f"Bearer {access_token}",  # Fabric/Entra ID token
+    "Content-Type": "application/json"
+}
+payload = {
+    "input_data": [{
+        "age": 72.0,
+        "is_male": 1,
+        "chronic_condition_count": 4.0,
+        "prior_admissions_12m": 2.0,
+        "index_los": 7.0,
+        # ... all 42 features
+    }]
+}
+
+response = requests.post(url, headers=headers, json=payload)
+risk_score = response.json()  # Returns prediction probability
+print(f"Readmission risk: {risk_score}")
+```
+
+### Step 14: Manage Endpoint Capacity
+
+> **💡 Capacity Tip:** Active endpoints consume **5 CU seconds per node**. With auto-sleep enabled (default), idle endpoints scale to zero after 5 minutes. For production use with consistent traffic, consider turning off auto-sleep to avoid cold-start latency.
+
+| Scenario | CU Consumption | Hourly Cost |
+|----------|---------------|-------------|
+| Inactive (no endpoint) | 0 CU/s | 0 CU Hours |
+| Active but idle (auto-sleep on) | 5 CU/s | 0.42 CU Hours |
+| Active with low traffic (1 node) | 5 CU/s | 5 CU Hours |
+| Active with high traffic (3 nodes) | 15 CU/s | 15 CU Hours |
+
+To deactivate the endpoint when done:
+1. Open the model version in Fabric
+2. Click **"Deactivate version endpoint"** from the ribbon
+3. The endpoint status changes to **Deactivating** and then no longer consumes capacity
+
+> 📖 **Reference:** [Serve real-time predictions with ML model endpoints](https://learn.microsoft.com/en-us/fabric/data-science/model-endpoints)
+
+---
+
+## Optional Part F: MLflow 3 — LoggedModel and Generative AI Traces
+
+> **⏱ Duration:** 15–20 minutes  
+> **Objective:** Upgrade to MLflow 3 to use LoggedModel entities and capture generative AI traces for the LLM calls made in this module.
+
+### Why MLflow 3?
+
+MLflow 3 introduces two major capabilities that enhance our readmission prediction workflow:
+
+| Capability | MLflow 2.x | MLflow 3 |
+|-----------|-----------|----------|
+| **Model logging** | Artifact attached to a run | First-class **LoggedModel** entity linked to run, params, metrics, and datasets |
+| **Experiment UI** | Single experiment view | ML experiment vs. AI experiment types, plus a Logged Models section |
+| **Gen AI observability** | Not available | **Traces** for prompts, responses, tool calls, latency, and tokens |
+
+Since this module uses Gen AI (Fabric AI endpoint) for feature engineering and result interpretation, MLflow 3 traces let you **capture and inspect every LLM call** — what prompts were sent, what responses came back, token usage, and latency. This is essential for auditing AI-assisted clinical decisions.
+
+### Step 15: Install MLflow 3
+
+Create a new code cell:
+
+```python
+%pip install "synapseml-mlflow[online-notebook]>=2.0.3" "mlflow-skinny==3.1.0" "opentelemetry-api<=1.40.0" -q
+```
+
+> **Note:** Fabric notebooks ship with MLflow 2.x by default. This command upgrades to MLflow 3.1 with the required Fabric integration package. The kernel will restart — wait for it to complete before continuing.
+
+### Step 16: Log the Readmission Model as a LoggedModel
+
+After the kernel restarts, create a new code cell:
+
+```python
+import mlflow
+import mlflow.sklearn
+import pandas as pd
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score, roc_auc_score
+from mlflow.entities import Dataset
+
+# ── Reinitialize after kernel restart ─────────────────────────
+# Reload the training data and best model
+training_spark_df = spark.table("gold_readmission_training")
+
+feature_columns = [
+    "age", "is_male", "risk_score", "is_medicare", "is_medicaid",
+    "is_self_pay", "is_high_risk",
+    "chronic_condition_count", "has_diabetes", "has_chf", "has_copd",
+    "has_hypertension", "has_ckd", "has_depression", "has_cad",
+    "has_obesity", "comorbidity_cluster_count",
+    "prior_encounters_12m", "prior_admissions_12m", "prior_ed_visits_12m",
+    "prior_outpatient_12m", "prior_total_charges_12m", "prior_avg_los",
+    "index_los", "vitals_reading_count", "sirs_positive_count",
+    "avg_heart_rate", "avg_temperature", "avg_respiratory_rate",
+    "avg_spo2", "max_pain_level", "max_heart_rate", "min_spo2",
+    "claim_total_amount", "avg_payment_ratio", "denied_claims_count",
+    "avg_days_to_payment",
+    "is_weekend_discharge", "discharge_month", "discharge_quarter",
+    "is_snf_discharge", "is_home_health_discharge",
+    "unique_medication_count", "is_polypharmacy"
+]
+
+pandas_df = training_spark_df.select(feature_columns + ["label"]).toPandas()
+X = pandas_df[feature_columns]
+y = pandas_df["label"]
+
+from sklearn.model_selection import train_test_split
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.2, random_state=42, stratify=y
+)
+
+# Retrain with the best algorithm (from previous AutoML results)
+from flaml import AutoML
+automl = AutoML()
+automl.fit(X_train=X_train, y_train=y_train,
+           time_budget=120, metric="roc_auc", task="classification",
+           estimator_list=["lgbm", "xgboost", "catboost", "rf", "extra_tree"],
+           seed=42, verbose=0)
+
+# ── Log as a LoggedModel (MLflow 3) ──────────────────────────
+mlflow.set_experiment("mlflow3-readmission-model")
+
+with mlflow.start_run(run_name="ReadmissionModel_MLflow3") as run:
+    # Wrap training data as an MLflow Dataset for lineage
+    train_dataset: Dataset = mlflow.data.from_pandas(
+        pd.concat([X_train, y_train], axis=1), name="readmission_train"
+    )
+    
+    # Log the model with name= (MLflow 3 style) and params=
+    model_info = mlflow.sklearn.log_model(
+        sk_model=automl.model,
+        name="readmission_predictor",
+        params={
+            "algorithm": automl.best_estimator,
+            "n_features": len(feature_columns),
+            "time_budget": 120,
+            **{k: str(v) for k, v in automl.best_config.items()}
+        },
+        input_example=X_test.head(3),
+    )
+    
+    # Retrieve the LoggedModel entity
+    logged_model = mlflow.get_logged_model(model_info.model_id)
+    print(f"✅ LoggedModel created:")
+    print(f"   Model ID: {logged_model.model_id}")
+    print(f"   Parameters: {logged_model.params}")
+    
+    # Compute metrics and link to LoggedModel + Dataset
+    y_prob = automl.predict_proba(X_test)[:, 1]
+    auc_roc = roc_auc_score(y_test, y_prob)
+    
+    mlflow.log_metrics(
+        metrics={
+            "auc_roc": auc_roc,
+            "n_test_samples": len(X_test),
+            "readmission_rate": float(y.mean()),
+        },
+        model_id=logged_model.model_id,
+        dataset=train_dataset,
+    )
+    
+    print(f"   AUC-ROC: {auc_roc:.4f}")
+    print(f"   Linked to dataset: {train_dataset.name}")
+
+print(f"\n💡 Open the experiment 'mlflow3-readmission-model' in Fabric to see:")
+print(f"   • The LoggedModel in the 'Logged Models' section")
+print(f"   • Parameters, metrics, and dataset linked to the model")
+print(f"   • Click 'Register model' to promote it to an ML Model item")
+```
+
+**What's different in MLflow 3:**
+- `name="readmission_predictor"` (instead of `artifact_path=`) creates a **first-class LoggedModel entity**
+- `params=` attaches hyperparameters directly to the LoggedModel
+- `mlflow.log_metrics(..., model_id=, dataset=)` links metrics to both the LoggedModel and its training dataset
+- You can compare multiple LoggedModels side-by-side in the experiment UI
+
+### Step 17: Capture Generative AI Traces
+
+The LLM calls in Steps 4 and 10 (feature suggestions, result interpretation) are critical to audit. MLflow 3 traces capture the full request/response lifecycle. Create a new code cell:
+
+```python
+import mlflow
+from openai import AzureOpenAI
+from synapse.ml.fabric.credentials import get_openai_httpx_sync_client
+
+# ── Enable OpenAI autologging for traces ──────────────────────
+mlflow.openai.autolog()
+
+# Create a new AI experiment for Gen AI traces
+mlflow.set_experiment("mlflow3-readmission-genai-traces")
+
+client = AzureOpenAI(
+    api_version="2025-04-01-preview",
+    http_client=get_openai_httpx_sync_client(),
+)
+
+# ── Trace 1: Feature Engineering Suggestion ───────────────────
+with mlflow.start_run(run_name="feature_engineering_trace"):
+    response = client.chat.completions.create(
+        model="gpt-4.1",
+        messages=[
+            {"role": "system", "content": "You are a clinical data scientist. Suggest 5 key features for readmission prediction."},
+            {"role": "user", "content": "We have patient demographics, encounter history, conditions, and vitals data. What are the top 5 features to predict 30-day readmission?"},
+        ],
+        temperature=0.3,
+        max_tokens=500,
+    )
+    
+    trace_id = mlflow.get_last_active_trace_id()
+    print(f"✅ Feature engineering trace captured")
+    print(f"   Trace ID: {trace_id}")
+    print(f"   Response: {response.choices[0].message.content[:200]}...")
+
+# ── Trace 2: Clinical Interpretation ──────────────────────────
+with mlflow.start_run(run_name="clinical_interpretation_trace"):
+    response = client.chat.completions.create(
+        model="gpt-4.1",
+        messages=[
+            {"role": "system", "content": "You are a clinical informatics expert. Interpret ML model results for a hospital CMO."},
+            {"role": "user", "content": f"Our readmission model achieved AUC-ROC of {auc_roc:.4f} using {automl.best_estimator}. The top features are prior_admissions_12m, chronic_condition_count, and index_los. Provide a 2-sentence clinical interpretation."},
+        ],
+        temperature=0.4,
+        max_tokens=300,
+    )
+    
+    trace_id = mlflow.get_last_active_trace_id()
+    print(f"\n✅ Clinical interpretation trace captured")
+    print(f"   Trace ID: {trace_id}")
+    print(f"   Response: {response.choices[0].message.content[:200]}...")
+
+# ── Trace 3: Custom traced function ──────────────────────────
+@mlflow.trace
+def assess_patient_risk(patient_summary: str) -> str:
+    """Use AI to generate a narrative risk assessment for a patient."""
+    mlflow.update_current_trace(tags={
+        "use_case": "patient_risk_narrative",
+        "model": "gpt-4.1",
+    })
+    
+    response = client.chat.completions.create(
+        model="gpt-4.1",
+        messages=[
+            {"role": "system", "content": "Generate a brief clinical risk narrative for care coordinators."},
+            {"role": "user", "content": patient_summary},
+        ],
+        temperature=0.3,
+        max_tokens=200,
+    )
+    return response.choices[0].message.content
+
+with mlflow.start_run(run_name="patient_risk_narrative_trace"):
+    narrative = assess_patient_risk(
+        "72-year-old male with CHF, COPD, and 3 prior admissions in 12 months. "
+        "Readmission risk score: 0.78 (High). Being discharged to home."
+    )
+    print(f"\n✅ Patient risk narrative trace captured")
+    print(f"   Narrative: {narrative[:200]}...")
+
+print(f"\n{'='*60}")
+print("📋 VIEW YOUR TRACES:")
+print(f"{'='*60}")
+print("1. Open the experiment 'mlflow3-readmission-genai-traces' in Fabric")
+print("2. Click the 'Traces' tab")
+print("3. Select any trace to see:")
+print("   • Full prompt/response pairs")
+print("   • Token usage (input + output tokens)")
+print("   • Latency per LLM call")
+print("   • Span hierarchy for nested function calls")
+print("   • Model metadata (name, version, parameters)")
+```
+
+**What traces capture:**
+- Complete prompt/response pairs — exactly what was sent to and returned from the LLM
+- Token usage (input + output tokens) for cost monitoring
+- Latency per call — identify slow LLM operations
+- Span hierarchy — when decorated functions call each other, MLflow nests spans for visualization
+- Error traces — if an LLM call fails, the trace captures the exception
+
+### Step 18: Register the LoggedModel
+
+To promote the MLflow 3 LoggedModel to a Fabric ML Model item:
+
+1. Open the **"mlflow3-readmission-model"** experiment in your workspace
+2. Navigate to the **Logged Models** section
+3. Select the **"readmission_predictor"** LoggedModel
+4. Click **"Register model"** on the detail page
+5. Choose to register as a **new ML model** or a **new version** of the existing `Readmission_Risk_Model`
+
+After registration, the LoggedModel detail page shows a link to the registered model item, and you can activate a real-time endpoint from there (as described in Part E).
+
+> 📖 **Reference:** [MLflow 3 in Fabric Data Science](https://learn.microsoft.com/en-us/fabric/data-science/mlflow-3-overview)
+
+---
+
+## Optional Part G: Monitor ML Experiments and Model Endpoints
+
+> **⏱ Duration:** 10–15 minutes  
+> **Objective:** Use the Fabric Monitoring hub to track experiment runs and monitor real-time endpoint traffic.
+
+### Why Monitor ML Workflows?
+
+In a clinical setting, model governance is critical:
+- **Audit trail** — Track who trained what model, when, and with what parameters
+- **Performance degradation** — Detect when models drift from their training performance
+- **Endpoint health** — Monitor request volume, error rates, and latency for deployed models
+- **Capacity planning** — Understand CU consumption from active endpoints
+
+### Step 19: Monitor Experiments from the Monitoring Hub
+
+The Fabric Monitoring hub provides a centralized view of all experiment runs:
+
+1. Open the **Monitoring hub** from the left navigation pane in Fabric
+2. Select the **Experiment** filter to narrow the view
+3. Browse experiment activities showing:
+   - **Status**: Succeeded, Failed, or In Progress
+   - **Start time** and **Duration**
+   - **Location** (workspace)
+   - **Submitter** (who triggered the run)
+
+#### Filter and Search Experiment Runs
+
+Use these filters to find specific runs:
+
+| Filter | Use Case |
+|--------|----------|
+| **Status** | Find failed runs that need debugging |
+| **Time range** | See runs from the last 24 hours or week |
+| **Submitter** | Track a specific team member's experiments |
+| **Location** | Focus on a specific workspace |
+
+#### Track Experiments from Notebook Activity
+
+When you select a notebook activity in the Monitoring hub:
+
+1. Open the **Item snapshots** page
+2. See all experiments and runs generated during that notebook execution
+3. View the settings and parameters that were in effect when the notebook ran
+
+This is valuable for **reproducing results** — if a model performed differently than expected, you can review the exact notebook state that produced it.
+
+### Step 20: Monitor Model Endpoint Traffic
+
+If you activated a real-time endpoint in Part E, Fabric automatically tracks traffic metrics:
+
+1. Navigate to your **Readmission_Risk_Model** in the workspace
+2. Select the version with an active endpoint
+3. Scroll to the **Endpoint metrics** section
+
+The following metrics are available:
+
+| Metric | Description | Why It Matters |
+|--------|-------------|----------------|
+| **Request count** | Total prediction requests received | Tracks adoption — are clinicians using the model? |
+| **Error count** | Failed requests | Alerts to integration issues or schema mismatches |
+| **Request latency** | Time to process and respond | Ensures sub-second response for clinical workflows |
+
+> **Note:** Metrics typically appear within 15 minutes after the endpoint receives traffic. If no data appears, verify the endpoint is active and has received at least one request.
+
+### Step 21: Validate Monitoring with a Test Script
+
+Create a new code cell to generate some endpoint traffic for monitoring:
+
+```python
+import mlflow
+from pprint import pprint
+from mlflow import MlflowClient
+
+# ── View experiment runs programmatically ─────────────────────
+client = MlflowClient()
+
+print("📊 EXPERIMENT RUNS SUMMARY")
+print("=" * 60)
+
+# List all experiments in the workspace
+experiments = client.search_experiments()
+for exp in experiments:
+    if "readmission" in exp.name.lower() or "automl" in exp.name.lower():
+        print(f"\n📁 Experiment: {exp.name}")
+        print(f"   ID: {exp.experiment_id}")
+        
+        # Get runs for this experiment
+        runs = client.search_runs(
+            experiment_ids=[exp.experiment_id],
+            order_by=["start_time DESC"],
+            max_results=5,
+        )
+        
+        print(f"   Recent runs ({len(runs)}):")
+        for run in runs:
+            status = run.info.status
+            duration = ""
+            if run.info.end_time and run.info.start_time:
+                dur_s = (run.info.end_time - run.info.start_time) / 1000
+                duration = f" ({dur_s:.1f}s)"
+            
+            metrics_str = ""
+            if "auc_roc" in run.data.metrics:
+                metrics_str = f" | AUC-ROC: {run.data.metrics['auc_roc']:.4f}"
+            
+            print(f"     • {run.info.run_name}: {status}{duration}{metrics_str}")
+
+# ── View registered models ────────────────────────────────────
+print(f"\n\n📦 REGISTERED MODELS")
+print("=" * 60)
+
+for rm in client.search_registered_models():
+    print(f"\n  Model: {rm.name}")
+    for mv in rm.latest_versions:
+        print(f"    Version {mv.version}: status={mv.status}, stage={mv.current_stage}")
+        print(f"    Run ID: {mv.run_id}")
+
+print(f"\n✅ Use the Fabric Monitoring hub for a visual overview of all activities")
+```
+
+### Monitoring Best Practices for Clinical ML Models
+
+| Practice | Action | Frequency |
+|----------|--------|-----------|
+| **Model performance audit** | Compare current AUC-ROC against initial training metrics | Monthly |
+| **Endpoint health check** | Review error rates and latency in endpoint metrics | Weekly |
+| **Experiment cleanup** | Archive old experiments that are no longer relevant | Quarterly |
+| **Capacity review** | Check CU consumption for active endpoints | Monthly |
+| **Retraining trigger** | Retrain if AUC-ROC drops >5% from baseline | As needed |
+
+> **💡 Tip:** Use the [Fabric Capacity Metrics app](https://learn.microsoft.com/en-us/fabric/enterprise/metrics-app-compute-page) to view total capacity usage for model endpoint operations. Endpoint operations appear under the item name **"Model Endpoint"** in the metrics app.
+
+> 📖 **Reference:** [Monitor machine learning experiments and models](https://learn.microsoft.com/en-us/fabric/data-science/monitor-machine-learning-experiments-models)
+
+---
+
+## ✅ Extended Module 7 Checklist (Optional Sections)
+
+If you completed the optional sections, confirm:
+
+- [ ] **Part E** — Model registered with `mlflow.register_model()` and visible in workspace
+- [ ] **Part E** — Real-time endpoint activated and status is "Active"
+- [ ] **Part E** — Tested endpoint with sample predictions (UI or API)
+- [ ] **Part F** — MLflow 3 installed and LoggedModel entity created
+- [ ] **Part F** — AI traces captured for Gen AI calls (visible in Traces tab)
+- [ ] **Part F** — LoggedModel shows linked parameters, metrics, and datasets
+- [ ] **Part G** — Viewed experiment runs in the Monitoring hub
+- [ ] **Part G** — Reviewed endpoint traffic metrics (if endpoint is active)
+- [ ] **Part G** — Programmatic experiment/model query working
+
+---
+
 **[← Module 6: Gen AI — Clinical Intelligence](Module06_GenAI_Clinical_Intelligence.md)** | **[Module 8: VS Code Agent Mode →](Module08_VSCode_Agent_Mode.md)** | **[Back to Overview](../README.md)**
