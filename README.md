@@ -29,6 +29,7 @@ Healthcare providers — hospital administrators, clinical informaticists, data 
 | *(Optional)* | [Module 9 — Data Agent Evaluation (LLM-as-Judge)](lab-guide/Module09_Data_Agent_Evaluation.md) | 30 min | Data Agent SDK, LLM-as-Judge, Semantic Link |
 | *(Optional)* | [Module 10 — Fabric IQ: Ontology & Plan](lab-guide/Module10_Fabric_IQ.md) | 45–60 min | Fabric IQ, Ontology, Plan, Data Agent |
 | *(Optional)* | [Module 11 — AI Search + Data Agent (Structured + Unstructured)](lab-guide/Module11_AI_Search_and_Data_Agent_Integration.md) | 45–60 min | Azure AI Search, Fabric Data Agent |
+| *(Optional)* | [Module 13 — Fabric App: Readmission Risk Tracker (Rayfin)](lab-guide/Module13_Fabric_App_Readmission_Tracker.md) | 45 min | Fabric Apps, Rayfin CLI, React |
 
 > **Total core day: 5.5 hours** (9:00 AM – 3:30 PM including breaks and lunch). Optional modules can be done independently after the lab.
 
@@ -49,7 +50,8 @@ FabricHackathon/
 │   ├── Module08_VSCode_Agent_Mode.md  ← (Optional) Build entire lab with AI agent
 │   ├── Module09_Data_Agent_Evaluation.md ← (Optional) LLM-as-Judge evaluation pipeline
 │   ├── Module10_Fabric_IQ.md          ← (Optional) Ontology + Plan with LLM-assisted design
-│   └── Module11_AI_Search_and_Data_Agent_Integration.md ← (Optional) Combine unstructured + structured responses
+│   ├── Module11_AI_Search_and_Data_Agent_Integration.md ← (Optional) Combine unstructured + structured responses
+│   └── Module13_Fabric_App_Readmission_Tracker.md ← (Optional) Deploy a Fabric App with Rayfin + React
 ├── data/
 │   ├── generate_healthcare_data.py    ← Python script to regenerate data
 │   ├── ai_search_sample_docs/          ← Sample unstructured docs for Azure AI Search (Module 11)
@@ -68,6 +70,12 @@ FabricHackathon/
 │   ├── 05_RealTime_Vitals_Simulator.py  ← With patient archetype & SIRS docs
 │   ├── 06_Predictive_Readmission_Model.py ← GenAI feature engineering + XGBoost
 │   └── 07_Data_Agent_Evaluation.py    ← LLM-as-Judge evaluation pipeline
+├── fabric-app/
+│   ├── App.tsx                        ← React frontend component (copy to src/App.tsx)
+│   ├── App.css                        ← Styles (copy to src/App.css)
+│   ├── rayfin.ts                      ← Rayfin client init (copy to src/lib/rayfin.ts)
+│   ├── RiskCase.ts                    ← Entity definition (copy to rayfin/data/RiskCase.ts)
+│   └── schema.ts                      ← Schema registry (copy to rayfin/data/schema.ts)
 └── resources/
     ├── kql_queries.kql                ← KQL queries for real-time analytics
     └── dax_measures.md                ← DAX measures for semantic model
@@ -95,6 +103,7 @@ By the end of this lab, you will have:
 9. **(Optional) VS Code Agent Mode** — experience building the entire lab through conversational AI with GitHub Copilot
 11. **(Optional) Readmission Prediction Model** — Gen AI-assisted feature engineering with XGBoost to predict 30-day hospital readmissions and generate patient risk scores
 12. **(Optional) AI Search + Data Agent Integration** — combine Azure AI Search document context with Fabric metrics in one grounded response
+13. **(Optional) A Fabric App** — a deployed Readmission Risk Tracker built with Rayfin CLI and React, running on Fabric infrastructure with SSO
 
 ## ⚠️ Important Notes
 

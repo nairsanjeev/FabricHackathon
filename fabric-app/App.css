@@ -1,0 +1,516 @@
+/* ── Reset & Base ── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: #f4f6f8;
+  color: #1a1a1a;
+  line-height: 1.5;
+}
+
+/* ── App Layout ── */
+.app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── Header ── */
+.app-header {
+  background: linear-gradient(135deg, #0078d4 0%, #004578 100%);
+  color: #fff;
+  padding: 2rem 2rem 1.5rem;
+}
+
+.header-content h1 {
+  font-size: 1.75rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+.header-content p {
+  margin-top: 0.25rem;
+  font-size: 0.95rem;
+  opacity: 0.85;
+}
+
+/* ── Tab Bar ── */
+.tab-bar {
+  display: flex;
+  gap: 0;
+  background: #fff;
+  border-bottom: 1px solid #e1e5e9;
+  padding: 0 2rem;
+}
+
+.tab-btn {
+  padding: 0.85rem 1.5rem;
+  border: none;
+  background: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #605e5c;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: all 0.15s ease;
+  position: relative;
+}
+
+.tab-btn:hover {
+  color: #0078d4;
+}
+
+.tab-btn.active {
+  color: #0078d4;
+  border-bottom-color: #0078d4;
+}
+
+.tab-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  margin-left: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  background: #d13438;
+  color: #fff;
+  border-radius: 10px;
+}
+
+/* ── Error Banner ── */
+.error-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 2rem;
+  background: #fde7e9;
+  color: #a4262c;
+  font-size: 0.875rem;
+}
+
+.error-banner button {
+  background: none;
+  border: none;
+  color: #a4262c;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+/* ── Main Content ── */
+.main-content {
+  flex: 1;
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.main-content h2 {
+  font-size: 1.35rem;
+  font-weight: 600;
+  margin-bottom: 0.25rem;
+}
+
+.section-subtitle {
+  color: #605e5c;
+  font-size: 0.9rem;
+  margin-bottom: 1.5rem;
+}
+
+/* ── Facility Scorecards ── */
+.scorecards-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.facility-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.facility-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.facility-header h3 {
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.trend {
+  font-size: 0.8rem;
+  font-weight: 500;
+  padding: 4px 10px;
+  border-radius: 12px;
+}
+
+.trend-improving {
+  color: #107c10;
+  background: #dff6dd;
+}
+
+.trend-stable {
+  color: #605e5c;
+  background: #edebe9;
+}
+
+.trend-worsening {
+  color: #a4262c;
+  background: #fde7e9;
+}
+
+.metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
+}
+
+.metric-card {
+  padding: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid transparent;
+}
+
+.metric-green {
+  border-left-color: #107c10;
+  background: #f6fff6;
+}
+
+.metric-yellow {
+  border-left-color: #ffb900;
+  background: #fffcf0;
+}
+
+.metric-red {
+  border-left-color: #d13438;
+  background: #fef6f6;
+}
+
+.metric-neutral {
+  border-left-color: #8a8886;
+  background: #faf9f8;
+}
+
+.metric-label {
+  font-size: 0.8rem;
+  color: #605e5c;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.metric-value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0.25rem 0;
+}
+
+.metric-unit {
+  font-size: 0.9rem;
+  font-weight: 400;
+  color: #605e5c;
+}
+
+.metric-target {
+  font-size: 0.75rem;
+  color: #8a8886;
+}
+
+/* ── Tracker ── */
+.tracker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 1.5rem;
+}
+
+.btn-primary {
+  padding: 0.6rem 1.25rem;
+  background: #0078d4;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.btn-primary:hover {
+  background: #106ebe;
+}
+
+.btn-primary:disabled {
+  background: #c8c6c4;
+  cursor: not-allowed;
+}
+
+/* ── Create Form ── */
+.create-form {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.create-form h3 {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-bottom: 1rem;
+}
+
+.form-grid label {
+  display: flex;
+  flex-direction: column;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #323130;
+}
+
+.form-grid input,
+.form-grid select,
+.form-grid textarea {
+  margin-top: 4px;
+  padding: 0.5rem 0.6rem;
+  font-size: 0.875rem;
+  border: 1px solid #c8c6c4;
+  border-radius: 4px;
+  font-family: inherit;
+}
+
+.form-grid input:focus,
+.form-grid select:focus,
+.form-grid textarea:focus {
+  outline: none;
+  border-color: #0078d4;
+  box-shadow: 0 0 0 1px #0078d4;
+}
+
+.span-2 {
+  grid-column: 1 / -1;
+}
+
+/* ── Cases Table ── */
+.table-wrapper {
+  overflow-x: auto;
+}
+
+.cases-table {
+  width: 100%;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+  border-collapse: collapse;
+  font-size: 0.875rem;
+}
+
+.cases-table th {
+  text-align: left;
+  padding: 0.75rem 1rem;
+  background: #faf9f8;
+  font-weight: 600;
+  font-size: 0.8rem;
+  color: #605e5c;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  border-bottom: 1px solid #e1e5e9;
+}
+
+.cases-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid #f3f2f1;
+  vertical-align: middle;
+}
+
+.cases-table tbody tr:hover {
+  background: #f3f9ff;
+}
+
+.resolved-row {
+  opacity: 0.55;
+}
+
+.center {
+  text-align: center;
+}
+
+.muted {
+  color: #8a8886;
+  font-size: 0.8rem;
+}
+
+/* ── Priority Badges ── */
+.priority-badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.priority-critical {
+  background: #d13438;
+  color: #fff;
+}
+
+.priority-high {
+  background: #ff8c00;
+  color: #fff;
+}
+
+.priority-medium {
+  background: #ffb900;
+  color: #323130;
+}
+
+.priority-low {
+  background: #edebe9;
+  color: #605e5c;
+}
+
+/* ── Status Select ── */
+.status-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.8rem;
+  border: 1px solid transparent;
+  cursor: pointer;
+}
+
+.status-open {
+  background: #fde7e9;
+  color: #a4262c;
+  border-color: #f1c1c3;
+}
+
+.status-in-progress {
+  background: #deecf9;
+  color: #0078d4;
+  border-color: #a9d3f2;
+}
+
+.status-scheduled-follow-up {
+  background: #fff4ce;
+  color: #8a6914;
+  border-color: #ffe7a0;
+}
+
+.status-resolved {
+  background: #dff6dd;
+  color: #107c10;
+  border-color: #b7e4b5;
+}
+
+/* ── Empty & Loading ── */
+.empty-state {
+  text-align: center;
+  padding: 3rem;
+  background: #fff;
+  border-radius: 8px;
+  color: #605e5c;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.loading {
+  text-align: center;
+  padding: 2rem;
+  color: #605e5c;
+}
+
+/* ── About ── */
+.about-section {
+  max-width: 800px;
+}
+
+.about-card {
+  background: #fff;
+  border-radius: 8px;
+  padding: 1.5rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.08);
+}
+
+.about-card h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #0078d4;
+}
+
+.about-card p {
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  color: #323130;
+}
+
+.about-card ul {
+  list-style: none;
+  padding: 0;
+}
+
+.about-card li {
+  padding: 0.4rem 0;
+  font-size: 0.9rem;
+  border-bottom: 1px solid #f3f2f1;
+}
+
+.about-card li:last-child {
+  border-bottom: none;
+}
+
+/* ── Footer ── */
+.app-footer {
+  text-align: center;
+  padding: 1.25rem 2rem;
+  background: #faf9f8;
+  border-top: 1px solid #e1e5e9;
+  color: #8a8886;
+  font-size: 0.8rem;
+}
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .main-content {
+    padding: 1rem;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .metrics-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .tab-bar {
+    padding: 0 1rem;
+  }
+
+  .tab-btn {
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+  }
+}
