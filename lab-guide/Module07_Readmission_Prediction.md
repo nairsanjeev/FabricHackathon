@@ -2,7 +2,7 @@
 
 | Duration | 45–60 minutes |
 |----------|---------------|
-| Objective | Use Fabric's built-in AI endpoint as a feature engineering assistant, then leverage AutoML (FLAML) to automatically find the best model for predicting 30-day hospital readmissions |
+| Objective | Use Azure OpenAI in Fabric with the OpenAI Python SDK as a feature engineering assistant, then leverage AutoML (FLAML) to automatically find the best model for predicting 30-day hospital readmissions |
 | Tools | Fabric Notebook, Fabric AI Services (built-in Azure OpenAI), PySpark, FLAML AutoML, MLflow |
 
 This module builds on the data created in Modules 1–2 and the Gen AI skills from Module 6. You will use Gen AI as an **ML feature engineering assistant** and AutoML to automatically discover the best algorithm.
@@ -43,13 +43,13 @@ Traditional machine learning for readmission prediction requires a clinical data
 
 ## What You Will Do
 
-1. 🤖 **Ask Fabric's built-in AI endpoint** to analyze your data schema and suggest predictive features for readmission
+1. 🤖 **Use Azure OpenAI in Fabric (Python SDK)** to analyze your data schema and suggest predictive features for readmission
 2. 🔧 **Build 25+ features** across 6 categories (Demographics, Comorbidity, Utilization, Clinical, Financial, Temporal) using PySpark
 3. 🔬 **Run AutoML (FLAML)** to automatically try multiple algorithms and find the best model
 4. 📊 **Track experiments with MLflow** — every trial is logged for reproducibility
 5. 📈 **Evaluate the best model** with AUC-ROC, Precision-Recall curves, and feature importance charts
 6. 🏥 **Score all patients** with a readmission risk probability and classify into Low/Medium/High risk tiers
-7. 💡 **Ask the AI endpoint** to interpret the results and generate clinical recommendations
+7. 💡 **Ask Azure OpenAI in Fabric** to interpret the results and generate clinical recommendations
 
 ---
 
@@ -58,14 +58,14 @@ Traditional machine learning for readmission prediction requires a clinical data
 Before starting this module, ensure you have:
 
 - ✅ **Completed Modules 1–2**: All Silver and Gold tables populated in your Lakehouse
-- ✅ **Fabric capacity**: The built-in Fabric AI endpoint provides access to Azure OpenAI models (like `gpt-4.1`) directly from Fabric notebooks, with no separate Azure OpenAI resource or API key needed
+- ✅ **Fabric capacity**: Fabric AI Services provides access to Azure OpenAI models (like `gpt-5.1`) directly from Fabric notebooks, with no separate Azure OpenAI resource or API key needed
 - ✅ **Fabric notebook environment**: Same workspace from previous modules
 
 > **📋 Key table needed:** `gold_readmissions` (created in Notebook 03). This table contains the target variable `was_readmitted` — a boolean flag indicating whether a patient was readmitted within 30 days of discharge.
 
 ---
 
-## Part A: Create the Notebook and Configure AI Endpoint
+## Part A: Create the Notebook and Configure the Azure OpenAI Client
 
 ### Step 1: Create a New Notebook
 
@@ -91,9 +91,11 @@ Paste in Cell 1:
 > - `A new release of pip is available` — Informational only.
 > - `PySpark kernel has been restarted` — Expected. Fabric restarts the kernel after `%pip install` so the new packages are available. **Wait for the restart to complete, then continue with the next cell.**
 
-### Step 3: Initialize the Fabric AI Client
+### Step 3: Create a Fabric-Authenticated Azure OpenAI Client
 
-Fabric provides a **built-in AI endpoint** that gives you access to Azure OpenAI models (like `gpt-4.1`) directly — no API keys, no endpoint URLs, no separate Azure OpenAI resource needed. Authentication is handled automatically through your Fabric credentials.
+Following the Microsoft Learn guidance, create an `AzureOpenAI` client that uses Fabric authentication (`get_openai_httpx_sync_client`) — no API keys or custom endpoint URLs required.
+
+Reference: [Use Azure OpenAI with Python SDK - Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/data-science/ai-services/how-to-use-openai-python-sdk)
 
 Paste in Cell 2:
 
@@ -105,16 +107,16 @@ from synapse.ml.fabric.credentials import get_openai_httpx_sync_client
 import openai
 import json
 
-# ── Fabric AI Endpoint ────────────────────────────────────────
-# No API keys or endpoints needed — Fabric handles authentication
+# ── Azure OpenAI in Fabric (Python SDK) ───────────────────────
+# No API keys or endpoints needed — Fabric handles authentication.
 client = openai.AzureOpenAI(
     http_client=get_openai_httpx_sync_client(),
     api_version="2025-04-01-preview",
 )
 
-MODEL_NAME = "gpt-4.1"
+MODEL_NAME = "gpt-5.1"
 
-# Quick test
+# Quick test (Chat Completions API)
 response = client.chat.completions.create(
     model=MODEL_NAME,
     messages=[{"role": "user", "content": "Say 'Connection successful' if you can read this."}],
@@ -126,13 +128,26 @@ print(f"✅ {response.choices[0].message.content}")
 
 You should see: `✅ Connection successful`
 
+> **Optional (recommended by OpenAI):** You can also validate the client with the Responses API used in the Microsoft Learn article:
+>
+> ```python
+> r = client.responses.create(
+>     model=MODEL_NAME,
+>     input=[{"role": "user", "content": "Say 'Connection successful'."}],
+>     store=False
+> )
+> print(r.output_text)
+> ```
+>
+> Fabric currently requires `store=False` for Responses API calls.
+
 ---
 
 ## Part B: Use Gen AI for Feature Engineering
 
-### Step 4: Ask the AI Endpoint to Suggest Predictive Features
+### Step 4: Ask Azure OpenAI to Suggest Predictive Features
 
-This is the core innovation — rather than manually researching clinical features from published readmission risk models, we ask the AI endpoint to analyze our data schema and suggest features grounded in medical literature.
+This is the core innovation — rather than manually researching clinical features from published readmission risk models, we ask Azure OpenAI in Fabric to analyze our data schema and suggest features grounded in medical literature.
 
 Create a new code cell (Cell 3) and paste the following:
 
@@ -212,7 +227,7 @@ Focus on features that:
 
 Return valid JSON only, no other text."""
 
-print("🤖 Asking Fabric AI endpoint for feature engineering suggestions...")
+print("🤖 Asking Azure OpenAI (Fabric-authenticated client) for feature suggestions...")
 print("   (This may take 15-30 seconds)\n")
 
 response = client.chat.completions.create(
@@ -234,7 +249,7 @@ if result_text.startswith("```"):
 ai_features = json.loads(result_text)
 
 # ── Display the AI-suggested features ────────────────────────
-print(f"✅ AI endpoint suggested {len(ai_features)} features:\n")
+print(f"✅ Azure OpenAI suggested {len(ai_features)} features:\n")
 print(f"{'#':<3} {'Feature':<40} {'Category':<15} {'Importance':<10}")
 print("─" * 70)
 for i, feat in enumerate(ai_features, 1):
@@ -259,7 +274,7 @@ for feat in ai_features[:5]:
 
 **Expected output:**
 ```
-✅ AI endpoint suggested 25 features:
+✅ Azure OpenAI suggested 25 features:
 
 #   Feature                                  Category        Importance
 ──────────────────────────────────────────────────────────────────────────
@@ -1054,7 +1069,7 @@ Given the readmission prediction model results below, provide:
 
 Write for a clinical audience, not data scientists."""
 
-print("🤖 Asking Fabric AI endpoint to interpret model results...\n")
+print("🤖 Asking Azure OpenAI in Fabric to interpret model results...\n")
 
 interpretation_response = client.chat.completions.create(
     model=MODEL_NAME,
@@ -1074,7 +1089,7 @@ print("=" * 70)
 print(interpretation)
 ```
 
-This closes the loop — Gen AI suggested the features, AutoML found the best model, and now Gen AI interprets the results for clinical stakeholders:
+This closes the loop — Azure OpenAI suggested the features, AutoML found the best model, and now Azure OpenAI interprets the results for clinical stakeholders:
 
 - **Clinical Interpretation**: What the model found in plain language
 - **Actionable Recommendations**: Specific interventions based on top features
@@ -1090,7 +1105,7 @@ This closes the loop — Gen AI suggested the features, AutoML found the best mo
 
 Confirm you have completed:
 
-- [ ] Fabric AI endpoint suggested 25+ features across 6 clinical categories
+- [ ] Azure OpenAI in Fabric suggested 25+ features across 6 clinical categories
 - [ ] Built a training dataset with 42 features in `gold_readmission_training`
 - [ ] Ran AutoML (FLAML) to automatically search across multiple algorithms
 - [ ] MLflow tracked all trial results for reproducibility
@@ -1099,7 +1114,7 @@ Confirm you have completed:
 - [ ] Reviewed feature importance chart — top features align with clinical literature
 - [ ] ROC curve and Precision-Recall curve generated
 - [ ] All patients scored and classified into risk tiers in `gold_readmission_risk_scores`
-- [ ] Fabric AI endpoint generated clinical interpretation and recommendations
+- [ ] Azure OpenAI generated clinical interpretation and recommendations
 - [ ] Understand how Gen AI + AutoML accelerates the full ML lifecycle
 
 ---
@@ -1108,7 +1123,7 @@ Confirm you have completed:
 
 | Component | Description |
 |-----------|-------------|
-| **Gen AI Feature Discovery** | Used Fabric's built-in AI endpoint to suggest clinically-grounded features |
+| **Gen AI Feature Discovery** | Used Azure OpenAI in Fabric (OpenAI Python SDK) to suggest clinically-grounded features |
 | **Feature Engineering Pipeline** | Built 42 features from 7 Silver/Gold tables using PySpark |
 | **AutoML Model Selection** | FLAML automatically tried 5 algorithms with hyperparameter tuning |
 | **MLflow Experiment Tracking** | Every trial logged for reproducibility and comparison |
@@ -1119,7 +1134,7 @@ Confirm you have completed:
 
 - **Module 2** (Data Engineering): The Silver/Gold tables you built are the foundation for all 42 ML features
 - **Module 3** (Power BI): Add the `gold_readmission_risk_scores` table to your semantic model for a "Readmission Risk" dashboard page
-- **Module 5** (Gen AI): The same Fabric built-in AI endpoint is used here, but for feature engineering and result interpretation instead of clinical note analysis
+- **Module 5** (Gen AI): The same Fabric-authenticated Azure OpenAI client pattern is used here, but for feature engineering and result interpretation instead of clinical note analysis
 - **Module 7** (Data Agent): The Data Agent can now answer questions like *"Which high-risk patients are being discharged this week?"* using the risk scores table
 
 ---
@@ -1326,7 +1341,7 @@ MLflow 3 introduces two major capabilities that enhance our readmission predicti
 | **Experiment UI** | Single experiment view | ML experiment vs. AI experiment types, plus a Logged Models section |
 | **Gen AI observability** | Not available | **Traces** for prompts, responses, tool calls, latency, and tokens |
 
-Since this module uses Gen AI (Fabric AI endpoint) for feature engineering and result interpretation, MLflow 3 traces let you **capture and inspect every LLM call** — what prompts were sent, what responses came back, token usage, and latency. This is essential for auditing AI-assisted clinical decisions.
+Since this module uses Gen AI (Azure OpenAI in Fabric) for feature engineering and result interpretation, MLflow 3 traces let you **capture and inspect every LLM call** — what prompts were sent, what responses came back, token usage, and latency. This is essential for auditing AI-assisted clinical decisions.
 
 ### Step 15: Install MLflow 3
 
@@ -1468,7 +1483,7 @@ client = AzureOpenAI(
 # ── Trace 1: Feature Engineering Suggestion ───────────────────
 with mlflow.start_run(run_name="feature_engineering_trace"):
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.1",
         messages=[
             {"role": "system", "content": "You are a clinical data scientist. Suggest 5 key features for readmission prediction."},
             {"role": "user", "content": "We have patient demographics, encounter history, conditions, and vitals data. What are the top 5 features to predict 30-day readmission?"},
@@ -1485,7 +1500,7 @@ with mlflow.start_run(run_name="feature_engineering_trace"):
 # ── Trace 2: Clinical Interpretation ──────────────────────────
 with mlflow.start_run(run_name="clinical_interpretation_trace"):
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.1",
         messages=[
             {"role": "system", "content": "You are a clinical informatics expert. Interpret ML model results for a hospital CMO."},
             {"role": "user", "content": f"Our readmission model achieved AUC-ROC of {auc_roc:.4f} using {automl.best_estimator}. The top features are prior_admissions_12m, chronic_condition_count, and index_los. Provide a 2-sentence clinical interpretation."},
@@ -1505,11 +1520,11 @@ def assess_patient_risk(patient_summary: str) -> str:
     """Use AI to generate a narrative risk assessment for a patient."""
     mlflow.update_current_trace(tags={
         "use_case": "patient_risk_narrative",
-        "model": "gpt-4.1",
+        "model": "gpt-5.1",
     })
     
     response = client.chat.completions.create(
-        model="gpt-4.1",
+        model="gpt-5.1",
         messages=[
             {"role": "system", "content": "Generate a brief clinical risk narrative for care coordinators."},
             {"role": "user", "content": patient_summary},
