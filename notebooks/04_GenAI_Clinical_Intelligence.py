@@ -276,8 +276,8 @@ print(f"Note:\n{sample_note['note_text'][:800]}...")
 #   Discharge Summary needs a different summary style than an ED Note
 #
 # #### Step 3: Parameters
-#     max_tokens=200, temperature=0.3
-# - `max_tokens=200` → Hard cap on output length (~150 words). 
+#     max_completion_tokens=200, temperature=0.3
+# - `max_completion_tokens=200` -> Hard cap on output length (~150 words).
 #   Prevents runaway generation.
 # - `temperature=0.3` → **Low randomness**. Temperature controls 
 #   "creativity" on a 0–1 scale:
@@ -327,7 +327,7 @@ Use medical terminology appropriately. Be concise and factual."""
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Note Type: {note_type}\n\nClinical Note:\n{note_text}"}
             ],
-            max_tokens=200,
+            max_completion_tokens=200,
             temperature=0.3
         )
         return response.choices[0].message.content.strip()

@@ -180,8 +180,8 @@ Use medical terminology appropriately. Be concise and factual."""
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Note Type: {note_type}\n\nClinical Note:\n{note_text}"}
             ],
-            max_tokens=200,
-            temperature=0.3  # Low temperature for factual, consistent output
+            max_completion_tokens=200,
+            temperature=0.3
         )
         return response.choices[0].message.content.strip()
     except Exception as e:
