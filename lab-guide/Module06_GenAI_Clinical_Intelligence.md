@@ -2,7 +2,7 @@
 
 | Duration | 30 minutes |
 |----------|------------|
-| Objective | Use Azure OpenAI through Fabric's built-in AI endpoint to summarize clinical notes, extract medical entities, and suggest ICD-10 codes — automating documentation tasks that consume hours of clinician time |
+| Objective | Use Azure OpenAI in Fabric with the OpenAI Python SDK to summarize clinical notes, extract medical entities, and suggest ICD-10 codes — automating documentation tasks that consume hours of clinician time |
 | Fabric Features | Fabric Notebook, Fabric AI Services (built-in Azure OpenAI), PySpark UDFs |
 
 ---
@@ -25,7 +25,7 @@ In this module, you'll build an AI-powered clinical intelligence pipeline that p
 To complete this module, you need:
 
 1. **Fabric workspace** with your `HealthcareLakehouse` (from Modules 1-2)
-2. **Fabric capacity** — The built-in Fabric AI endpoint provides access to Azure OpenAI models (like `gpt-4.1`) directly from Fabric notebooks, with no separate Azure OpenAI resource or API key needed
+2. **Fabric capacity** — Fabric AI Services provides access to Azure OpenAI models (like `gpt-5.1`) directly from Fabric notebooks, with no separate Azure OpenAI resource or API key needed
 
 > **Note:** Fabric AI Services uses your workspace's Fabric capacity. No external Azure OpenAI resource, endpoint URL, or API key is required. See [Fabric AI Services documentation](https://learn.microsoft.com/en-us/fabric/data-science/ai-services/how-to-use-openai-python-sdk) for details.
 
@@ -33,7 +33,7 @@ To complete this module, you need:
 
 ## What You Will Do
 
-1. Set up the Fabric AI endpoint connection in a notebook (no API keys needed)
+1. Set up a Fabric-authenticated Azure OpenAI client in a notebook (no API keys needed)
 2. Summarize clinical notes using GPT
 3. Extract medical entities (diagnoses, medications, procedures)
 4. Suggest ICD-10 codes from clinical text
@@ -41,7 +41,7 @@ To complete this module, you need:
 
 ---
 
-## Part A: Set Up Fabric AI Endpoint Connection
+## Part A: Set Up Azure OpenAI Client in Fabric
 
 ### Step 1: Create a New Notebook
 
@@ -73,15 +73,17 @@ Paste in Cell 1:
 > - `A new release of pip is available` — Informational only.
 > - `PySpark kernel has been restarted` — Expected. Fabric restarts the kernel after `%pip install` so the new package is available. **Wait for the restart to complete, then continue with the next cell.**
 
-### Step 3: Initialize the Fabric AI Client
+### Step 3: Create a Fabric-Authenticated Azure OpenAI Client
 
-Fabric provides a **built-in AI endpoint** that gives you access to Azure OpenAI models (like `gpt-4.1`) directly — no API keys, no endpoint URLs, no separate Azure OpenAI resource needed. Authentication is handled automatically through your Fabric credentials.
+Following Microsoft Learn guidance, create an `AzureOpenAI` client that uses Fabric authentication (`get_openai_httpx_sync_client`) — no API keys or custom endpoint URLs required.
+
+Reference: [Use Azure OpenAI with Python SDK - Microsoft Fabric](https://learn.microsoft.com/en-us/fabric/data-science/ai-services/how-to-use-openai-python-sdk)
 
 Paste in Cell 2:
 
 ```python
 # =============================================================
-# Cell 2: Initialize Fabric AI Client
+# Cell 2: Create Fabric-authenticated Azure OpenAI client
 # No API keys or endpoints needed — Fabric handles authentication
 # =============================================================
 
@@ -94,7 +96,7 @@ client = openai.AzureOpenAI(
 )
 
 # Model to use for all AI calls
-MODEL_NAME = "gpt-4.1"
+MODEL_NAME = "gpt-5.1"
 
 # Quick test
 response = client.chat.completions.create(
@@ -107,6 +109,19 @@ print(f"✅ {response.choices[0].message.content}")
 ```
 
 You should see: `✅ Connection successful`
+
+> **Optional (recommended by OpenAI):** You can also validate with the Responses API:
+>
+> ```python
+> r = client.responses.create(
+>     model=MODEL_NAME,
+>     input=[{"role": "user", "content": "Say 'Connection successful'."}],
+>     store=False
+> )
+> print(r.output_text)
+> ```
+>
+> Fabric currently requires `store=False` for Responses API calls.
 
 ---
 
@@ -483,11 +498,11 @@ df_codes.groupBy("icd10_code").count().orderBy("count", ascending=False).show(15
 
 ---
 
-## ✅ Module 5 Checklist
+## ✅ Module 6 Checklist
 
-Before moving to Module 6, confirm:
+Before moving to Module 7, confirm:
 
-- [ ] Fabric AI endpoint connection is working (test call succeeded)
+- [ ] Fabric-authenticated Azure OpenAI client is working (test call succeeded)
 - [ ] Clinical note summarization produces concise, accurate summaries
 - [ ] Entity extraction identifies diagnoses, medications, and procedures
 - [ ] ICD-10 code suggestion returns plausible codes with evidence
