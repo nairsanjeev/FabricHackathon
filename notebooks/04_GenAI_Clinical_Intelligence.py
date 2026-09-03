@@ -19,8 +19,8 @@
 #   variables, imports, or DataFrames across session restarts.
 #
 # ⚠️ PREREQUISITES:
-#   - Azure OpenAI resource with a deployed model (gpt-4o-mini recommended)
-#   - Endpoint URL and API key from your Azure OpenAI deployment
+#   - Fabric capacity with AI Services enabled
+#   - OpenAI Python SDK installed in the notebook runtime
 #   - Silver layer tables populated (from Notebook 02)
 #
 # ================================================================
@@ -43,7 +43,7 @@
 #
 # ## How Gen AI Helps
 #
-# Large Language Models (LLMs) like GPT-4o can process clinical 
+# Large Language Models (LLMs) like GPT-5.1 can process clinical
 # text to automate three critical documentation tasks:
 #
 # | Task | Manual Time | AI Time | Accuracy |
@@ -57,7 +57,7 @@
 # ```
 # ┌──────────────┐     ┌───────────────┐     ┌──────────────┐
 # │  Clinical     │────→│  Azure OpenAI  │────→│  Gold Layer   │
-# │  Notes (Silver)│    │  (GPT-4o)      │    │  AI Insights  │
+# │  Notes (Silver)│    │  (GPT-5.1)     │    │  AI Insights  │
 # └──────────────┘     └───────────────┘     └──────────────┘
 #      150 notes         3 AI tasks:          Structured output
 #                        • Summarize          ready for BI and
@@ -80,36 +80,11 @@
 # ║  CELL 2 — CODE: Azure OpenAI Configuration                    ║
 # ╚════════════════════════════════════════════════════════════════╝
 
-# ⚠️ REPLACE these values with your Azure OpenAI resource details
-# In production, use Azure Key Vault or Fabric environment variables
-#
-# HOW TO GET THESE VALUES FROM AI FOUNDRY:
-#   1. Go to https://ai.azure.com → sign in → open your project
-#   2. ENDPOINT & KEY:
-#      - Click "Management center" (gear icon) → "Connected resources"
-#      - Click your Azure OpenAI connection → copy Endpoint and Key
-#      - OR: Azure Portal → your OpenAI resource → "Keys and Endpoint"
-#   3. DEPLOYMENT NAME:
-#      - In AI Foundry → "Models + endpoints" → "Deployments" tab
-#      - Copy the deployment name (e.g., "gpt-4o-mini", "gpt-4.1")
-#      - If no deployment exists: click "+ Deploy model" → select a GPT model → deploy
-#
-# IMPORTANT: The endpoint must be ONLY the base URL — do NOT include
-# any path like /openai/v1 or /openai/deployments/...
-# The SDK appends the correct path automatically.
-#
-# ✅ Correct:   https://my-resource.openai.azure.com/
-# ❌ Wrong:     https://my-resource.openai.azure.com/openai/v1
-# ❌ Wrong:     https://my-resource.openai.azure.com/openai/deployments/gpt-4o
-
-AZURE_OPENAI_ENDPOINT = "https://<your-resource-name>.openai.azure.com/"  # From AI Foundry
-AZURE_OPENAI_KEY = "<your-api-key>"                                        # From AI Foundry
-AZURE_OPENAI_DEPLOYMENT = "<your-deployment-name>"                          # From AI Foundry
-AZURE_OPENAI_API_VERSION = "2024-06-01"
-
-print("✅ Configuration set!")
-print(f"   Endpoint: {AZURE_OPENAI_ENDPOINT[:40]}...")
-print(f"   Deployment: {AZURE_OPENAI_DEPLOYMENT}")
+# Fabric handles Azure OpenAI authentication automatically.
+# No endpoint URL, API key, or deployment name is required.
+MODEL_NAME = "gpt-5.1"
+print("✅ Fabric Azure OpenAI configuration set")
+print(f"   Model: {MODEL_NAME}")
 
 
 # ╔════════════════════════════════════════════════════════════════╗
@@ -129,13 +104,12 @@ print(f"   Deployment: {AZURE_OPENAI_DEPLOYMENT}")
 # ║  CELL 4 — MARKDOWN                                            ║
 # ╚════════════════════════════════════════════════════════════════╝
 #
-# ## Initializing the Azure OpenAI Client
+# ## Initializing the Azure OpenAI Client in Fabric
 #
 # ### 1. What this step does (business meaning)
 # 
-# We create a connection to YOUR Azure-hosted GPT model. This is 
-# different from the public OpenAI API — Azure OpenAI runs within 
-# your Azure tenant, which means:
+# We create a Fabric-authenticated connection to Azure OpenAI. 
+# This is different from the public OpenAI API and means:
 # - ✅ **Data residency:** Clinical notes stay in YOUR Azure region 
 #   and are NOT sent to public OpenAI servers
 # - ✅ **HIPAA compliance:** Azure OpenAI supports BAA (Business 
@@ -153,21 +127,16 @@ print(f"   Deployment: {AZURE_OPENAI_DEPLOYMENT}")
 #   routing automatically.
 #
 # #### Step 2: Create the client
-#     client = AzureOpenAI(
-#         azure_endpoint=AZURE_OPENAI_ENDPOINT,
-#         api_key=AZURE_OPENAI_KEY,
-#         api_version=AZURE_OPENAI_API_VERSION)
-# - `azure_endpoint`: Your resource's base URL 
-#   (e.g., `https://my-resource.openai.azure.com/`). The SDK 
-#   appends `/openai/deployments/...` automatically.
-# - `api_key`: 32-character key from the Azure portal. In 
-#   production, you'd use Azure Key Vault or Managed Identity.
-# - `api_version`: `"2024-06-01"` is the stable GA version with 
-#   full chat completion support.
+#     client = openai.AzureOpenAI(
+#         http_client=get_openai_httpx_sync_client(),
+#         api_version="2025-04-01-preview")
+# - `get_openai_httpx_sync_client()` injects Fabric auth automatically.
+# - No endpoint URL or API key setup is required in notebooks.
+# - `api_version` selects the Azure OpenAI API surface exposed by Fabric.
 #
 # #### Step 3: Test the connection
 #     response = client.chat.completions.create(
-#         model=AZURE_OPENAI_DEPLOYMENT,
+#         model=MODEL_NAME,
 #         messages=[{"role": "user", "content": "Say 'Connection successful'"}],
 #         max_tokens=10)
 # - Sends a minimal test message to verify the endpoint, key, 
@@ -179,26 +148,26 @@ print(f"   Deployment: {AZURE_OPENAI_DEPLOYMENT}")
 #
 # ### 3. Summary
 #
-# The AzureOpenAI client is initialized with your endpoint, API key, 
+# The AzureOpenAI client is initialized with Fabric authentication 
 # and API version. A test call verifies connectivity before processing 
-# any clinical data. All communication stays within your Azure tenant.
+# any clinical data.
 
 
 # ╔════════════════════════════════════════════════════════════════╗
 # ║  CELL 5 — CODE: Initialize Client and Test Connection          ║
 # ╚════════════════════════════════════════════════════════════════╝
 
-from openai import AzureOpenAI
+from synapse.ml.fabric.credentials import get_openai_httpx_sync_client
+import openai
 
-client = AzureOpenAI(
-    azure_endpoint=AZURE_OPENAI_ENDPOINT,
-    api_key=AZURE_OPENAI_KEY,
-    api_version=AZURE_OPENAI_API_VERSION
+client = openai.AzureOpenAI(
+    http_client=get_openai_httpx_sync_client(),
+    api_version="2025-04-01-preview"
 )
 
 # Quick connectivity test — should return "Connection successful"
 response = client.chat.completions.create(
-    model=AZURE_OPENAI_DEPLOYMENT,
+    model=MODEL_NAME,
     messages=[{"role": "user", "content": "Say 'Connection successful' if you can read this."}],
     max_tokens=10
 )
@@ -353,7 +322,7 @@ Use medical terminology appropriately. Be concise and factual."""
     
     try:
         response = client.chat.completions.create(
-            model=AZURE_OPENAI_DEPLOYMENT,
+            model=MODEL_NAME,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": f"Note Type: {note_type}\n\nClinical Note:\n{note_text}"}
@@ -472,7 +441,7 @@ Return valid JSON only, no other text."""
     
     try:
         response = client.chat.completions.create(
-            model=AZURE_OPENAI_DEPLOYMENT,
+            model=MODEL_NAME,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": note_text}
@@ -600,7 +569,7 @@ Guidelines:
     
     try:
         response = client.chat.completions.create(
-            model=AZURE_OPENAI_DEPLOYMENT,
+            model=MODEL_NAME,
             messages=[
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": note_text}
@@ -686,7 +655,7 @@ for code in codes:
 #
 # ### 3. Cost awareness
 # - Each note: ~2,000–3,000 tokens across 3 calls
-# - At GPT-4o-mini pricing (~$0.15/M input tokens):
+# - At low-cost GPT-family pricing, this lab batch remains inexpensive:
 #   - ✅ 20 notes ≈ $0.01
 #   - ✅ 10,000 notes ≈ $5–10
 #

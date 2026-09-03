@@ -20,11 +20,11 @@
 #
 # ⚠️ PREREQUISITES:
 #   - All Silver and Gold tables from Notebooks 01-03 populated
-#   - Fabric capacity with built-in AI endpoint access
+#   - Fabric capacity with AI Services enabled
 #
 # ── APPROACH ──────────────────────────────────────────────────
 #   We combine Gen AI feature engineering with AutoML model selection:
-#     1. Use Fabric's built-in AI endpoint as a feature engineering assistant
+#     1. Use Azure OpenAI in Fabric (Python SDK) as a feature engineering assistant
 #     2. Build ML features from clinical, financial & temporal data
 #     3. Run FLAML AutoML to automatically find the best algorithm
 #     4. Track experiments with MLflow for reproducibility
@@ -73,7 +73,7 @@
 # ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐    ┌──────────────────┐
 # │ Step 1: GenAI     │    │ Step 2: Feature   │    │ Step 3: AutoML   │    │ Step 4: Score    │
 # │ Feature Discovery │───→│ Implementation    │───→│ Model Selection  │───→│ & Interpret      │
-# │ (Fabric AI)       │    │ (PySpark)         │    │ (FLAML + MLflow) │    │ (Risk Tiers)     │
+# │ (Azure OpenAI)    │    │ (PySpark)         │    │ (FLAML + MLflow) │    │ (Risk Tiers)     │
 # └──────────────────┘    └──────────────────┘    └──────────────────┘    └──────────────────┘
 #       Ask LLM to               Build 42              Try 5 algorithms,      Score patients,
 #      suggest features        features from            track with MLflow,    generate clinical
@@ -101,7 +101,7 @@
 
 
 # ╔════════════════════════════════════════════════════════════════╗
-# ║  CELL 3 — CODE: Initialize Fabric AI Client                   ║
+# ║  CELL 3 — CODE: Initialize Azure OpenAI Client in Fabric      ║
 # ╚════════════════════════════════════════════════════════════════╝
 
 from pyspark.sql.functions import *
@@ -111,14 +111,14 @@ from synapse.ml.fabric.credentials import get_openai_httpx_sync_client
 import openai
 import json
 
-# ── Fabric AI Endpoint ────────────────────────────────────────
+# ── Azure OpenAI in Fabric (Python SDK) ───────────────────────
 # No API keys or endpoints needed — Fabric handles authentication
 client = openai.AzureOpenAI(
     http_client=get_openai_httpx_sync_client(),
     api_version="2025-04-01-preview",
 )
 
-MODEL_NAME = "gpt-4.1"
+MODEL_NAME = "gpt-5.1"
 
 # Quick test
 response = client.chat.completions.create(
@@ -206,7 +206,7 @@ Focus on features that:
 
 Return valid JSON only, no other text."""
 
-print("🤖 Asking Fabric AI endpoint for feature engineering suggestions...")
+print("🤖 Asking Azure OpenAI (Fabric-authenticated client) for feature suggestions...")
 print("   (This may take 15-30 seconds)\n")
 
 response = client.chat.completions.create(
@@ -228,7 +228,7 @@ if result_text.startswith("```"):
 ai_features = json.loads(result_text)
 
 # ── Display the AI-suggested features ────────────────────────
-print(f"✅ AI endpoint suggested {len(ai_features)} features:\n")
+print(f"✅ Azure OpenAI suggested {len(ai_features)} features:\n")
 print(f"{'#':<3} {'Feature':<40} {'Category':<15} {'Importance':<10}")
 print("─" * 70)
 for i, feat in enumerate(ai_features, 1):
@@ -846,7 +846,7 @@ Given the readmission prediction model results below, provide:
 
 Write for a clinical audience, not data scientists."""
 
-print("🤖 Asking Fabric AI endpoint to interpret model results...\n")
+print("🤖 Asking Azure OpenAI in Fabric to interpret model results...\n")
 
 interpretation_response = client.chat.completions.create(
     model=MODEL_NAME,
@@ -877,13 +877,13 @@ print(interpretation)
 #
 # | Step | What You Did | Technology |
 # |------|-------------|------------|
-# | 1 | Feature Discovery | Fabric AI endpoint analyzed schema, suggested 25+ features |
+# | 1 | Feature Discovery | Azure OpenAI in Fabric analyzed schema, suggested 25+ features |
 # | 2 | Feature Implementation | PySpark built 42 features across 6 categories |
 # | 3 | AutoML Model Selection | FLAML tried 5 algorithms with hyperparameter tuning |
 # | 4 | Experiment Tracking | MLflow logged all trials for reproducibility |
 # | 5 | Visualization | ROC curve, PR curve, feature importance chart |
 # | 6 | Risk Scoring | Every patient scored 0.0-1.0 and classified Low/Medium/High |
-# | 7 | Interpretation | Fabric AI endpoint translated results into clinical recommendations |
+# | 7 | Interpretation | Azure OpenAI translated results into clinical recommendations |
 #
 # ### Output Tables Created
 # - **gold_readmission_training** — Feature-engineered training dataset (42 features)
