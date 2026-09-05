@@ -27,7 +27,7 @@ In this module, we'll monitor for **temperature + heart rate + respiratory rate*
 
 1. Create an **Eventhouse** with a KQL database
 2. Create an **Eventstream** to receive vitals data and configure the destination table
-3. Build a **Real-Time Dashboard** with auto-refresh (visuals show empty until data flows)
+3. Build a **Real-Time Dashboard** with live refresh (visuals show empty until data flows)
 4. Run a **simulator notebook** that pushes vitals data to the Eventstream
 5. **Watch the dashboard update in real time** as the simulator runs
 6. Write **KQL queries** for deeper clinical analysis
@@ -134,7 +134,7 @@ You **must publish the Eventstream before the connection string becomes availabl
 6. You should now see:
    - **Event Hub name** — e.g., `es_xxxxxxxx`
    - **Connection string–primary key** — starts with `Endpoint=sb://...`
-7. Click the **copy** icon next to the **Connection string–primary key** to copy it
+7. Click the **eye** icon first to reveal the **Connection string–primary key**, then click the **copy** icon next to it
 
 ![Eventstream connection details showing Event Hub protocol and connection string](images/Module4-GetCOnnectionstrig.png)
 
@@ -287,7 +287,7 @@ In the new Real-Time Dashboard interface, you add visuals (not tiles) using the 
 > 💡 **Tip:** For each visual, after entering the query, click **Apply changes** first. The visual formatting options (visual type, title, conditional formatting) only become available after you apply the query. Apply changes → then configure the visual settings.
 
 #### Visual 1: SIRS Alert Count (Big Number)
-1. Click **Add visual** in the toolbar and select **Stat**
+1. Click **Add visual** in the toolbar, open **Legacy**, and select **Stat**
 
 ![Add visual dropdown showing Stat option highlighted](images/Module4-RealtimeDashboardVisual-Stat.png)
 
@@ -301,7 +301,10 @@ PatientVitals
 ```
 4. Visual type: **Stat** (big number)
 5. Title: `Active SIRS Alerts`
-6. Add conditional formatting: Red if > 0
+6. Add conditional formatting:
+    - Column: `alert_patients` (long)
+    - Condition: `> 0`
+    - Color: Red
 
 #### Visual 2: Patient Vitals Grid
 1. Click **Add visual** and select **Table**, then enter this query:
@@ -358,23 +361,22 @@ PatientVitals
 2. Visual type: **Heatmap**
 3. Title: `Department Alert Summary`
 
-### Step 11: Set Continuous Auto-Refresh
+### Step 11: Set Continuous Live Refresh
 
 This is the key step that makes the dashboard update automatically as data flows in.
 
 1. At the top of the dashboard, click the **Manage** tab in the ribbon
-2. Click **Auto refresh** in the toolbar
-3. Toggle **Auto refresh** to **Enabled**
-4. Set the **Minimum time interval** to **10 seconds**
-5. Set the **Default refresh rate** to **10 seconds**
+2. Click **Refresh settings** in the toolbar
+3. Select **Live refresh (Recommended)**
+4. Click **Settings** and set the refresh interval to **10 seconds**
 
-![Manage tab showing Auto refresh settings with Enabled toggle and 10-second intervals](images/Module4-RTIDshboardRefresh.png)
+![Refresh settings panel showing Live refresh selected](images/Module4-RTIDshboardRefresh.png)
 
-6. You should now see the dashboard auto-refreshing at the configured interval
+5. You should now see the dashboard updating automatically with live refresh
 
 > **Note:** The visuals will show empty or zero results until you start the simulator in Part D. This is expected.
 
-> 📌 **Keep this dashboard tab open!** Open a **new browser tab** to create the simulator notebook in Part D. Once the simulator starts sending data, come back to this tab and watch the dashboard visuals update automatically every 30 seconds.
+> 📌 **Keep this dashboard tab open!** Open a **new browser tab** to create the simulator notebook in Part D. Once the simulator starts sending data, come back to this tab and watch the dashboard visuals update automatically.
 
 ---
 
@@ -407,7 +409,7 @@ Paste the following code in Cell 1:
 #   2. Click the VitalsSimulator source node
 #   3. Click "Details" in the lower pane
 #   4. Select Event Hub → SAS key authentication
-#   5. Copy the "Connection string–primary key"
+#   5. Click the eye icon to reveal "Connection string–primary key", then copy it
 CONNECTION_STR = "<PASTE_YOUR_EVENTSTREAM_CONNECTION_STRING_HERE>"
 
 # Simulation parameters

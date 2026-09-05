@@ -120,7 +120,7 @@ MODEL_NAME = "gpt-5.1"
 response = client.chat.completions.create(
     model=MODEL_NAME,
     messages=[{"role": "user", "content": "Say 'Connection successful' if you can read this."}],
-    max_tokens=10
+    max_completion_tokens=10
 )
 
 print(f"✅ {response.choices[0].message.content}")
@@ -230,40 +230,102 @@ Return valid JSON only, no other text."""
 print("🤖 Asking Azure OpenAI (Fabric-authenticated client) for feature suggestions...")
 print("   (This may take 15-30 seconds)\n")
 
-response = client.chat.completions.create(
-    model=MODEL_NAME,
-    messages=[
-        {"role": "system", "content": system_prompt},
-        {"role": "user", "content": f"Here is our data schema:\n\n{schema_description}\n\nSuggest 25 features for 30-day readmission prediction."}
-    ],
-    max_tokens=4000,
-    temperature=0.3
-)
+try:
+    response = client.chat.completions.create(
+        model=MODEL_NAME,
+        messages=[
+            {"role": "system", "content": system_prompt},
+            {"role": "user", "content": f"Schema:\n{schema_description}\n\nSuggest 25 readmission features."}
+        ],
+        max_completion_tokens=4000,
+        temperature=0.3
+    )
 
-result_text = response.choices[0].message.content.strip()
+    result_text = response.choices[0].message.content.strip()
 
-# Strip markdown code fences if present
-if result_text.startswith("```"):
-    result_text = result_text.split("\n", 1)[-1].rsplit("```", 1)[0]
+    # Remove markdown fences
+    if result_text.startswith("```json"):
+        result_text = result_text[7:]
+    if result_text.startswith("```"):
+        result_text = result_text[3:]
+    if result_text.endswith("```"):
+        result_text = result_text[:-3]
+    result_text = result_text.strip()
 
-ai_features = json.loads(result_text)
+    # Replace literal backslash-n sequences with spaces
+    result_text = result_text.replace('\\n', ' ')
 
-# ── Display the AI-suggested features ────────────────────────
-print(f"✅ Azure OpenAI suggested {len(ai_features)} features:\n")
-print(f"{'#':<3} {'Feature':<40} {'Category':<15} {'Importance':<10}")
-print("─" * 70)
-for i, feat in enumerate(ai_features, 1):
-    print(f"{i:<3} {feat['feature_name']:<40} {feat['category']:<15} {feat['expected_importance']:<10}")
+    # Parse JSON
+    ai_features = json.loads(result_text)
 
-# Show detailed rationale for top 5
-print(f"\n{'='*70}")
-print("📋 DETAILED CLINICAL RATIONALE (Top 5):")
-print(f"{'='*70}")
-for feat in ai_features[:5]:
-    print(f"\n🔹 {feat['feature_name']}")
-    print(f"   Category: {feat['category']}")
-    print(f"   How to compute: {feat['computation']}")
-    print(f"   Clinical rationale: {feat['clinical_rationale']}")
+    print(f"✅ Successfully parsed {len(ai_features)} features")
+
+    # Trim to exactly 25 features (prioritize high importance)
+    if len(ai_features) > 25:
+        importance_order = {"high": 0, "medium": 1, "low": 2}
+        ai_features = sorted(
+            ai_features,
+            key=lambda x: importance_order.get(x.get("expected_importance", "").lower(), 3)
+        )
+        ai_features = ai_features[:25]
+        print("   -> Trimmed to 25 features (keeping high-priority ones)\n")
+    else:
+        print()
+
+except json.JSONDecodeError as e:
+    print(f"❌ JSON Parse Error at Line {e.lineno}, Column {e.colno}: {e.msg}")
+    start = max(0, e.pos - 100)
+    print(f"   Context: ...{result_text[start:e.pos+100]}...\n")
+    ai_features = []
+
+except Exception as e:
+    print(f"❌ Error: {type(e).__name__}: {str(e)}\n")
+    ai_features = []
+
+# ── Display Results ────────────────────────────────────────────
+if ai_features:
+    print(f"{'='*70}")
+    print(f"✅ READMISSION PREDICTION FEATURES ({len(ai_features)} total)")
+    print(f"{'='*70}\n")
+
+    print(f"{'#':<3} {'Feature':<40} {'Category':<15} {'Importance':<10}")
+    print("─" * 70)
+    for i, feat in enumerate(ai_features, 1):
+        print(f"{i:<3} {feat['feature_name']:<40} {feat['category']:<15} {feat['expected_importance']:<10}")
+
+    print(f"\n{'='*70}")
+    print("📊 FEATURES BY CATEGORY:")
+    print(f"{'='*70}\n")
+
+    categories = {}
+    for feat in ai_features:
+        cat = feat['category']
+        categories[cat] = categories.get(cat, 0) + 1
+
+    for cat, count in sorted(categories.items()):
+        importance_high = len([f for f in ai_features if f['category'] == cat and f['expected_importance'] == 'high'])
+        print(f"  {cat:<20} {count:>2} features ({importance_high} high priority)")
+
+    print(f"\n{'='*70}")
+    print("📋 DETAILED CLINICAL RATIONALE (Top 5 by importance):")
+    print(f"{'='*70}\n")
+
+    high_importance = [f for f in ai_features if f['expected_importance'] == 'high']
+    for feat in high_importance[:5]:
+        print(f"🔹 {feat['feature_name']}")
+        print(f"   Category: {feat['category']}")
+        print(f"   Computation: {feat['computation'][:100]}...")
+        print(f"   Rationale: {feat['clinical_rationale']}")
+        print()
+
+    with open("readmission_features.json", "w") as f:
+        json.dump(ai_features, f, indent=2)
+
+    print(f"{'='*70}")
+    print("✅ All 25 features saved to: readmission_features.json")
+    print(f"{'='*70}")
+else:
+    print("⚠️  No features generated. Verify Azure OpenAI client and MODEL_NAME.")
 ```
 
 **What happens:**
@@ -887,9 +949,14 @@ print(f"\n{'Trial':<7} {'Algorithm':<15} {'AUC-ROC (CV)':<15} {'Train Time':<12}
 print("─" * 50)
 
 for trial_id, config in automl.config_history.items():
-    estimator = config.get("Current Learner", "unknown")
-    # Get the best loss for this trial from the search state
-    print(f"{trial_id:<7} {estimator:<15}")
+    # Handle both dict and tuple formats
+    if isinstance(config, dict):
+        estimator = config.get("Current Learner", "unknown")
+    elif isinstance(config, tuple):
+        estimator = config[0] if config else "unknown"
+    else:
+        estimator = str(config)
+    print(f"{trial_id:<7} {str(estimator):<15}")
 
 # Compare AutoML result to baseline
 print(f"\n{'='*70}")
@@ -901,7 +968,8 @@ print(f"  {'LACE Index':<35} {'0.68-0.72':<12} {'Validated in >50 studies'}")
 print(f"  {'HOSPITAL Score':<35} {'0.72':<12} {'7-point scale'}")
 print(f"  {'Yale/CMS Model':<35} {'0.73-0.76':<12} {'Used for HRRP penalties'}")
 print(f"  {'─'*65}")
-print(f"  {'Our AutoML Model ({automl.best_estimator})':<35} {f'{auc_roc:.4f}':<12} {'AutoML-optimized, 42 features'}")
+best_est = str(automl.best_estimator) if automl.best_estimator else "Unknown"
+print(f"  {'Our AutoML Model (' + best_est + ')':<35} {f'{auc_roc:.4f}':<12} {'AutoML-optimized, 42 features'}")
 print(f"  {'─'*65}")
 
 if auc_roc > 0.76:
@@ -1077,7 +1145,7 @@ interpretation_response = client.chat.completions.create(
         {"role": "system", "content": interpretation_prompt},
         {"role": "user", "content": model_summary}
     ],
-    max_tokens=2000,
+    max_completion_tokens=2000,
     temperature=0.4
 )
 
@@ -1489,7 +1557,7 @@ with mlflow.start_run(run_name="feature_engineering_trace"):
             {"role": "user", "content": "We have patient demographics, encounter history, conditions, and vitals data. What are the top 5 features to predict 30-day readmission?"},
         ],
         temperature=0.3,
-        max_tokens=500,
+        max_completion_tokens=500,
     )
     
     trace_id = mlflow.get_last_active_trace_id()
@@ -1506,7 +1574,7 @@ with mlflow.start_run(run_name="clinical_interpretation_trace"):
             {"role": "user", "content": f"Our readmission model achieved AUC-ROC of {auc_roc:.4f} using {automl.best_estimator}. The top features are prior_admissions_12m, chronic_condition_count, and index_los. Provide a 2-sentence clinical interpretation."},
         ],
         temperature=0.4,
-        max_tokens=300,
+        max_completion_tokens=300,
     )
     
     trace_id = mlflow.get_last_active_trace_id()
@@ -1530,7 +1598,7 @@ def assess_patient_risk(patient_summary: str) -> str:
             {"role": "user", "content": patient_summary},
         ],
         temperature=0.3,
-        max_tokens=200,
+        max_completion_tokens=200,
     )
     return response.choices[0].message.content
 
