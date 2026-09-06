@@ -65,13 +65,16 @@ Paste in Cell 1:
 # Cell 1: Install OpenAI SDK
 # =============================================================
 
-%pip install -U openai -q
+%pip install "openai==1.99.9" -q
 ```
 
-> **Expected warnings — safe to ignore:**
-> - `ERROR: pip's dependency resolver...` — This is a pre-installed Fabric package with a stale dependency constraint. It does **not** affect the `openai` package or this lab.
+> **Why this version is pinned:** OpenAI SDK 3.x loads an `aiohttp` transport that is incompatible with the `aiohttp` version currently included in some Fabric Spark runtimes, causing `AttributeError: module aiohttp has no attribute SocketTimeoutError` during `import openai`. Version `1.99.9` supports `AzureOpenAI`, the Responses API, and `max_completion_tokens` without loading that transport.
+>
+> **Expected messages:**
 > - `A new release of pip is available` — Informational only.
 > - `PySpark kernel has been restarted` — Expected. Fabric restarts the kernel after `%pip install` so the new package is available. **Wait for the restart to complete, then continue with the next cell.**
+>
+> If you already installed an unpinned or 3.x version, run Cell 1 again. After the kernel restart, resume with Cell 2; you do not need to upgrade pip or `aiohttp`.
 
 ### Step 3: Create a Fabric-Authenticated Azure OpenAI Client
 
@@ -102,7 +105,7 @@ MODEL_NAME = "gpt-5.1"
 response = client.chat.completions.create(
     model=MODEL_NAME,
     messages=[{"role": "user", "content": "Say 'Connection successful' if you can read this."}],
-    max_tokens=10
+    max_completion_tokens=10
 )
 
 print(f"✅ {response.choices[0].message.content}")
@@ -238,7 +241,7 @@ Return valid JSON only, no other text."""
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": note_text}
             ],
-            max_tokens=500,
+            max_completion_tokens=500,
             temperature=0.1  # Very low temperature for consistent extraction
         )
         result_text = response.choices[0].message.content.strip()
@@ -305,7 +308,7 @@ Guidelines:
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": note_text}
             ],
-            max_tokens=600,
+            max_completion_tokens=600,
             temperature=0.2
         )
         result_text = response.choices[0].message.content.strip()

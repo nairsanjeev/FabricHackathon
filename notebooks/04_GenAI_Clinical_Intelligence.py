@@ -91,10 +91,10 @@ print(f"   Model: {MODEL_NAME}")
 # ║  CELL 3 — CODE: Install and Initialize OpenAI SDK             ║
 # ╚════════════════════════════════════════════════════════════════╝
 
-%pip install openai -q
-# ⚠️ EXPECTED WARNINGS (safe to ignore):
-#   - "ERROR: pip's dependency resolver..." — a pre-installed Fabric package (nni)
-#     has a stale constraint. It does NOT affect the openai package or this lab.
+%pip install "openai==1.99.9" -q
+# Version 1.99.9 avoids the OpenAI 3.x aiohttp transport incompatibility present
+# in some Fabric Spark runtimes while supporting the APIs used in this notebook.
+# EXPECTED MESSAGES:
 #   - "A new release of pip is available" — informational only.
 #   - "PySpark kernel has been restarted" — expected. Wait for the restart, then
 #     continue with the next cell.
@@ -138,7 +138,7 @@ print(f"   Model: {MODEL_NAME}")
 #     response = client.chat.completions.create(
 #         model=MODEL_NAME,
 #         messages=[{"role": "user", "content": "Say 'Connection successful'"}],
-#         max_tokens=10)
+#         max_completion_tokens=10)
 # - Sends a minimal test message to verify the endpoint, key, 
 #   and deployment name are all correct
 # - `model=` is actually the DEPLOYMENT name (not the model name) 
@@ -160,6 +160,8 @@ print(f"   Model: {MODEL_NAME}")
 from synapse.ml.fabric.credentials import get_openai_httpx_sync_client
 import openai
 
+MODEL_NAME = "gpt-5.1"  # Redefine after the %pip-triggered Python restart.
+
 client = openai.AzureOpenAI(
     http_client=get_openai_httpx_sync_client(),
     api_version="2025-04-01-preview"
@@ -169,7 +171,7 @@ client = openai.AzureOpenAI(
 response = client.chat.completions.create(
     model=MODEL_NAME,
     messages=[{"role": "user", "content": "Say 'Connection successful' if you can read this."}],
-    max_tokens=10
+    max_completion_tokens=10
 )
 
 print(response.choices[0].message.content)
@@ -446,7 +448,7 @@ Return valid JSON only, no other text."""
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": note_text}
             ],
-            max_tokens=500,
+            max_completion_tokens=500,
             temperature=0.1
         )
         result_text = response.choices[0].message.content.strip()
@@ -517,8 +519,8 @@ print(json.dumps(entities, indent=2))
 #   similar codes), not just extraction
 # - Still low enough to ensure consistency across runs
 #
-# #### Step 3: Max tokens 600
-#     max_tokens=600
+# #### Step 3: Maximum completion tokens 600
+#     max_completion_tokens=600
 # - Higher than summarization (200) because each code suggestion 
 #   includes 4 fields, and a note may have 5–10 diagnosable conditions
 #
@@ -574,7 +576,7 @@ Guidelines:
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": note_text}
             ],
-            max_tokens=600,
+            max_completion_tokens=600,
             temperature=0.2
         )
         result_text = response.choices[0].message.content.strip()
