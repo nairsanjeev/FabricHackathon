@@ -91,9 +91,11 @@ print(f"   Model: {MODEL_NAME}")
 # ║  CELL 3 — CODE: Install and Initialize OpenAI SDK             ║
 # ╚════════════════════════════════════════════════════════════════╝
 
-%pip install "openai==1.99.9" -q
+%pip install --force-reinstall --no-deps --no-cache-dir "openai==1.99.9" -q
 # Version 1.99.9 avoids the OpenAI 3.x aiohttp transport incompatibility present
 # in some Fabric Spark runtimes while supporting the APIs used in this notebook.
+# --force-reinstall and --no-cache-dir ensure an existing OpenAI 3.x wheel is
+# replaced instead of reused. --no-deps leaves Fabric's shared libraries intact.
 # EXPECTED MESSAGES:
 #   - "A new release of pip is available" — informational only.
 #   - "PySpark kernel has been restarted" — expected. Wait for the restart, then
@@ -157,7 +159,16 @@ print(f"   Model: {MODEL_NAME}")
 # ║  CELL 5 — CODE: Initialize Client and Test Connection          ║
 # ╚════════════════════════════════════════════════════════════════╝
 
+from importlib.metadata import version
 from synapse.ml.fabric.credentials import get_openai_httpx_sync_client
+
+installed_openai_version = version("openai")
+if installed_openai_version != "1.99.9":
+    raise RuntimeError(
+        f"Expected openai 1.99.9, found {installed_openai_version}. "
+        "Run the preceding %pip cell and wait for the Python kernel to restart."
+    )
+
 import openai
 
 MODEL_NAME = "gpt-5.1"  # Redefine after the %pip-triggered Python restart.
