@@ -83,11 +83,13 @@ Before starting this module, ensure you have:
 Paste in Cell 1:
 
 ```python
-%pip install -U openai flaml[automl] scikit-learn matplotlib -q
+%pip install -U flaml[automl] scikit-learn matplotlib -q
+%pip install --force-reinstall --no-deps --no-cache-dir "openai==1.99.9" -q
 ```
 
-> **Expected warnings — safe to ignore:**
-> - `ERROR: pip's dependency resolver...` — This is a pre-installed Fabric package with a stale dependency constraint. It does **not** affect the packages for this lab.
+> **Why OpenAI is installed separately:** The FLAML and ML packages need normal dependency resolution. OpenAI is force-installed without dependencies so an existing OpenAI 3.x wheel is replaced without changing Fabric's shared `aiohttp` package. This prevents `AttributeError: module aiohttp has no attribute SocketTimeoutError` during `import openai`.
+>
+> **Expected messages:**
 > - `A new release of pip is available` — Informational only.
 > - `PySpark kernel has been restarted` — Expected. Fabric restarts the kernel after `%pip install` so the new packages are available. **Wait for the restart to complete, then continue with the next cell.**
 
@@ -103,7 +105,16 @@ Paste in Cell 2:
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 from pyspark.sql.window import Window
+from importlib.metadata import version
 from synapse.ml.fabric.credentials import get_openai_httpx_sync_client
+
+installed_openai_version = version("openai")
+if installed_openai_version != "1.99.9":
+    raise RuntimeError(
+        f"Expected openai 1.99.9, found {installed_openai_version}. "
+        "Run the preceding %pip cell and wait for the Python kernel to restart."
+    )
+
 import openai
 import json
 

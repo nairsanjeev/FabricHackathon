@@ -95,8 +95,10 @@
 # ║  CELL 2 — CODE: Install Libraries                             ║
 # ╚════════════════════════════════════════════════════════════════╝
 
-%pip install -U openai flaml[automl] scikit-learn matplotlib -q
-# ⚠️ Expected: pip warnings about dependencies — safe to ignore.
+%pip install -U flaml[automl] scikit-learn matplotlib -q
+%pip install --force-reinstall --no-deps --no-cache-dir "openai==1.99.9" -q
+# OpenAI is installed separately so its 3.x wheel is replaced without changing
+# Fabric's shared aiohttp package. This prevents SocketTimeoutError on import.
 # The kernel will restart after install. Wait for restart to complete.
 
 
@@ -107,7 +109,16 @@
 from pyspark.sql.functions import *
 from pyspark.sql.types import *
 from pyspark.sql.window import Window
+from importlib.metadata import version
 from synapse.ml.fabric.credentials import get_openai_httpx_sync_client
+
+installed_openai_version = version("openai")
+if installed_openai_version != "1.99.9":
+    raise RuntimeError(
+        f"Expected openai 1.99.9, found {installed_openai_version}. "
+        "Run the preceding %pip cell and wait for the Python kernel to restart."
+    )
+
 import openai
 import json
 
