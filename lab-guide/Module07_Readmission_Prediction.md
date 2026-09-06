@@ -236,6 +236,7 @@ Focus on features that:
 2. Have clinical evidence supporting their predictive value
 3. Span multiple feature categories (not all demographics)
 4. Include interaction features and temporal patterns
+5. Keep each computation and clinical rationale under 30 words
 
 Return valid JSON only, no other text."""
 
@@ -249,11 +250,20 @@ try:
             {"role": "system", "content": system_prompt},
             {"role": "user", "content": f"Schema:\n{schema_description}\n\nSuggest 25 readmission features."}
         ],
-        max_completion_tokens=4000,
+        max_completion_tokens=12000,
         temperature=0.3
     )
 
-    result_text = response.choices[0].message.content.strip()
+    choice = response.choices[0]
+    if choice.finish_reason == "length":
+        raise RuntimeError(
+            "Azure OpenAI truncated the feature JSON. Increase "
+            "max_completion_tokens and run this cell again."
+        )
+    if not choice.message.content:
+        raise RuntimeError("Azure OpenAI returned an empty response.")
+
+    result_text = choice.message.content.strip()
 
     # Remove markdown fences
     if result_text.startswith("```json"):
@@ -286,7 +296,7 @@ try:
 
 except json.JSONDecodeError as e:
     print(f"❌ JSON Parse Error at Line {e.lineno}, Column {e.colno}: {e.msg}")
-    start = max(0, e.pos - 100)
+    start = e.pos - 100 if e.pos >= 100 else 0
     print(f"   Context: ...{result_text[start:e.pos+100]}...\n")
     ai_features = []
 
