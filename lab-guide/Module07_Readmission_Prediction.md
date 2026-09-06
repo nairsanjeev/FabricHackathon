@@ -83,14 +83,15 @@ Before starting this module, ensure you have:
 Paste in Cell 1:
 
 ```python
-%pip install -U flaml[automl] scikit-learn matplotlib -q
-%pip install --force-reinstall --no-deps --no-cache-dir "openai==1.99.9" -q
+%pip install flaml[automl] scikit-learn matplotlib -q
+%pip install --force-reinstall --no-cache-dir "openai==1.99.9" -q
 ```
 
-> **Why OpenAI is installed separately:** The FLAML and ML packages need normal dependency resolution. OpenAI is force-installed without dependencies so an existing OpenAI 3.x wheel is replaced without changing Fabric's shared `aiohttp` package. This prevents `AttributeError: module aiohttp has no attribute SocketTimeoutError` during `import openai`.
+> **Why OpenAI is installed separately:** The exact OpenAI version replaces an incompatible OpenAI 3.x wheel and installs required dependencies such as `pydantic`. OpenAI 1.99.9 does not install `aiohttp` unless its optional `aiohttp` extra is requested, so Fabric's shared `aiohttp` package remains unchanged. Removing `--upgrade` from the ML package command also avoids unnecessarily replacing Fabric's preinstalled libraries.
 >
 > **Expected messages:**
 > - `A new release of pip is available` — Informational only.
+> - `nni 3.0 requires filelock<3.12` — A non-blocking warning about preinstalled Fabric packages; it does not cause the OpenAI import failure. Do not upgrade pip or change `filelock` for this lab.
 > - `PySpark kernel has been restarted` — Expected. Fabric restarts the kernel after `%pip install` so the new packages are available. **Wait for the restart to complete, then continue with the next cell.**
 
 ### Step 3: Create a Fabric-Authenticated Azure OpenAI Client

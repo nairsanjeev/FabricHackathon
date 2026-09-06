@@ -95,10 +95,12 @@
 # ║  CELL 2 — CODE: Install Libraries                             ║
 # ╚════════════════════════════════════════════════════════════════╝
 
-%pip install -U flaml[automl] scikit-learn matplotlib -q
-%pip install --force-reinstall --no-deps --no-cache-dir "openai==1.99.9" -q
-# OpenAI is installed separately so its 3.x wheel is replaced without changing
-# Fabric's shared aiohttp package. This prevents SocketTimeoutError on import.
+%pip install flaml[automl] scikit-learn matplotlib -q
+%pip install --force-reinstall --no-cache-dir "openai==1.99.9" -q
+# OpenAI is installed separately so its 3.x wheel and required dependencies,
+# including pydantic, are installed. aiohttp is only an optional OpenAI extra,
+# so Fabric's shared aiohttp package remains unchanged.
+# An nni/filelock dependency warning is non-blocking; do not change filelock.
 # The kernel will restart after install. Wait for restart to complete.
 
 
