@@ -6,6 +6,12 @@ Build an end-to-end analytics solution on **Microsoft Fabric** that helps a hosp
 
 ---
 
+## 🎥 Video Walkthrough
+
+Watch the [full Fabric Lab video walkthrough](resources/videos/Fabric%20Lab%20Video%20Walkthrough.mp4) for a guided, end-to-end tour of the lab.
+
+---
+
 ## 🏥 Who Is This Lab For?
 
 Healthcare providers — hospital administrators, clinical informaticists, data analysts, IT leaders, and quality improvement teams — who want to understand how Microsoft Fabric can unify their data platform.
