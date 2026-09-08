@@ -8,7 +8,7 @@ Build an end-to-end analytics solution on **Microsoft Fabric** that helps a hosp
 
 ## 🎥 Video Walkthrough
 
-Watch the [full Fabric Lab video walkthrough](resources/videos/Fabric%20Lab%20Video%20Walkthrough.mp4) for a guided, end-to-end tour of the lab.
+Use the [Fabric Lab Video Walkthrough](lab-guide/Video_Walkthrough.md) to watch the complete lab from beginning to end, or play it while you follow the written modules step by step.
 
 ---
 
@@ -20,6 +20,7 @@ Healthcare providers — hospital administrators, clinical informaticists, data 
 
 | Time | Module | Duration | Fabric Capability |
 |------|--------|----------|--------------------|
+| *(Optional)* | [Full Lab Video Walkthrough](lab-guide/Video_Walkthrough.md) | Self-paced | Watch first or follow along |
 | 9:00 – 9:20 | [Module 0 — Introduction & Healthcare Context](lab-guide/Module00_Introduction.md) | 20 min | Overview |
 | 9:20 – 9:50 | [Module 1 — Lakehouse & Data Ingestion](lab-guide/Module01_Setup_and_Data_Ingestion.md) | 30 min | Lakehouse, Upload, Spark Notebook |
 | 9:50 – 10:35 | [Module 2 — Data Engineering](lab-guide/Module02_Data_Engineering.md) | 45 min | Spark Notebooks, Delta Tables |

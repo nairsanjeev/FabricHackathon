@@ -175,4 +175,4 @@ The data includes realistic patterns:
 
 ## Let's Get Started!
 
-Proceed to **[Module 1: Lakehouse Setup & Data Ingestion →](Module01_Setup_and_Data_Ingestion.md)**
+**[← Video Walkthrough](Video_Walkthrough.md)** | **[Module 1: Lakehouse Setup & Data Ingestion →](Module01_Setup_and_Data_Ingestion.md)**
